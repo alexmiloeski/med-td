@@ -65,7 +65,7 @@ public class SSPoint : MonoBehaviour
         }
     }
 
-    private void HighlightOff()
+    public void HighlightOff()
     {
         rend.color = invisibleColor;
     }

@@ -4,6 +4,8 @@ public class BuildManager : MonoBehaviour
 {
     public static BuildManager instance;
 
+    public Transform lymphNodePrefab;
+
     public int numberOfLymphNodes = 5;
     private static bool finishedWithSS;
     //private static int selectedSSCount;
@@ -39,6 +41,38 @@ public class BuildManager : MonoBehaviour
         }
     }
 
+    public void FinishWithSS()
+    {
+        finishedWithSS = true;
+
+        if (selectedSSPoints == null) return;
+
+        // convert the selected SSPoints to LymphNodes
+        for (int i = 0; i < selectedSSPoints.Length; i++)
+        {
+            // first instantiate a LymphNode object on this ss point's location
+            if (selectedSSPoints[i] != null)
+            {
+                Instantiate(lymphNodePrefab, selectedSSPoints[i].transform.position, selectedSSPoints[i].transform.rotation);
+            }
+
+            // then destroy the ss object
+            if (selectedSSPoints[i] != null)
+            {
+                Destroy(selectedSSPoints[i].gameObject);
+                selectedSSPoints[i] = null;
+            }
+        }
+
+        selectedSSPoints = null;
+
+        // destroy the text elements
+        UIManager mm = this.GetComponent<UIManager>();
+        mm.DestroySSUIElements();
+
+        // destroy the done button
+    }
+
     public void StartSSSelection()
     {
         Debug.Log("BuildManager.StartSSSelection");
@@ -66,6 +100,12 @@ public class BuildManager : MonoBehaviour
             // todo: maybe inform the player that max allowed ss have been selected
         }
 
+        UIManager mm = this.GetComponent<UIManager>();
+        int selectedSSCount = GetSelectedSSCount();
+        mm.UpdateSelectedSSCount(selectedSSCount);
+
+        mm.SetEnabledButtonDoneWithSS(selectedSSCount >= numberOfLymphNodes);
+
         return success;
     }
 
@@ -81,6 +121,25 @@ public class BuildManager : MonoBehaviour
                 break;
             }
         }
+
+        int selectedSSCount = GetSelectedSSCount();
+        UIManager mm = this.GetComponent<UIManager>();
+        mm.UpdateSelectedSSCount(selectedSSCount);
+
+        mm.SetEnabledButtonDoneWithSS(selectedSSCount >= numberOfLymphNodes);
+    }
+
+    private int GetSelectedSSCount()
+    {
+        int count = 0;
+        for (int i = 0; i < selectedSSPoints.Length; i++)
+        {
+            if (selectedSSPoints[i] != null)
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void Deselect()
