@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class Scroller : MonoBehaviour
 {
     // TODO this could and should be relative to the vertical offset (difference between screen height and field height)
-    public float scrollSpeed = 0.005f;
+    public float scrollSpeed = 0.018f;
     public Transform uICanvas;
 
     public static Scroller instance;
@@ -12,12 +12,16 @@ public class Scroller : MonoBehaviour
     private Camera cam;
     private float currentAspect;
 
+    private float totalDrag;
     private float prevPoint;
     private float newPoint;
     private float camLowerBound;
     private float camUpperBound;
 
     private bool dragging;
+
+    // total drag allowed before the scrolling starts; useful for clicking buttons
+    private const float totalDragAllowed = 5f;
 
 
     private void Start()
@@ -51,6 +55,7 @@ public class Scroller : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //Debug.Log("mouse button 0 down");
+            totalDrag = 0f;
             prevPoint = Input.mousePosition.y;
             dragging = false;
         }
@@ -72,8 +77,11 @@ public class Scroller : MonoBehaviour
             float delta = prevPoint - newPoint;
             float moveDist = delta * scrollSpeed;
             prevPoint = newPoint;
-
+            
             if (moveDist == 0) return;
+
+            totalDrag += Mathf.Abs(delta);
+            if (totalDrag < totalDragAllowed) return;
 
             dragging = true;
 

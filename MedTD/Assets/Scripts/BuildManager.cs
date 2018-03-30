@@ -77,6 +77,7 @@ public class BuildManager : MonoBehaviour
     public bool SelectSS(SSPoint sSPoint)
     {
         //Debug.Log("BuildManager.SelectSS");
+        UIManager uim = this.GetComponent<UIManager>();
 
         bool success = false;
         for (int i = 0; i < selectedSSPoints.Length; i++)
@@ -93,15 +94,48 @@ public class BuildManager : MonoBehaviour
         if (!success)
         {
             // todo: maybe inform the player that max allowed ss have been selected
+            ShowXAtTouch();
+            uim.FlashMaxSSSelected(2f);
         }
 
-        UIManager uim = this.GetComponent<UIManager>();
+        
         int selectedSSCount = GetSelectedSSCount();
         uim.UpdateSelectedSSCount(selectedSSCount);
 
         uim.SetEnabledButtonDoneWithSS(selectedSSCount >= numberOfLymphNodes);
 
         return success;
+    }
+
+    private void ShowXAtTouch()
+    {
+        if (xGO != null)
+        {
+            Destroy(xGO);
+            interrupt = true;
+        }
+
+        Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosWorld.z = -2f;
+        var xSprite = Resources.Load<Sprite>("Sprites/xSprite");
+
+        xGO = new GameObject();
+        xGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
+        xGO.AddComponent<SpriteRenderer>().sprite = xSprite;
+        
+        Invoke("DestroyXAtTouch", 0.5f);
+    }
+    GameObject xGO;
+    bool interrupt = false;
+    private void DestroyXAtTouch()
+    {
+        if (interrupt)
+        {
+            interrupt = false;
+            return;
+        }
+        if (xGO != null)
+            Destroy(xGO);
     }
 
     public void DeselectSS(SSPoint sSPoint)

@@ -15,21 +15,21 @@ public class Shop : MonoBehaviour
         buildManager = BuildManager.instance;
     }
 
-    public void BuySSButtonClick()
-    {
-        Debug.Log("BuySSButtonClick");
+    //public void BuySSButtonClick()
+    //{
+    //    Debug.Log("BuySSButtonClick");
 
-        if (somethingSelected)
-        {
-            buildManager.Deselect();
-        }
-        else
-        {
-            buildManager.StartSSSelection();
-        }
+    //    if (somethingSelected)
+    //    {
+    //        buildManager.Deselect();
+    //    }
+    //    else
+    //    {
+    //        buildManager.StartSSSelection();
+    //    }
 
-        somethingSelected = !somethingSelected;
-    }
+    //    somethingSelected = !somethingSelected;
+    //}
 
     public void BuildTower1()
     {

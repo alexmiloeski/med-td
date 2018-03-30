@@ -7,24 +7,45 @@ public class UIManager : MonoBehaviour
     public Transform uICanvas;
     public Text textSelectSS;
     public Text textSelectedSSCount;
+    public Text textMaxSSSelected;
     public Button buttonDoneWithSS;
     public GameObject buildingMenuPrefab;
+
+    private bool interrupt;
     
     private void Start()
     {
         BuildManager buildManager = BuildManager.instance;
         textSelectSS.text = "Pick " + buildManager.numberOfLymphNodes + " strategic sites.";
+        textSelectedSSCount.text = "Number of selected sites: 0/" + buildManager.numberOfLymphNodes + ".";
+        textMaxSSSelected.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
     }
 
-    
-    public void SetEnabledButtonDoneWithSS(bool active)
+
+    private void SetEnabledTextMaxSSSelected(bool newActiveState)
     {
-        if (buttonDoneWithSS.gameObject.activeSelf != active)
-            buttonDoneWithSS.gameObject.SetActive(active);
+        if (textMaxSSSelected.gameObject.activeSelf != newActiveState)
+            textMaxSSSelected.gameObject.SetActive(newActiveState);
+    }
+    private void DisableTextMaxSSSelected()
+    {
+        if (interrupt)
+        {
+            interrupt = false;
+            return;
+        }
+
+        if (textMaxSSSelected.gameObject.activeSelf)
+            textMaxSSSelected.gameObject.SetActive(false);
+    }
+    public void SetEnabledButtonDoneWithSS(bool newActiveState)
+    {
+        if (buttonDoneWithSS.gameObject.activeSelf != newActiveState)
+            buttonDoneWithSS.gameObject.SetActive(newActiveState);
     }
     public void UpdateSelectedSSCount(int count)
     {
-        SetTextSelectedSSCount("Number of selected sites: " + count);
+        SetTextSelectedSSCount("Number of selected sites: " + count + "/" + BuildManager.instance.numberOfLymphNodes + ".");
     }
     private void SetTextSelectedSSCount(string newText)
     {
@@ -53,5 +74,16 @@ public class UIManager : MonoBehaviour
         buildingMenuRT.localPosition = proportionalPosition - uiOffset;
         
         return buildingMenu;
+    }
+
+    internal void FlashMaxSSSelected(float delay)
+    {
+        if (textMaxSSSelected.gameObject.activeSelf)
+        {
+            DisableTextMaxSSSelected();
+            interrupt = true;
+        }
+        SetEnabledTextMaxSSSelected(true);
+        Invoke("DisableTextMaxSSSelected", delay);
     }
 }
