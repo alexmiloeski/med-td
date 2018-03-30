@@ -97,6 +97,20 @@ public class Scroller : MonoBehaviour
         }
     }
 
+    private void OnMouseUpAsButton()
+    {
+        //Debug.Log("Scroller.OnMouseUpAsButton");
+        // if we're not scrolling, and there's a lymph node selected, deselect it
+        if (!dragging)
+        {
+            BuildManager buildManager = BuildManager.instance;
+            if (buildManager.IsFinishedWithSS())
+            {
+                buildManager.DeselectLymphNode();
+            }
+        }
+    }
+
     /// <summary>
     /// Saves the aspect ratio value;
     /// Resizes the camera so it fits the field's width;

@@ -172,9 +172,10 @@ public class BuildManager : MonoBehaviour
     public void DeselectLymphNode()
     {
         if (selectedLymphNode != null)
+        {
             selectedLymphNode.Deselect();
-
-        selectedLymphNode = null;
+            selectedLymphNode = null;
+        }
     }
 
     internal void BuildTower1()
