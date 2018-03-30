@@ -24,32 +24,8 @@ public class SSPoint : MonoBehaviour
         if (highlightedColor.a < 0.1f) highlightedColor.a = 0.1f;
         invisibleColor = highlightedColor;
         invisibleColor.a = 0;
-
-        //defaultColor = rend.color;
     }
     
-    private void OnMouseDown()
-    {
-        Debug.Log("SSPoint.OnMouseDown");
-        startTouchPoint = Input.mousePosition;
-
-        Scroller.instance.OnMouseDown();
-    }
-
-    private void OnMouseDrag()
-    {
-        Debug.Log("SSPoint.OnMouseDrag");
-        Vector2 currentTouchPoint = Input.mousePosition;
-
-        if (currentTouchPoint == startTouchPoint) // todo: AROUND the point
-        {
-            
-        }
-        else
-        {
-            Scroller.instance.OnMouseDrag();
-        }
-    }
 
     private void OnMouseUpAsButton()
     {

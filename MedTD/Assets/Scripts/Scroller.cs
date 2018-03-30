@@ -21,7 +21,7 @@ public class Scroller : MonoBehaviour
     private void Start()
     {
         cam = Camera.main;
-        
+
         SetUpRatio();
     }
 
@@ -44,6 +44,57 @@ public class Scroller : MonoBehaviour
         {
             SetUpRatio();
         }
+
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Debug.Log("mouse button 0 down");
+            prevPoint = Input.mousePosition.y;
+            dragging = false;
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            //Debug.Log("mouse button 0 drag");
+            if (cam == null) cam = Camera.main;
+
+            // if camHeight > fieldHeight (i.e. there's extra vertical space), then don't enable drag!
+            if (cam.orthographicSize * 2 > this.GetComponent<BoxCollider2D>().bounds.size.y)
+            {
+                dragging = false;
+                return;
+            }
+
+
+            newPoint = Input.mousePosition.y;
+
+            float delta = prevPoint - newPoint;
+            float moveDist = delta * scrollSpeed;
+            prevPoint = newPoint;
+
+            if (moveDist == 0) return;
+
+            dragging = true;
+
+            bool tooLow = cam.transform.position.y + moveDist < camLowerBound;
+            bool tooHigh = cam.transform.position.y + moveDist > camUpperBound;
+            if (tooLow) // if it's too low, move it to camLowerBound
+            {
+                cam.transform.position = new Vector3(cam.transform.position.x, camLowerBound, cam.transform.position.z);
+            }
+            else if (tooHigh) // if it's too high, move it to camUpperBound
+            {
+                cam.transform.position = new Vector3(cam.transform.position.x, camUpperBound, cam.transform.position.z);
+            }
+            else // else just move it where it's going
+            {
+                cam.transform.Translate(new Vector2(0, moveDist));
+            }
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            //Debug.Log("mouse button 0 up");
+            dragging = false;
+        }
     }
 
     /// <summary>
@@ -64,90 +115,27 @@ public class Scroller : MonoBehaviour
         float cameraWidth = scrollFieldWidth / 2;
         // resize the camera so it fits the field's width
         cam.orthographicSize = cameraWidth / currentAspect;
-        
+
         // position the camera in the middle of the field (vertically)
         cam.transform.position = new Vector3(cam.transform.position.x, this.transform.position.y, cam.transform.position.z);
-        
+
         // calculate and define the upper and lower bounds for the camera
         BoxCollider2D fieldCollider = this.GetComponent<BoxCollider2D>();
         float height = fieldCollider.bounds.size.y;
         float fieldTop = fieldCollider.transform.position.y - (height / 2);
         float fieldBottom = fieldCollider.transform.position.y + (height / 2);
-        
-        float camHeight = cam.orthographicSize*2;
+
+        float camHeight = cam.orthographicSize * 2;
         float camTop = cam.transform.position.y - (camHeight / 2);
         float camBottom = cam.transform.position.y + (camHeight / 2);
-        
+
         float diffBottom = camBottom - fieldBottom;
         float diffTop = camTop - fieldTop;
-        
+
         camLowerBound = cam.transform.position.y + diffBottom;
         camUpperBound = cam.transform.position.y + diffTop;
     }
     
-    public void OnMouseDown()
-    {
-        Debug.Log("Scroller.OnMouseDown");
-
-        dragging = false;
-        prevPoint = Input.mousePosition.y;
-
-        /*
-        // see if there's something below the scroller where the mouse is pointing
-        int layerMask = 1 << 8; // 9 is the scroller's layer
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0, layerMask);
-        if (hit)
-        {
-            Debug.Log("name " + hit.transform.gameObject.name);
-        }
-        */
-    }
-
-    public void OnMouseDrag()
-    {
-        Debug.Log("Scroller.OnMouseDrag");
-        if (cam == null) cam = Camera.main;
-
-        // if camHeight > fieldHeight (i.e. there's extra vertical space), then don't enable drag!
-        if (cam.orthographicSize*2 > this.GetComponent<BoxCollider2D>().bounds.size.y)
-        {
-            dragging = false;
-            return;
-        }
-        
-        
-        newPoint = Input.mousePosition.y;
-
-        float delta = prevPoint - newPoint;
-        float moveDist = delta * scrollSpeed;
-        prevPoint = newPoint;
-        
-        if (moveDist == 0) return;
-
-        dragging = true;
-
-        bool tooLow = cam.transform.position.y + moveDist < camLowerBound;
-        bool tooHigh = cam.transform.position.y + moveDist > camUpperBound;
-        if (tooLow) // if it's too low, move it to camLowerBound
-        {
-            cam.transform.position = new Vector3(cam.transform.position.x, camLowerBound, cam.transform.position.z);
-        }
-        else if (tooHigh) // if it's too high, move it to camUpperBound
-        {
-            cam.transform.position = new Vector3(cam.transform.position.x, camUpperBound, cam.transform.position.z);
-        }
-        else // else just move it where it's going
-        {
-            cam.transform.Translate(new Vector2(0, moveDist));
-        }
-    }
-
-    private void OnMouseUp()
-    {
-        Debug.Log("Scroller.OnMouseUp");
-        dragging = false;
-    }
-
     public bool IsDragging()
     {
         return dragging;

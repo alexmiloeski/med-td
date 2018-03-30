@@ -32,30 +32,7 @@ public class LymphNode : MonoBehaviour
         // get this lymph node's default renderer color, for disabled its highlight
         defaultColor = rend.color;
     }
-
-    private void OnMouseDown()
-    {
-        Debug.Log("LymphNode.OnMouseDown");
-        startTouchPoint = Input.mousePosition;
-
-        Scroller.instance.OnMouseDown();
-    }
-
-    private void OnMouseDrag()
-    {
-        Debug.Log("LymphNode.OnMouseDrag");
-        Vector2 currentTouchPoint = Input.mousePosition;
-
-        if (currentTouchPoint == startTouchPoint) // todo: AROUND the point
-        {
-
-        }
-        else
-        {
-            Scroller.instance.OnMouseDrag();
-        }
-    }
-
+    
     private void OnMouseUpAsButton()
     {
         Debug.Log("LymphNode.OnMouseUpAsButton");
