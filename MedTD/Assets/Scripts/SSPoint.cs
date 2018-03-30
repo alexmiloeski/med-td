@@ -7,17 +7,15 @@ public class SSPoint : MonoBehaviour
     private SpriteRenderer rend;
     private Color invisibleColor;
     private Color highlightedColor = Color.white;
-    private LymphNode lymphNode;
-
-    //private bool isFree;
-    private bool isSelected;
+    //private LymphNode lymphNode;
+    
+    private bool selected;
 
     void Start ()
     {
         buildManager = BuildManager.instance;
 
-        isSelected = false;
-        //isFree = true; // todo: when a lymph node is built here, this should be false
+        selected = false;
 
         rend = GetComponent<SpriteRenderer>();
         // make sure the opacity of the selectedColor isn't 0
@@ -30,7 +28,7 @@ public class SSPoint : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log("SSPoint on mouse down");
+        //Debug.Log("SSPoint on mouse down");
 
         if (buildManager == null) return;//todo
 
@@ -38,13 +36,13 @@ public class SSPoint : MonoBehaviour
         if (!buildManager.IsFinishedWithSS())
         {
             // if this SS hasn't been selected (and the number of selected < max allowed), select it
-            if (!this.isSelected)
+            if (!this.selected)
             {
                 Debug.Log("this is not selected; TRY to select it");
 
                 if (buildManager.SelectSS(this))
                 {
-                    this.isSelected = true;
+                    this.selected = true;
                     // mark this square visually as selected
                     HighlightOn();
                 }
@@ -58,7 +56,7 @@ public class SSPoint : MonoBehaviour
             {
                 Debug.Log("this is already selected; trying to deselect it");
                 buildManager.DeselectSS(this);
-                this.isSelected = false;
+                this.selected = false;
                 // mark this square visually as not selected
                 HighlightOff();
             }

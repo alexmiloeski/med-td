@@ -8,4 +8,10 @@ public class ButtonManager : MonoBehaviour
 
         BuildManager.instance.FinishWithSS();
     }
+    public void ButtonBuildTower1Action()
+    {
+        Debug.Log("Button build tower 1");
+
+        BuildManager.instance.BuildTower1();
+    }
 }

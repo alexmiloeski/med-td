@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class BuildManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class BuildManager : MonoBehaviour
     //private static int selectedSSCount;
     private static SSPoint[] selectedSSPoints;
 
+    
     //public GameObject environmentGO;
     //public GameObject shopGO;
     //public GameObject walkablePath;
@@ -67,8 +69,8 @@ public class BuildManager : MonoBehaviour
         selectedSSPoints = null;
 
         // destroy the text elements
-        UIManager mm = this.GetComponent<UIManager>();
-        mm.DestroySSUIElements();
+        UIManager uim = this.GetComponent<UIManager>();
+        uim.DestroySSUIElements();
 
         // destroy the done button
     }
@@ -100,11 +102,11 @@ public class BuildManager : MonoBehaviour
             // todo: maybe inform the player that max allowed ss have been selected
         }
 
-        UIManager mm = this.GetComponent<UIManager>();
+        UIManager uim = this.GetComponent<UIManager>();
         int selectedSSCount = GetSelectedSSCount();
-        mm.UpdateSelectedSSCount(selectedSSCount);
+        uim.UpdateSelectedSSCount(selectedSSCount);
 
-        mm.SetEnabledButtonDoneWithSS(selectedSSCount >= numberOfLymphNodes);
+        uim.SetEnabledButtonDoneWithSS(selectedSSCount >= numberOfLymphNodes);
 
         return success;
     }
@@ -161,6 +163,42 @@ public class BuildManager : MonoBehaviour
     {
         return selectingSS;
     }
+
+    public void SelectLymphNode(LymphNode ln)
+    {
+        // if there's another lymph node already selected, first deselect that one
+        if (selectedLymphNode != null)
+        {
+            selectedLymphNode.Deselect();
+        }
+
+        //selectedLymphNode.Select(); // redundant, called from LymphNode too
+
+        selectedLymphNode = ln;
+    }
+    public void DeselectLymphNode()
+    {
+        if (selectedLymphNode != null)
+            selectedLymphNode.Deselect();
+
+        selectedLymphNode = null;
+    }
+
+    internal void BuildTower1()
+    {
+        if (selectedLymphNode == null)
+        {
+            throw new Exception("Error! There's no selected lymph node.");
+        }
+
+        // todo: build tower on selectedLymphNode
+
+        Debug.Log("building tower1 on the selected lymph node...");
+    }
+
+
+
+
     //public bool IsSSSelected()
     //{
     //    return selectedSSPoint != null;
