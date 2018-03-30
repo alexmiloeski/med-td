@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,12 +40,12 @@ public class UIManager : MonoBehaviour
         if (textMaxSSSelected.gameObject.activeSelf)
             textMaxSSSelected.gameObject.SetActive(false);
     }
-    public void SetEnabledButtonDoneWithSS(bool newActiveState)
+    internal void SetEnabledButtonDoneWithSS(bool newActiveState)
     {
         if (buttonDoneWithSS.gameObject.activeSelf != newActiveState)
             buttonDoneWithSS.gameObject.SetActive(newActiveState);
     }
-    public void UpdateSelectedSSCount(int count)
+    internal void UpdateSelectedSSCount(int count)
     {
         SetTextSelectedSSCount("Number of selected sites: " + count + "/" + BuildManager.instance.numberOfLymphNodes + ".");
     }
@@ -53,14 +53,14 @@ public class UIManager : MonoBehaviour
     {
         textSelectedSSCount.text = newText;
     }
-    public void DestroySSUIElements()
+    internal void DestroySSUIElements()
     {
         Destroy(textSelectSS.gameObject);
         Destroy(textSelectedSSCount.gameObject);
         Destroy(buttonDoneWithSS.gameObject);
     }
 
-    public GameObject ShowBuildingMenu(Transform lymphNode)
+    internal GameObject ShowBuildingMenu(Transform lymphNode)
     {
         //Debug.Log("UIManager.ShowBuildingMenu");
         GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
@@ -78,12 +78,13 @@ public class UIManager : MonoBehaviour
         return buildingMenu;
     }
 
-    public void FlashXAtTouch(float delay)
+    internal void FlashXAtTouch(float delay)
     {
         ShowXAtTouch(delay);
     }
     private void ShowXAtTouch(float delay)
     {
+        //Debug.Log("ShowXAtTouch");
         if (xGO != null)
         {
             Destroy(xGO);
@@ -97,20 +98,20 @@ public class UIManager : MonoBehaviour
         xGO = new GameObject();
         xGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
         xGO.AddComponent<SpriteRenderer>().sprite = xSprite;
-
-        Invoke("DestroyXAtTouch", delay);
+        
+        StartCoroutine(DestroyXAtTouch(delay));
     }
-    private void DestroyXAtTouch()
+    private IEnumerator DestroyXAtTouch(float delay)
     {
-        if (interruptXAtTouch)
+        // destroy here
+        yield return new WaitForSeconds(delay);
+        if (!interruptXAtTouch)
         {
-            interruptXAtTouch = false;
-            return;
-        }
-        if (xGO != null)
             Destroy(xGO);
+        }
+        else interruptXAtTouch = false;
     }
-    public void FlashMaxSSSelected(float delay)
+    internal void FlashMaxSSSelected(float delay)
     {
         if (textMaxSSSelected.gameObject.activeSelf)
         {

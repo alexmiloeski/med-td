@@ -34,7 +34,7 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    public void FinishWithSS()
+    internal void FinishWithSS()
     {
         finishedWithSS = true;
 
@@ -68,13 +68,13 @@ public class BuildManager : MonoBehaviour
         // destroy the done button
     }
 
-    public void StartSSSelection()
+    internal void StartSSSelection()
     {
         //Debug.Log("BuildManager.StartSSSelection");
         //selectingSS = true;
     }
 
-    public bool SelectSS(SSPoint sSPoint)
+    internal bool SelectSS(SSPoint sSPoint)
     {
         //Debug.Log("BuildManager.SelectSS");
         UIManager uim = this.GetComponent<UIManager>();
@@ -106,9 +106,9 @@ public class BuildManager : MonoBehaviour
 
         return success;
     }
-    
 
-    public void DeselectSS(SSPoint sSPoint)
+
+    internal void DeselectSS(SSPoint sSPoint)
     {
         //Debug.Log("BuildManager.DeselectSS");
         for (int i = 0; i < selectedSSPoints.Length; i++)
@@ -141,7 +141,7 @@ public class BuildManager : MonoBehaviour
         return count;
     }
 
-    public void Deselect()
+    internal void Deselect()
     {
         //selectingSS = false;
         //selectedSSPoint = null;
@@ -152,7 +152,7 @@ public class BuildManager : MonoBehaviour
     //{
     //    return selectedSSPoints.Length;
     //}
-    public bool IsFinishedWithSS()
+    internal bool IsFinishedWithSS()
     {
         return finishedWithSS;
     }
@@ -162,7 +162,7 @@ public class BuildManager : MonoBehaviour
     //}
 
     // if this method is not called from LymphNode, LymphNode.Select() has to be called!
-    public void SelectLymphNode(LymphNode ln)
+    internal void SelectLymphNode(LymphNode ln)
     {
         // if there's another lymph node already selected, first deselect that one
         if (selectedLymphNode != null)
@@ -175,7 +175,7 @@ public class BuildManager : MonoBehaviour
 
         selectedLymphNode = ln;
     }
-    public void DeselectLymphNode()
+    internal void DeselectLymphNode()
     {
         if (selectedLymphNode != null)
         {
@@ -183,13 +183,13 @@ public class BuildManager : MonoBehaviour
             selectedLymphNode = null;
         }
     }
-    public LymphNode GetSelectedLymphNode()
+    internal LymphNode GetSelectedLymphNode()
     {
         return selectedLymphNode;
     }
 
 
-    public void BuildTower1()
+    internal void BuildTower1()
     {
         if (selectedLymphNode == null)
         {
@@ -200,7 +200,7 @@ public class BuildManager : MonoBehaviour
 
         Debug.Log("building tower1 on the selected lymph node...");
     }
-    public void BuildTower2()
+    internal void BuildTower2()
     {
         if (selectedLymphNode == null)
         {
@@ -211,7 +211,7 @@ public class BuildManager : MonoBehaviour
 
         Debug.Log("building tower2 on the selected lymph node...");
     }
-    public void BuildTower3()
+    internal void BuildTower3()
     {
         if (selectedLymphNode == null)
         {
@@ -222,7 +222,7 @@ public class BuildManager : MonoBehaviour
 
         Debug.Log("building tower3 on the selected lymph node...");
     }
-    public void BuildTower4()
+    internal void BuildTower4()
     {
         if (selectedLymphNode == null)
         {

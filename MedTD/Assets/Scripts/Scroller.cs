@@ -199,8 +199,8 @@ public class Scroller : MonoBehaviour
         camLowerBound = cam.transform.position.y + diffBottom;
         camUpperBound = cam.transform.position.y + diffTop;
     }
-    
-    public bool IsDragging()
+
+    internal bool IsDragging()
     {
         return dragging;
     }

@@ -71,7 +71,7 @@ public class LymphNode : MonoBehaviour
         }
     }
 
-    public void Select()
+    internal void Select()
     {
         this.selected = true;
         HighlightOn();
@@ -88,12 +88,12 @@ public class LymphNode : MonoBehaviour
         }
     }
 
-    public GameObject GetBuildingMenu()
+    internal GameObject GetBuildingMenu()
     {
         return buildingMenu;
     }
 
-    public void HighlightOff()
+    internal void HighlightOff()
     {
         rend.color = defaultColor;
     }
