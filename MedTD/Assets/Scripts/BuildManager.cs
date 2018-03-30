@@ -16,7 +16,7 @@ public class BuildManager : MonoBehaviour
     //private static Tower selectedTower;
     private TowerBlueprint towerToBuild;
 
-    private bool selectingSS;
+    //private bool selectingSS;
 
     private void Awake()
     {
@@ -71,7 +71,7 @@ public class BuildManager : MonoBehaviour
     public void StartSSSelection()
     {
         //Debug.Log("BuildManager.StartSSSelection");
-        selectingSS = true;
+        //selectingSS = true;
     }
 
     public bool SelectSS(SSPoint sSPoint)
@@ -93,9 +93,9 @@ public class BuildManager : MonoBehaviour
 
         if (!success)
         {
-            // todo: maybe inform the player that max allowed ss have been selected
-            ShowXAtTouch();
-            uim.FlashMaxSSSelected(2f);
+            // inform the player that max allowed ss have been selected
+            uim.FlashXAtTouch(0.8f);
+            uim.FlashMaxSSSelected(1.5f);
         }
 
         
@@ -106,37 +106,7 @@ public class BuildManager : MonoBehaviour
 
         return success;
     }
-
-    private void ShowXAtTouch()
-    {
-        if (xGO != null)
-        {
-            Destroy(xGO);
-            interrupt = true;
-        }
-
-        Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosWorld.z = -2f;
-        var xSprite = Resources.Load<Sprite>("Sprites/xSprite");
-
-        xGO = new GameObject();
-        xGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
-        xGO.AddComponent<SpriteRenderer>().sprite = xSprite;
-        
-        Invoke("DestroyXAtTouch", 0.5f);
-    }
-    GameObject xGO;
-    bool interrupt = false;
-    private void DestroyXAtTouch()
-    {
-        if (interrupt)
-        {
-            interrupt = false;
-            return;
-        }
-        if (xGO != null)
-            Destroy(xGO);
-    }
+    
 
     public void DeselectSS(SSPoint sSPoint)
     {
@@ -173,7 +143,7 @@ public class BuildManager : MonoBehaviour
 
     public void Deselect()
     {
-        selectingSS = false;
+        //selectingSS = false;
         //selectedSSPoint = null;
         selectedLymphNode = null;
     }
@@ -186,10 +156,10 @@ public class BuildManager : MonoBehaviour
     {
         return finishedWithSS;
     }
-    public bool IsSelectingSS()
-    {
-        return selectingSS;
-    }
+    //public bool IsSelectingSS()
+    //{
+    //    //return selectingSS;
+    //}
 
     // if this method is not called from LymphNode, LymphNode.Select() has to be called!
     public void SelectLymphNode(LymphNode ln)

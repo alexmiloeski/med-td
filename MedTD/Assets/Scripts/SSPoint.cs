@@ -30,7 +30,7 @@ public class SSPoint : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
-        Debug.Log("SSPoint.OnMouseUpAsButton");
+        //Debug.Log("SSPoint.OnMouseUpAsButton");
 
         // if there's a ui element above, don't do anything
         if (EventSystem.current.IsPointerOverGameObject())
@@ -59,7 +59,7 @@ public class SSPoint : MonoBehaviour
                 else
                 {
                     // todo: inform that they can't select more than N ss
-                    Debug.Log("Max ss selected, yo");
+                    //Debug.Log("Max ss selected, yo");
                 }
             }
             else // if this SS is already selected, deselect it

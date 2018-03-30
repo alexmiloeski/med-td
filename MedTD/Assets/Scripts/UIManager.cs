@@ -11,8 +11,10 @@ public class UIManager : MonoBehaviour
     public Button buttonDoneWithSS;
     public GameObject buildingMenuPrefab;
 
-    private bool interrupt;
-    
+    private GameObject xGO;
+    private bool interruptXAtTouch = false;
+    private bool interruptTextMaxSSSelected = false;
+
     private void Start()
     {
         BuildManager buildManager = BuildManager.instance;
@@ -29,9 +31,9 @@ public class UIManager : MonoBehaviour
     }
     private void DisableTextMaxSSSelected()
     {
-        if (interrupt)
+        if (interruptTextMaxSSSelected)
         {
-            interrupt = false;
+            interruptTextMaxSSSelected = false;
             return;
         }
 
@@ -57,8 +59,8 @@ public class UIManager : MonoBehaviour
         Destroy(textSelectedSSCount.gameObject);
         Destroy(buttonDoneWithSS.gameObject);
     }
-    
-    internal GameObject ShowBuildingMenu(Transform lymphNode)
+
+    public GameObject ShowBuildingMenu(Transform lymphNode)
     {
         //Debug.Log("UIManager.ShowBuildingMenu");
         GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
@@ -76,12 +78,44 @@ public class UIManager : MonoBehaviour
         return buildingMenu;
     }
 
-    internal void FlashMaxSSSelected(float delay)
+    public void FlashXAtTouch(float delay)
+    {
+        ShowXAtTouch(delay);
+    }
+    private void ShowXAtTouch(float delay)
+    {
+        if (xGO != null)
+        {
+            Destroy(xGO);
+            interruptXAtTouch = true;
+        }
+
+        Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosWorld.z = -2f;
+        var xSprite = Resources.Load<Sprite>("Sprites/xSprite");
+
+        xGO = new GameObject();
+        xGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
+        xGO.AddComponent<SpriteRenderer>().sprite = xSprite;
+
+        Invoke("DestroyXAtTouch", delay);
+    }
+    private void DestroyXAtTouch()
+    {
+        if (interruptXAtTouch)
+        {
+            interruptXAtTouch = false;
+            return;
+        }
+        if (xGO != null)
+            Destroy(xGO);
+    }
+    public void FlashMaxSSSelected(float delay)
     {
         if (textMaxSSSelected.gameObject.activeSelf)
         {
             DisableTextMaxSSSelected();
-            interrupt = true;
+            interruptTextMaxSSSelected = true;
         }
         SetEnabledTextMaxSSSelected(true);
         Invoke("DisableTextMaxSSSelected", delay);

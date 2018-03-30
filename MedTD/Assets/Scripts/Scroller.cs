@@ -127,6 +127,7 @@ public class Scroller : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             //Debug.Log("mouse button 0 up");
+            
             dragging = false;
         }
     }
@@ -142,12 +143,20 @@ public class Scroller : MonoBehaviour
         }
 
         // if we're not scrolling, and there's a lymph node selected, deselect it
+        // if we're not scrolling, and we're selecting SS, then this is a click outside any valid SS
         if (!dragging)
         {
             BuildManager buildManager = BuildManager.instance;
-            if (buildManager.IsFinishedWithSS())
+            if (buildManager.IsFinishedWithSS()) // done selecting SS
             {
                 buildManager.DeselectLymphNode();
+            }
+            else // still selecting SS
+            {
+                // this is a click outside any valid strategic sites
+                Debug.Log("INVALID STRATEGIC SITE!");
+                UIManager uim = buildManager.gameObject.GetComponent<UIManager>();
+                uim.FlashXAtTouch(0.5f);
             }
         }
     }
