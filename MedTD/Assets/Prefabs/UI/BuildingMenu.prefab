@@ -207,7 +207,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114473431017128920, guid: 8a4732587bf48bc45b443451b64b7084,
+      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower3Action
         m_Mode: 1
@@ -287,7 +287,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114473431017128920, guid: 8a4732587bf48bc45b443451b64b7084,
+      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower1Action
         m_Mode: 1
@@ -427,7 +427,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114473431017128920, guid: 8a4732587bf48bc45b443451b64b7084,
+      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower4Action
         m_Mode: 1
@@ -540,7 +540,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114473431017128920, guid: 8a4732587bf48bc45b443451b64b7084,
+      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower2Action
         m_Mode: 1
