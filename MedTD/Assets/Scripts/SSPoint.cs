@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SSPoint : MonoBehaviour
 {
@@ -30,6 +31,12 @@ public class SSPoint : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         Debug.Log("SSPoint.OnMouseUpAsButton");
+
+        // if there's a ui element above, don't do anything
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
 
         if (Scroller.instance.IsDragging()) return;
 

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class LymphNode : MonoBehaviour
 {
@@ -36,6 +37,12 @@ public class LymphNode : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         Debug.Log("LymphNode.OnMouseUpAsButton");
+
+        // if there's a ui element above, don't do anything
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
 
         if (Scroller.instance.IsDragging()) return;
 
@@ -79,6 +86,11 @@ public class LymphNode : MonoBehaviour
         {
             Destroy(buildingMenu);
         }
+    }
+
+    public GameObject GetBuildingMenu()
+    {
+        return buildingMenu;
     }
 
     public void HighlightOff()

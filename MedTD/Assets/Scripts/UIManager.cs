@@ -30,10 +30,6 @@ public class UIManager : MonoBehaviour
     {
         textSelectedSSCount.text = newText;
     }
-    //public void SetTextSelectSS(string newText)
-    //{
-    //    textSelectSS.text = newText;
-    //}
     public void DestroySSUIElements()
     {
         Destroy(textSelectSS.gameObject);

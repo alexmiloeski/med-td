@@ -14,4 +14,22 @@ public class ButtonManager : MonoBehaviour
 
         BuildManager.instance.BuildTower1();
     }
+    public void ButtonBuildTower2Action()
+    {
+        Debug.Log("Button build tower 2");
+
+        BuildManager.instance.BuildTower2();
+    }
+    public void ButtonBuildTower3Action()
+    {
+        Debug.Log("Button build tower 3");
+
+        BuildManager.instance.BuildTower3();
+    }
+    public void ButtonBuildTower4Action()
+    {
+        Debug.Log("Button build tower 4");
+
+        BuildManager.instance.BuildTower4();
+    }
 }

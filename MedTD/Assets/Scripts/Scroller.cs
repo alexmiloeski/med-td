@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Scroller : MonoBehaviour
 {
     // TODO this could and should be relative to the vertical offset (difference between screen height and field height)
     public float scrollSpeed = 0.005f;
+    public Transform uICanvas;
 
     public static Scroller instance;
 
@@ -89,6 +91,30 @@ public class Scroller : MonoBehaviour
             {
                 cam.transform.Translate(new Vector2(0, moveDist));
             }
+
+            
+            // move any build menus along with the cam
+            BuildManager buildManager = BuildManager.instance;
+            if (buildManager.IsFinishedWithSS())
+            {
+                LymphNode selLN = buildManager.GetSelectedLymphNode();
+                if (selLN != null)
+                {
+                    //Debug.Log("there's a lymph node selected");
+                    GameObject buildingMenu = selLN.GetBuildingMenu();
+                    if (buildingMenu != null)
+                    {   // there's a building menu shown; move the menu
+                        RectTransform buildingMenuRT = buildingMenu.GetComponent<RectTransform>();
+                        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
+                        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(selLN.transform.position);
+                        Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
+                        Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
+
+                        // set the position and remove the screen offset
+                        buildingMenuRT.localPosition = proportionalPosition - uiOffset;
+                    }
+                }
+            }
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -100,6 +126,13 @@ public class Scroller : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         //Debug.Log("Scroller.OnMouseUpAsButton");
+
+        // if there's a ui element above, don't do anything
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         // if we're not scrolling, and there's a lymph node selected, deselect it
         if (!dragging)
         {

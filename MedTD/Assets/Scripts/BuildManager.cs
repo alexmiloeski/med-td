@@ -157,6 +157,7 @@ public class BuildManager : MonoBehaviour
         return selectingSS;
     }
 
+    // if this method is not called from LymphNode, LymphNode.Select() has to be called!
     public void SelectLymphNode(LymphNode ln)
     {
         // if there's another lymph node already selected, first deselect that one
@@ -165,6 +166,7 @@ public class BuildManager : MonoBehaviour
             selectedLymphNode.Deselect();
         }
 
+        // if this method is not called from LymphNode, LymphNode.Select() has to be called!
         //selectedLymphNode.Select(); // redundant, called from LymphNode too
 
         selectedLymphNode = ln;
@@ -177,8 +179,13 @@ public class BuildManager : MonoBehaviour
             selectedLymphNode = null;
         }
     }
+    public LymphNode GetSelectedLymphNode()
+    {
+        return selectedLymphNode;
+    }
 
-    internal void BuildTower1()
+
+    public void BuildTower1()
     {
         if (selectedLymphNode == null)
         {
@@ -188,6 +195,39 @@ public class BuildManager : MonoBehaviour
         // todo: build tower on selectedLymphNode
 
         Debug.Log("building tower1 on the selected lymph node...");
+    }
+    public void BuildTower2()
+    {
+        if (selectedLymphNode == null)
+        {
+            throw new Exception("Error! There's no selected lymph node.");
+        }
+
+        // todo: build tower on selectedLymphNode
+
+        Debug.Log("building tower2 on the selected lymph node...");
+    }
+    public void BuildTower3()
+    {
+        if (selectedLymphNode == null)
+        {
+            throw new Exception("Error! There's no selected lymph node.");
+        }
+
+        // todo: build tower on selectedLymphNode
+
+        Debug.Log("building tower3 on the selected lymph node...");
+    }
+    public void BuildTower4()
+    {
+        if (selectedLymphNode == null)
+        {
+            throw new Exception("Error! There's no selected lymph node.");
+        }
+
+        // todo: build tower on selectedLymphNode
+
+        Debug.Log("building tower4 on the selected lymph node...");
     }
 
 
