@@ -6,21 +6,12 @@ public class BuildManager : MonoBehaviour
     public static BuildManager instance;
 
     public Transform lymphNodePrefab;
+    public Transform sSPointContainer;
 
     public int numberOfLymphNodes = 5;
     private static bool finishedWithSS;
-    //private static int selectedSSCount;
     private static SSPoint[] selectedSSPoints;
-
     
-    //public GameObject environmentGO;
-    //public GameObject shopGO;
-    //public GameObject walkablePath;
-
-    //public GameObject standardTurretPrefab;
-    //public GameObject missileLauncherPrefab;
-
-    //private static SSPoint selectedSSPoint;
     private static LymphNode selectedLymphNode;
     //private static Tower selectedTower;
     private TowerBlueprint towerToBuild;
@@ -49,21 +40,23 @@ public class BuildManager : MonoBehaviour
 
         if (selectedSSPoints == null) return;
 
+        GameObject containerLymphNodes = new GameObject("LymphNodes");
+
         // convert the selected SSPoints to LymphNodes
         for (int i = 0; i < selectedSSPoints.Length; i++)
         {
-            // first instantiate a LymphNode object on this ss point's location
+            // instantiate a LymphNode object on this ss point's location
             if (selectedSSPoints[i] != null)
             {
-                Instantiate(lymphNodePrefab, selectedSSPoints[i].transform.position, selectedSSPoints[i].transform.rotation);
+                Transform lymphNode = Instantiate(lymphNodePrefab, selectedSSPoints[i].transform.position, selectedSSPoints[i].transform.rotation);
+                lymphNode.SetParent(containerLymphNodes.transform);
             }
+        }
 
-            // then destroy the ss object
-            if (selectedSSPoints[i] != null)
-            {
-                Destroy(selectedSSPoints[i].gameObject);
-                selectedSSPoints[i] = null;
-            }
+        // destroy all SSPoints
+        for (int i = 0; i < sSPointContainer.childCount; i++)
+        {
+            Destroy(sSPointContainer.GetChild(i).gameObject);
         }
 
         selectedSSPoints = null;
@@ -77,7 +70,7 @@ public class BuildManager : MonoBehaviour
 
     public void StartSSSelection()
     {
-        Debug.Log("BuildManager.StartSSSelection");
+        //Debug.Log("BuildManager.StartSSSelection");
         selectingSS = true;
     }
 
@@ -90,7 +83,7 @@ public class BuildManager : MonoBehaviour
         {
             if (selectedSSPoints[i] == null)
             {
-                Debug.Log("Found an empty spot, selecting this SS");
+                //Debug.Log("Found an empty spot, selecting this SS");
                 selectedSSPoints[i] = sSPoint;
                 success = true;
                 break;
@@ -113,12 +106,12 @@ public class BuildManager : MonoBehaviour
 
     public void DeselectSS(SSPoint sSPoint)
     {
-        Debug.Log("BuildManager.DeselectSS");
+        //Debug.Log("BuildManager.DeselectSS");
         for (int i = 0; i < selectedSSPoints.Length; i++)
         {
             if (selectedSSPoints[i] != null && selectedSSPoints[i].Equals(sSPoint))
             {
-                Debug.Log("Found it. Deselecting this SS");
+                //Debug.Log("Found it. Deselecting this SS");
                 selectedSSPoints[i] = null;
                 break;
             }

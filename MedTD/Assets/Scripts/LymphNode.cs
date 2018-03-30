@@ -5,8 +5,8 @@ public class LymphNode : MonoBehaviour
     private BuildManager buildManager;
 
     private SpriteRenderer rend;
-    private Color invisibleColor;
-    private Color highlightedColor = Color.white;
+    private Color defaultColor;
+    private Color highlightedColor = Color.green;
 
     private GameObject buildingMenu;
 
@@ -14,6 +14,8 @@ public class LymphNode : MonoBehaviour
 
     private bool selected;
     private bool vacant;
+
+    private Vector2 startTouchPoint;
 
     void Start()
     {
@@ -25,13 +27,40 @@ public class LymphNode : MonoBehaviour
         rend = GetComponent<SpriteRenderer>();
         // make sure the opacity of the selectedColor isn't 0
         if (highlightedColor.a < 0.1f) highlightedColor.a = 0.1f;
-        invisibleColor = highlightedColor;
-        invisibleColor.a = 0;
+        
+
+        // get this lymph node's default renderer color, for disabled its highlight
+        defaultColor = rend.color;
     }
 
     private void OnMouseDown()
     {
-        Debug.Log("LymphNode on mouse down");
+        Debug.Log("LymphNode.OnMouseDown");
+        startTouchPoint = Input.mousePosition;
+
+        Scroller.instance.OnMouseDown();
+    }
+
+    private void OnMouseDrag()
+    {
+        Debug.Log("LymphNode.OnMouseDrag");
+        Vector2 currentTouchPoint = Input.mousePosition;
+
+        if (currentTouchPoint == startTouchPoint) // todo: AROUND the point
+        {
+
+        }
+        else
+        {
+            Scroller.instance.OnMouseDrag();
+        }
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        Debug.Log("LymphNode.OnMouseUpAsButton");
+
+        if (Scroller.instance.IsDragging()) return;
 
         // if not selected, select it
         if (!selected)
@@ -77,7 +106,7 @@ public class LymphNode : MonoBehaviour
 
     public void HighlightOff()
     {
-        rend.color = invisibleColor;
+        rend.color = defaultColor;
     }
     private void HighlightOn()
     {

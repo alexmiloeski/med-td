@@ -11,6 +11,8 @@ public class SSPoint : MonoBehaviour
     
     private bool selected;
 
+    private Vector2 startTouchPoint;
+
     void Start ()
     {
         buildManager = BuildManager.instance;
@@ -23,12 +25,37 @@ public class SSPoint : MonoBehaviour
         invisibleColor = highlightedColor;
         invisibleColor.a = 0;
 
-        //invisibleColor = rend.color;
+        //defaultColor = rend.color;
     }
-
+    
     private void OnMouseDown()
     {
-        //Debug.Log("SSPoint on mouse down");
+        Debug.Log("SSPoint.OnMouseDown");
+        startTouchPoint = Input.mousePosition;
+
+        Scroller.instance.OnMouseDown();
+    }
+
+    private void OnMouseDrag()
+    {
+        Debug.Log("SSPoint.OnMouseDrag");
+        Vector2 currentTouchPoint = Input.mousePosition;
+
+        if (currentTouchPoint == startTouchPoint) // todo: AROUND the point
+        {
+            
+        }
+        else
+        {
+            Scroller.instance.OnMouseDrag();
+        }
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        Debug.Log("SSPoint.OnMouseUpAsButton");
+
+        if (Scroller.instance.IsDragging()) return;
 
         if (buildManager == null) return;//todo
 
@@ -38,7 +65,7 @@ public class SSPoint : MonoBehaviour
             // if this SS hasn't been selected (and the number of selected < max allowed), select it
             if (!this.selected)
             {
-                Debug.Log("this is not selected; TRY to select it");
+                //Debug.Log("this is not selected; TRY to select it");
 
                 if (buildManager.SelectSS(this))
                 {
@@ -54,7 +81,7 @@ public class SSPoint : MonoBehaviour
             }
             else // if this SS is already selected, deselect it
             {
-                Debug.Log("this is already selected; trying to deselect it");
+                //Debug.Log("this is already selected; trying to deselect it");
                 buildManager.DeselectSS(this);
                 this.selected = false;
                 // mark this square visually as not selected

@@ -4,7 +4,9 @@ public class Scroller : MonoBehaviour
 {
     // TODO this could and should be relative to the vertical offset (difference between screen height and field height)
     public float scrollSpeed = 0.005f;
-    
+
+    public static Scroller instance;
+
     private Camera cam;
     private float currentAspect;
 
@@ -21,6 +23,16 @@ public class Scroller : MonoBehaviour
         cam = Camera.main;
         
         SetUpRatio();
+    }
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Debug.Log("More than one Scroller in scene!");
+            return;
+        }
+        instance = this;
     }
 
     private void Update()
@@ -75,11 +87,25 @@ public class Scroller : MonoBehaviour
     
     public void OnMouseDown()
     {
+        Debug.Log("Scroller.OnMouseDown");
+
+        dragging = false;
         prevPoint = Input.mousePosition.y;
+
+        /*
+        // see if there's something below the scroller where the mouse is pointing
+        int layerMask = 1 << 8; // 9 is the scroller's layer
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y), Vector2.zero, 0, layerMask);
+        if (hit)
+        {
+            Debug.Log("name " + hit.transform.gameObject.name);
+        }
+        */
     }
 
-    private void OnMouseDrag()
+    public void OnMouseDrag()
     {
+        Debug.Log("Scroller.OnMouseDrag");
         if (cam == null) cam = Camera.main;
 
         // if camHeight > fieldHeight (i.e. there's extra vertical space), then don't enable drag!
@@ -114,5 +140,16 @@ public class Scroller : MonoBehaviour
         {
             cam.transform.Translate(new Vector2(0, moveDist));
         }
+    }
+
+    private void OnMouseUp()
+    {
+        Debug.Log("Scroller.OnMouseUp");
+        dragging = false;
+    }
+
+    public bool IsDragging()
+    {
+        return dragging;
     }
 }
