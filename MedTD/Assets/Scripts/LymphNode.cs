@@ -9,12 +9,15 @@ public class LymphNode : MonoBehaviour
     private Color defaultColor;
     private Color highlightedColor = Color.green;
 
-    private GameObject buildingMenu;
+    private TowerBlueprint towerBlueprint;
+    //private GameObject towerPrefab;
+    private GameObject towerObject;
+    private GameObject menu;
 
     //private Tower tower; // todo: can Tower be abstract? the different tower types could extend it
 
     private bool selected;
-    private bool vacant;
+    //private bool vacant;
 
     private Vector2 startTouchPoint;
 
@@ -23,8 +26,7 @@ public class LymphNode : MonoBehaviour
         buildManager = BuildManager.instance;
 
         selected = false;
-        vacant = true; // todo: when a tower is built here, this should be false
-
+        
         rend = GetComponent<SpriteRenderer>();
         // make sure the opacity of the selectedColor isn't 0
         if (highlightedColor.a < 0.1f) highlightedColor.a = 0.1f;
@@ -53,21 +55,22 @@ public class LymphNode : MonoBehaviour
             this.Select(); // could be redundant, if it's called from BuildManager too
 
             UIManager uim = buildManager.gameObject.GetComponent<UIManager>();
-            if (vacant) // if there's no tower here, show building menu
+            if (IsVacant()) // if there's no tower here, show building menu
             {
                 Debug.Log("vacant: showing building menu");
-                buildingMenu = uim.ShowBuildingMenu(this.transform);
+                menu = uim.ShowBuildingMenu(this.transform);
             }
             else // if there's a tower here, show other menu (sell, upgrade, rally point..)
             {
-                //uim.ShowOtherMenu();//todo
+                Debug.Log("not vacant: showing tower menu");
+                menu = uim.ShowTowerMenu(this.transform);
             }
         }
         // if selected, deselect it
         else
         {
             buildManager.DeselectLymphNode();
-            this.Deselect(); // redundant, called from BuildManager too
+            Deselect(); // redundant, called from BuildManager too
         }
     }
 
@@ -76,21 +79,51 @@ public class LymphNode : MonoBehaviour
         this.selected = true;
         HighlightOn();
     }
-    public void Deselect()
+    internal void Deselect()
     {
         this.selected = false;
         HighlightOff();
 
         // destroy building menu
-        if (buildingMenu != null)
+        if (menu != null)
         {
-            Destroy(buildingMenu);
+            Destroy(menu);
         }
     }
 
+    internal void BuildTower(TowerBlueprint _towerBlueprint)
+    {
+        this.towerBlueprint = _towerBlueprint;
+
+        GameObject towerPrefab = _towerBlueprint.level1Prefab;
+        Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
+        towerPosition.z = -0.3f;
+
+        towerObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
+        towerObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
+        
+        // deselect this lymph node (which also destroys the building menu)
+        Deselect(); // redundant, called from BuildManager too
+    }
+    internal void DestroyTower()
+    {
+        Destroy(towerObject);
+        towerBlueprint = null;
+        Deselect();
+    }
+
+    internal bool IsVacant()
+    {
+        return towerObject == null;
+    }
+
+    internal TowerBlueprint GetTowerBlueprint()
+    {
+        return towerBlueprint;
+    }
     internal GameObject GetBuildingMenu()
     {
-        return buildingMenu;
+        return menu;
     }
 
     internal void HighlightOff()

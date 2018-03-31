@@ -14,7 +14,7 @@ public class BuildManager : MonoBehaviour
     
     private static LymphNode selectedLymphNode;
     //private static Tower selectedTower;
-    private TowerBlueprint towerToBuild;
+    //private TowerBlueprint towerToBuild;
 
     //private bool selectingSS;
 
@@ -106,8 +106,7 @@ public class BuildManager : MonoBehaviour
 
         return success;
     }
-
-
+    
     internal void DeselectSS(SSPoint sSPoint)
     {
         //Debug.Log("BuildManager.DeselectSS");
@@ -141,12 +140,12 @@ public class BuildManager : MonoBehaviour
         return count;
     }
 
-    internal void Deselect()
-    {
-        //selectingSS = false;
-        //selectedSSPoint = null;
-        selectedLymphNode = null;
-    }
+    //internal void Deselect()
+    //{
+    //    //selectingSS = false;
+    //    //selectedSSPoint = null;
+    //    selectedLymphNode = null;
+    //}
 
     //public int GetSelectedSSCount()
     //{
@@ -189,51 +188,44 @@ public class BuildManager : MonoBehaviour
     }
 
 
-    internal void BuildTower1()
+    internal void BuildTower(TowerBlueprint towerBlueprint)
     {
-        if (selectedLymphNode == null)
+        if (selectedLymphNode == null || !selectedLymphNode.IsVacant())
         {
-            throw new Exception("Error! There's no selected lymph node.");
+            throw new Exception("Error! There's no selected lymph node or it is not vacant.");
+        }
+        
+        if (Player.HasEnoughMoney(towerBlueprint.level1Cost))
+        {
+            Debug.Log("building tower1 on the selected lymph node...");
+            Player.SubtractMoney(towerBlueprint.level1Cost);
+            selectedLymphNode.BuildTower(towerBlueprint);
+            DeselectLymphNode();
+        }
+        else
+        {
+            Debug.Log("not enough money; " + towerBlueprint.level1Cost + " needed, player has " + Player.Money);
+            // todo: not enough money, show info, maybe deselect, etc.
+        }
+    }
+    internal void SellTower()
+    {
+        if (selectedLymphNode == null || selectedLymphNode.IsVacant())
+        {
+            throw new Exception("Error! There's no selected lymph node or no tower on it.");
         }
 
-        // todo: build tower on selectedLymphNode
-
-        Debug.Log("building tower1 on the selected lymph node...");
-    }
-    internal void BuildTower2()
-    {
-        if (selectedLymphNode == null)
+        Debug.Log("Selling tower...");
+        TowerBlueprint towerToSell = selectedLymphNode.GetTowerBlueprint();
+        if (towerToSell == null)
         {
-            throw new Exception("Error! There's no selected lymph node.");
+            throw new Exception("Error! The tower blueprint for this lymph node is null.");
         }
 
-        // todo: build tower on selectedLymphNode
-
-        Debug.Log("building tower2 on the selected lymph node...");
+        Player.AddMoney(towerToSell.level1SellValue);
+        selectedLymphNode.DestroyTower();
+        DeselectLymphNode();
     }
-    internal void BuildTower3()
-    {
-        if (selectedLymphNode == null)
-        {
-            throw new Exception("Error! There's no selected lymph node.");
-        }
-
-        // todo: build tower on selectedLymphNode
-
-        Debug.Log("building tower3 on the selected lymph node...");
-    }
-    internal void BuildTower4()
-    {
-        if (selectedLymphNode == null)
-        {
-            throw new Exception("Error! There's no selected lymph node.");
-        }
-
-        // todo: build tower on selectedLymphNode
-
-        Debug.Log("building tower4 on the selected lymph node...");
-    }
-
 
 
 
