@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - StrategicPoints
+  - Level1
+  - Level2
+  - Level3
+  - Level4
+  - ButtonUpgradeTower
   layers:
   - Default
   - TransparentFX

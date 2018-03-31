@@ -63,7 +63,10 @@ public class LymphNode : MonoBehaviour
             else // if there's a tower here, show other menu (sell, upgrade, rally point..)
             {
                 Debug.Log("not vacant: showing tower menu");
-                menu = uim.ShowTowerMenu(this.transform);
+                int currLevel = currentLevelTowerObject.GetComponent<TowerLevel>().level;
+                int maxLevel = towerBlueprint.numberOfLevels;
+                bool upgradeable = currLevel < maxLevel;
+                menu = uim.ShowTowerMenu(this.transform, upgradeable);
             }
         }
         // if selected, deselect it

@@ -8,6 +8,8 @@ public class TowerBlueprint
     public GameObject level3Prefab;
     public GameObject level4Prefab;
 
+    public int numberOfLevels = 1;
+
     //public int level1Cost;
     //public int level2Cost;
     //public int level3Cost;

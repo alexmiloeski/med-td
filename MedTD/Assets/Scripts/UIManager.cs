@@ -102,11 +102,23 @@ public class UIManager : MonoBehaviour
         
         return buildingMenu;
     }
-    internal GameObject ShowTowerMenu(Transform lymphNode)
+    internal GameObject ShowTowerMenu(Transform lymphNode, bool upgradeable)
     {
         //Debug.Log("UIManager.ShowTowerMenu");
         GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
         towerMenu.transform.SetParent(uICanvas);
+
+        // if this tower is not upgradeable, don't show upgrade button
+        if (!upgradeable)
+        {
+            for (int i = 0; i < towerMenu.transform.childCount; i++)
+            {
+                if (towerMenu.transform.GetChild(i).tag.Equals("ButtonUpgradeTower"))
+                {
+                    towerMenu.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
+        }
 
         RectTransform towerMenuRT = towerMenu.GetComponent<RectTransform>();
         RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
