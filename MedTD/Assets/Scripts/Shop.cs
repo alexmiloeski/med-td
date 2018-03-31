@@ -17,6 +17,7 @@ public class Shop : MonoBehaviour
     public void ButtonSellTowerAction()
     {
         Debug.Log("ButtonSellTowerAction");
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
 
         buildManager.SellTower();
@@ -24,12 +25,19 @@ public class Shop : MonoBehaviour
     public void ButtonUpgradeTowerAction()
     {
         Debug.Log("ButtonUpgradeTowerAction");
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
+
+        // todo:
+        buildManager.UpgradeTower();
     }
     public void ButtonSetRallyPointAction()
     {
         Debug.Log("ButtonSetRallyPointAction");
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
+
+        // todo
     }
 
 
@@ -37,43 +45,41 @@ public class Shop : MonoBehaviour
     public void ButtonDoneWithSSAction()
     {
         //Debug.Log("Button done with ss");
-
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
-        if (!Scroller.instance.IsDragging())
-        {
-            buildManager.FinishWithSS();
-        }
+        
+        buildManager.FinishWithSS();
     }
     public void ButtonBuildTower1Action()
     {
         Debug.Log("Button build tower 1");
-        
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
-        if (!Scroller.instance.IsDragging())
-            buildManager.BuildTower(tower1);
+        
+        buildManager.BuildTower(tower1);
     }
     public void ButtonBuildTower2Action()
     {
         Debug.Log("Button build tower 2");
-
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
-        //if (!Scroller.instance.IsDragging())
-        //    buildManager.BuildTower(tower2);
+
+        //buildManager.BuildTower(tower2);
     }
     public void ButtonBuildTower3Action()
     {
         Debug.Log("Button build tower 3");
-
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
-        //if (!Scroller.instance.IsDragging())
-        //    buildManager.BuildTower(tower3);
+
+        //buildManager.BuildTower(tower3);
     }
     public void ButtonBuildTower4Action()
     {
         Debug.Log("Button build tower 4");
-
+        if (Scroller.instance.IsDragging()) return;
         if (buildManager == null) buildManager = BuildManager.instance;
-        //if (!Scroller.instance.IsDragging())
-        //    buildManager.BuildTower(tower4);
+
+        //buildManager.BuildTower(tower4);
     }
 }

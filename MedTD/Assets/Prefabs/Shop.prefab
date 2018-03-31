@@ -54,29 +54,14 @@ MonoBehaviour:
   tower1:
     level1Prefab: {fileID: 1364557980695860, guid: fa59afe8d5fbea545a5bc926c3c9f23f,
       type: 2}
-    level2Prefab: {fileID: 0}
-    level3Prefab: {fileID: 0}
-    level1Cost: 100
-    level2Cost: 0
-    level3Cost: 0
-    level1SellValue: 50
-    level2SellValue: 0
-    level3SellValue: 0
-    level1Damage: 100
-    level2Damage: 0
-    level3Damage: 0
-    ranged: 1
+    level2Prefab: {fileID: 1364557980695860, guid: df0b006913e17a54aa6cd422256aac65,
+      type: 2}
+    level3Prefab: {fileID: 1364557980695860, guid: b5c156c96133a314089d283012e8d76d,
+      type: 2}
+    level4Prefab: {fileID: 1364557980695860, guid: bbf2c02ee58e9774782289c443bbf137,
+      type: 2}
   tower2:
     level1Prefab: {fileID: 0}
     level2Prefab: {fileID: 0}
     level3Prefab: {fileID: 0}
-    level1Cost: 0
-    level2Cost: 0
-    level3Cost: 0
-    level1SellValue: 0
-    level2SellValue: 0
-    level3SellValue: 0
-    level1Damage: 0
-    level2Damage: 0
-    level3Damage: 0
-    ranged: 1
+    level4Prefab: {fileID: 0}

@@ -194,17 +194,19 @@ public class BuildManager : MonoBehaviour
         {
             throw new Exception("Error! There's no selected lymph node or it is not vacant.");
         }
+
+        TowerLevel baseLevel = towerBlueprint.GetBaseLevel();
         
-        if (Player.HasEnoughMoney(towerBlueprint.level1Cost))
+        if (Player.HasEnoughMoney(baseLevel.cost))
         {
             Debug.Log("building tower1 on the selected lymph node...");
-            Player.SubtractMoney(towerBlueprint.level1Cost);
+            Player.SubtractMoney(baseLevel.cost);
             selectedLymphNode.BuildTower(towerBlueprint);
             DeselectLymphNode();
         }
         else
         {
-            Debug.Log("not enough money; " + towerBlueprint.level1Cost + " needed, player has " + Player.Money);
+            Debug.Log("not enough money; " + baseLevel.cost + " needed, player has " + Player.Money);
             // todo: not enough money, show info, maybe deselect, etc.
         }
     }
@@ -216,17 +218,52 @@ public class BuildManager : MonoBehaviour
         }
 
         Debug.Log("Selling tower...");
-        TowerBlueprint towerToSell = selectedLymphNode.GetTowerBlueprint();
+        //TowerBlueprint towerToSell = selectedLymphNode.GetTowerBlueprint();
+        TowerLevel towerToSell = selectedLymphNode.GetTowerLevel();
         if (towerToSell == null)
         {
             throw new Exception("Error! The tower blueprint for this lymph node is null.");
         }
 
-        Player.AddMoney(towerToSell.level1SellValue);
+        //Player.AddMoney(towerToSell.level1SellValue);
+        Player.AddMoney(towerToSell.sellValue);
         selectedLymphNode.DestroyTower();
         DeselectLymphNode();
     }
+    internal void UpgradeTower()
+    {
+        Debug.Log("BuildManager.UpgradeTower");
 
+        if (selectedLymphNode == null || selectedLymphNode.IsVacant())
+        {
+            throw new Exception("Error! There's no selected lymph node or no tower on it.");
+        }
+                
+        int currentLevel = selectedLymphNode.GetTowerLevel().level;
+        Debug.Log("curlvl = " + currentLevel);
+        GameObject nextLevelTowerPrefab = selectedLymphNode.GetTowerBlueprint().GetNextLevelPrefab(currentLevel);
+        if (nextLevelTowerPrefab == null)
+        {
+            // top level
+            Debug.Log("tower already at top level");
+            // todo: this should be checked earlier and the upgrade button shouldn't be active
+            return;
+        }
+
+        int nextLevelCost = nextLevelTowerPrefab.GetComponent<TowerLevel>().cost;
+        if (Player.HasEnoughMoney(nextLevelCost))
+        {
+            Debug.Log("upgrading tower1 to lvl " + nextLevelTowerPrefab.GetComponent<TowerLevel>().level + " on the selected lymph node...");
+            Player.SubtractMoney(nextLevelCost);
+            selectedLymphNode.UpgradeTower(nextLevelTowerPrefab);
+            DeselectLymphNode(); // todo: design decision
+        }
+        else
+        {
+            Debug.Log("not enough money; " + nextLevelCost + " needed, player has " + Player.Money);
+            // todo: not enough money, show info, maybe deselect, etc.
+        }
+    }
 
 
     //public bool IsSSSelected()

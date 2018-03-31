@@ -20,9 +20,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4549199124100168}
   - component: {fileID: 212208300386307692}
+  - component: {fileID: 114071612443669222}
   m_Layer: 0
-  m_Name: Tower1
-  m_TagString: Untagged
+  m_Name: Tower1.1
+  m_TagString: Level1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40,6 +41,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114071612443669222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1364557980695860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fedb28a153400da4e9ed16984b7901e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 1
+  cost: 100
+  sellValue: 60
+  damage: 100
 --- !u!212 &212208300386307692
 SpriteRenderer:
   m_ObjectHideFlags: 1

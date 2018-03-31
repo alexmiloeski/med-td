@@ -11,7 +11,7 @@ public class LymphNode : MonoBehaviour
 
     private TowerBlueprint towerBlueprint;
     //private GameObject towerPrefab;
-    private GameObject towerObject;
+    private GameObject currentLevelTowerObject;
     private GameObject menu;
 
     //private Tower tower; // todo: can Tower be abstract? the different tower types could extend it
@@ -93,30 +93,49 @@ public class LymphNode : MonoBehaviour
 
     internal void BuildTower(TowerBlueprint _towerBlueprint)
     {
-        this.towerBlueprint = _towerBlueprint;
+        towerBlueprint = _towerBlueprint;
 
         GameObject towerPrefab = _towerBlueprint.level1Prefab;
         Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
         towerPosition.z = -0.3f;
 
-        towerObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
-        towerObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
+        currentLevelTowerObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
+        currentLevelTowerObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
+        //towerObject.AddComponent<TowerLevel>();
+        //TowerLevel towerLevel = towerObject.GetComponent<TowerLevel>();
+        //towerLevel.SetBlueprint(towerBlueprint);
+
         
         // deselect this lymph node (which also destroys the building menu)
         Deselect(); // redundant, called from BuildManager too
     }
     internal void DestroyTower()
     {
-        Destroy(towerObject);
+        Destroy(currentLevelTowerObject);
         towerBlueprint = null;
         Deselect();
+    }
+    internal void UpgradeTower(GameObject nextLevelTowerPrefab)
+    {
+        Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
+        towerPosition.z = -0.3f;
+
+        // destroy the current tower before creating the next level tower
+        Destroy(currentLevelTowerObject);
+
+        currentLevelTowerObject = Instantiate(nextLevelTowerPrefab, towerPosition, transform.rotation);
+        currentLevelTowerObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
     }
 
     internal bool IsVacant()
     {
-        return towerObject == null;
+        return currentLevelTowerObject == null;
     }
 
+    internal TowerLevel GetTowerLevel()
+    {
+        return currentLevelTowerObject.GetComponent<TowerLevel>();
+    }
     internal TowerBlueprint GetTowerBlueprint()
     {
         return towerBlueprint;
