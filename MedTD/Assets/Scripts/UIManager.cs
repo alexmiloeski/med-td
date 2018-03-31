@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     private bool interruptXAtTouch = false;
     private bool interruptTextMaxSSSelected = false;
 
+
     private void Awake()
     {
         if (instance != null)
@@ -40,6 +41,27 @@ public class UIManager : MonoBehaviour
         textMaxSSSelected.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
     }
 
+
+    //internal void SelectButtonBuildTower1()
+    //{
+    //    Debug.Log("SelectButtonBuildTower1");
+    //    BuildManager buildManager = BuildManager.instance;
+    //    GameObject menu = buildManager.GetSelectedLymphNode().GetBuildingMenu();
+    //    for (int i = 0; i < menu.transform.childCount; i++)
+    //    {
+    //        //if (menu.transform.GetChild(i).tag.Equals("ButtonUpgradeTower"))
+    //        if (menu.transform.GetChild(i).name.Equals("ButtonBuildTower1"))
+    //        {
+    //            Debug.Log("found the button!");
+    //            GameObject buttonBuildTower1 = menu.transform.GetChild(i).gameObject;
+    //            buttonBuildTower1.tag = "Selected";
+    //            Image image = buttonBuildTower1.GetComponent<Image>();
+    //            image.sprite = spriteCheckmark;
+    //            Text text = buttonBuildTower1.transform.GetChild(0).GetComponent<Text>();
+    //            text.text = "";
+    //        }
+    //    }
+    //}
 
     internal void UpdateTextHealth()
     {
