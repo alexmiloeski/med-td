@@ -8,7 +8,6 @@ public class SSPoint : MonoBehaviour
     private SpriteRenderer rend;
     private Color invisibleColor;
     private Color highlightedColor = Color.white;
-    //private LymphNode lymphNode;
     
     private bool selected;
 
@@ -30,8 +29,6 @@ public class SSPoint : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
-        //Debug.Log("SSPoint.OnMouseUpAsButton");
-
         // if there's a ui element above, don't do anything
         if (EventSystem.current.IsPointerOverGameObject())
         {
@@ -48,27 +45,17 @@ public class SSPoint : MonoBehaviour
             // if this SS hasn't been selected (and the number of selected < max allowed), select it
             if (!this.selected)
             {
-                //Debug.Log("this is not selected; TRY to select it");
-
                 if (buildManager.SelectSS(this))
-                {
+                {   // this SS has been successfully selected
                     this.selected = true;
-                    // mark this square visually as selected
-                    HighlightOn();
-                }
-                else
-                {
-                    // todo: inform that they can't select more than N ss
-                    //Debug.Log("Max ss selected, yo");
+                    HighlightOn(); // mark this square visually as selected
                 }
             }
             else // if this SS is already selected, deselect it
             {
-                //Debug.Log("this is already selected; trying to deselect it");
                 buildManager.DeselectSS(this);
                 this.selected = false;
-                // mark this square visually as not selected
-                HighlightOff();
+                HighlightOff(); // mark this square visually as not selected
             }
         }
     }

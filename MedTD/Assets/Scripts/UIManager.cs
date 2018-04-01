@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     public GameObject buildingMenuPrefab;
     public GameObject towerMenuPrefab;
 
-    private GameObject xGO;
+    private GameObject xSpriteObject;
     private bool interruptXAtTouch = false;
     private bool interruptTextMaxSSSelected = false;
 
@@ -41,28 +41,7 @@ public class UIManager : MonoBehaviour
         textMaxSSSelected.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
     }
 
-
-    //internal void SelectButtonBuildTower1()
-    //{
-    //    Debug.Log("SelectButtonBuildTower1");
-    //    BuildManager buildManager = BuildManager.instance;
-    //    GameObject menu = buildManager.GetSelectedLymphNode().GetBuildingMenu();
-    //    for (int i = 0; i < menu.transform.childCount; i++)
-    //    {
-    //        //if (menu.transform.GetChild(i).tag.Equals("ButtonUpgradeTower"))
-    //        if (menu.transform.GetChild(i).name.Equals("ButtonBuildTower1"))
-    //        {
-    //            Debug.Log("found the button!");
-    //            GameObject buttonBuildTower1 = menu.transform.GetChild(i).gameObject;
-    //            buttonBuildTower1.tag = "Selected";
-    //            Image image = buttonBuildTower1.GetComponent<Image>();
-    //            image.sprite = spriteCheckmark;
-    //            Text text = buttonBuildTower1.transform.GetChild(0).GetComponent<Text>();
-    //            text.text = "";
-    //        }
-    //    }
-    //}
-
+    
     internal void UpdateTextHealth()
     {
         textHealth.text = "Health: " + Player.Health;
@@ -107,12 +86,17 @@ public class UIManager : MonoBehaviour
         Destroy(buttonDoneWithSS.gameObject);
     }
 
+    /// <summary> Shows the building menu (see <see cref="buildingMenuPrefab"/>) at the same
+    /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called by a
+    /// LymphNode object when it is clicked without a tower on it. </summary>
     internal GameObject ShowBuildingMenu(Transform lymphNode)
     {
-        //Debug.Log("UIManager.ShowBuildingMenu");
         GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
         buildingMenu.transform.SetParent(uICanvas);
         
+        // UI elements and other scene objects use different coordinate systems;
+        // in order to position the menu where the lymph node is (on the screen)...
+        // ...we have to do some conversions between World and Viewport
         RectTransform buildingMenuRT = buildingMenu.GetComponent<RectTransform>();
         RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
         Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
@@ -124,24 +108,30 @@ public class UIManager : MonoBehaviour
         
         return buildingMenu;
     }
+    /// <summary> Shows the tower menu (see <see cref="towerMenuPrefab"/>) at the same
+    /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called
+    /// by a LymphNode object when it is clicked with a tower on it. </summary>
     internal GameObject ShowTowerMenu(Transform lymphNode, bool upgradeable)
     {
-        //Debug.Log("UIManager.ShowTowerMenu");
         GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
         towerMenu.transform.SetParent(uICanvas);
 
-        // if this tower is not upgradeable, don't show upgrade button
+        // if this tower is not upgradeable (i.e. the current tower...
+        // ...level is the last one), don't show the "upgrade" button
         if (!upgradeable)
         {
             for (int i = 0; i < towerMenu.transform.childCount; i++)
             {
-                if (towerMenu.transform.GetChild(i).tag.Equals("ButtonUpgradeTower"))
+                if (towerMenu.transform.GetChild(i).CompareTag("ButtonUpgradeTower"))
                 {
                     towerMenu.transform.GetChild(i).gameObject.SetActive(false);
                 }
             }
         }
 
+        // UI elements and other scene objects use different coordinate systems;
+        // in order to position the menu where the lymph node is (on the screen)...
+        // ...we have to do some conversions between World and Viewport
         RectTransform towerMenuRT = towerMenu.GetComponent<RectTransform>();
         RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
         Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
@@ -154,16 +144,13 @@ public class UIManager : MonoBehaviour
         return towerMenu;
     }
 
+    /// <summary> Shows an X at the touch position for <paramref name="delay"/> seconds. </summary>
+    /// <param name="delay">Time in seconds that the X should stay on the screen.</param>
     internal void FlashXAtTouch(float delay)
     {
-        ShowXAtTouch(delay);
-    }
-    private void ShowXAtTouch(float delay)
-    {
-        //Debug.Log("ShowXAtTouch");
-        if (xGO != null)
+        if (xSpriteObject != null)
         {
-            Destroy(xGO);
+            Destroy(xSpriteObject);
             interruptXAtTouch = true;
         }
 
@@ -171,19 +158,21 @@ public class UIManager : MonoBehaviour
         mousePosWorld.z = -2f;
         var xSprite = Resources.Load<Sprite>("Sprites/xSprite");
 
-        xGO = new GameObject();
-        xGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
-        xGO.AddComponent<SpriteRenderer>().sprite = xSprite;
-        
+        xSpriteObject = new GameObject();
+        xSpriteObject.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
+        xSpriteObject.AddComponent<SpriteRenderer>().sprite = xSprite;
+
         StartCoroutine(DestroyXAtTouch(delay));
     }
     private IEnumerator DestroyXAtTouch(float delay)
     {
-        // destroy here
+        // wait for 'delay' seconds before destroying the X object
         yield return new WaitForSeconds(delay);
+        // if another click has triggered the X to show AFTER this instance
+        // ... of this method was called, don't destroy the X object;
         if (!interruptXAtTouch)
         {
-            Destroy(xGO);
+            Destroy(xSpriteObject);
         }
         else interruptXAtTouch = false;
     }

@@ -4568,8 +4568,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lymphNodePrefab: {fileID: 4207219894400406, guid: 11343f41f04d26c48a91bc0bddb1ab4f,
     type: 2}
-  sSPointContainer: {fileID: 123073212}
-  numberOfLymphNodes: 3
+  sSContainer: {fileID: 123073212}
+  numberOfLymphNodes: 4
 --- !u!114 &1378128244
 MonoBehaviour:
   m_ObjectHideFlags: 0

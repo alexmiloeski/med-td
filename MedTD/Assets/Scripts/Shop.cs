@@ -1,21 +1,21 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+
+public enum SelectedAction { Nothing, BuildTower1, BuildTower2, BuildTower3, BuildTower4, SellTower, UpgradeTower };
 
 public class Shop : MonoBehaviour
 {
     public TowerBlueprint tower1;
     public TowerBlueprint tower2;
 
+    // needed for changing button appearance when "selected"
     public Sprite spriteButtonRegular;
     public Sprite spriteCheckmark;
-
-    private const string tagSelected = "Selected";
-    private const string tagUnselected = "Untagged";
-
+    
     private BuildManager buildManager;
-    //private UIManager uIManager;
 
+    /// <summary> Reference(s) to a button's state before it's been clicked and changed to "selected";
+    /// Used for changing it back to its original state when another button becomes "selected" </summary>
     private GameObject tempButton;
     private string tempButtonText;
     private Sprite tempButtonSprite;
@@ -24,131 +24,41 @@ public class Shop : MonoBehaviour
     {
         buildManager = BuildManager.instance;
     }
-
-    // make sure button actions aren't called when dragging by checking if Scroller.IsDragging
+    
     public void ButtonDoneWithSSAction()
     {
-        //Debug.Log("Button done with ss");
-        if (Scroller.instance.IsDragging()) return;
+        if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
         if (buildManager == null) buildManager = BuildManager.instance;
         
         buildManager.FinishWithSS();
     }
     public void ButtonBuildTower1Action(GameObject buttonObject)
     {
-        Debug.Log("Button build tower 1");
-        if (Scroller.instance.IsDragging()) return;
-
-        // first change button image to checkmark, then after clicking again - build
-        if (!buttonObject.CompareTag(tagSelected))
-        {
-            // if there was another button that was previously selected, reset its values
-            ResetPreviouslySelectedButton();
-
-            // change this button's values so as to appear "selected"
-            SetButtonAsSelected(buttonObject);
-        }
-        else
-        {
-            // reset any previously selected buttons
-            tempButton = null;
-
-            if (buildManager == null) buildManager = BuildManager.instance;
-            buildManager.BuildTower(tower1);
-        }
+        ButtonAction(buttonObject, SelectedAction.BuildTower1, tower1);
     }
     public void ButtonBuildTower2Action(GameObject buttonObject)
     {
-        Debug.Log("Button build tower 2");
-        if (Scroller.instance.IsDragging()) return;
-
-        // first change button image to checkmark, then after clicking again - build
-        if (!buttonObject.CompareTag(tagSelected))
-        {
-            // if there was another button that was previously selected, reset its values
-            ResetPreviouslySelectedButton();
-
-            // change this button's values so as to appear "selected"
-            SetButtonAsSelected(buttonObject);
-        }
-        else
-        {
-            // reset any previously selected buttons
-            tempButton = null;
-
-            if (buildManager == null) buildManager = BuildManager.instance;
-            buildManager.BuildTower(tower2);
-        }
+        ButtonAction(buttonObject, SelectedAction.BuildTower2, tower2);
     }
-    public void ButtonBuildTower3Action()
+    public void ButtonBuildTower3Action(GameObject buttonObject)
     {
-        Debug.Log("Button build tower 3");
-        if (Scroller.instance.IsDragging()) return;
-        if (buildManager == null) buildManager = BuildManager.instance;
-
-        //buildManager.BuildTower(tower3);
+        //ButtonAction(buttonObject, SelectedAction.BuildTower2, tower3);
     }
-    public void ButtonBuildTower4Action()
+    public void ButtonBuildTower4Action(GameObject buttonObject)
     {
-        Debug.Log("Button build tower 4");
-        if (Scroller.instance.IsDragging()) return;
-        if (buildManager == null) buildManager = BuildManager.instance;
-
-        //buildManager.BuildTower(tower4);
+        //ButtonAction(buttonObject, SelectedAction.BuildTower2, tower4);
     }
     public void ButtonSellTowerAction(GameObject buttonObject)
     {
-        Debug.Log("ButtonSellTowerAction");
-        if (Scroller.instance.IsDragging()) return;
-
-        // first change button image to checkmark, then after clicking again - build
-        if (!buttonObject.CompareTag(tagSelected))
-        {
-            // if there was another button that was previously selected, reset its values
-            ResetPreviouslySelectedButton();
-
-            // change this button's values so as to appear "selected"
-            SetButtonAsSelected(buttonObject);
-        }
-        else
-        {
-            // reset any previously selected buttons
-            tempButton = null;
-
-            if (buildManager == null) buildManager = BuildManager.instance;
-            buildManager.SellTower();
-        }
+        ButtonAction(buttonObject, SelectedAction.SellTower, null);
     }
     public void ButtonUpgradeTowerAction(GameObject buttonObject)
     {
-        Debug.Log("ButtonUpgradeTowerAction");
-        if (Scroller.instance.IsDragging()) return;
-
-        // first change button image to checkmark, then after clicking again - build
-        if (!buttonObject.CompareTag(tagSelected))
-        {
-            // if there was another button that was previously selected, reset its values
-            ResetPreviouslySelectedButton();
-
-            // change this button's values so as to appear "selected"
-            SetButtonAsSelected(buttonObject);
-        }
-        else
-        {
-            // reset any previously selected buttons
-            tempButton = null;
-
-            if (buildManager == null) buildManager = BuildManager.instance;
-            buildManager.UpgradeTower();
-        }
+        ButtonAction(buttonObject, SelectedAction.UpgradeTower, null);
     }
     public void ButtonSetRallyPointAction()
     {
-        Debug.Log("ButtonSetRallyPointAction");
-        if (Scroller.instance.IsDragging()) return;
-        if (buildManager == null) buildManager = BuildManager.instance;
-
-        // todo
+        //ButtonAction(null, SelectedAction.SetRallyPoint, null);
     }
 
     private void SetButtonAsSelected(GameObject buttonObject)
@@ -162,7 +72,6 @@ public class Shop : MonoBehaviour
         if (text != null) tempButtonText = text.text;
 
         // change this button's values so as to appear "selected"
-        buttonObject.tag = tagSelected;
         if (image != null) image.sprite = spriteCheckmark;
         if (text != null) text.text = "";
     }
@@ -170,11 +79,32 @@ public class Shop : MonoBehaviour
     {
         if (tempButton != null)
         {
-            tempButton.tag = tagUnselected;
             if (tempButton.GetComponent<Image>() != null)
                 tempButton.GetComponent<Image>().sprite = tempButtonSprite;
             if (tempButton.transform.GetChild(0) != null && tempButton.transform.GetChild(0).GetComponent<Text>() != null)
                 tempButton.transform.GetChild(0).GetComponent<Text>().text = tempButtonText;
+        }
+    }
+    private void ButtonAction(GameObject buttonObject, SelectedAction sa, TowerBlueprint tower)
+    {
+        if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
+
+        if (buildManager == null) buildManager = BuildManager.instance;
+        if (buildManager.GetSelectedAction() == sa)
+        {
+            tempButton = null;
+
+            buildManager.DoSelectedAction(tower);
+            // destroy the menu; deselecting the lymph node also destroys the menu, so that works fine
+            // todo: if a design decision is made to not deselect the node after starting the action,
+            // then this has to be redone, because not destroying the menu leaves the selected button
+            buildManager.DeselectLymphNode();
+        }
+        else
+        {
+            ResetPreviouslySelectedButton();
+            SetButtonAsSelected(buttonObject);
+            buildManager.SelectAction(sa);
         }
     }
 }

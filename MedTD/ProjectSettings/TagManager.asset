@@ -10,7 +10,6 @@ TagManager:
   - Level3
   - Level4
   - ButtonUpgradeTower
-  - Selected
   layers:
   - Default
   - TransparentFX

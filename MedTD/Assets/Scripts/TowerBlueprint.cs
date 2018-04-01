@@ -9,28 +9,19 @@ public class TowerBlueprint
     public GameObject level4Prefab;
 
     public int numberOfLevels = 1;
-
-    //public int level1Cost;
-    //public int level2Cost;
-    //public int level3Cost;
-
-    //public int level1SellValue;
-    //public int level2SellValue;
-    //public int level3SellValue;
-
-    //public float level1Damage;
-    //public float level2Damage;
-    //public float level3Damage;
-
+    
     //public bool ranged = true;
 
+    /// <summary> Just returns the prefab for the first level of this tower. </summary>
     internal TowerLevel GetBaseLevel()
     {
         return level1Prefab.GetComponent<TowerLevel>();
     }
-    internal GameObject GetNextLevelPrefab(int curLevel)
+
+    /// <summary> Returns the prefab for the level that is 1 greater than <paramref name="currentLevel"/> of this tower. </summary>
+    internal GameObject GetNextLevelPrefab(int currentLevel)
     {
-        switch (curLevel)
+        switch (currentLevel)
         {
             case 1:
                 return level2Prefab;
@@ -41,17 +32,4 @@ public class TowerBlueprint
         }
         return null;
     }
-    //internal GameObject GetTowerPrefabLevel(int level)
-    //{
-    //    switch (level)
-    //    {
-    //        case 1:
-    //            return level1Prefab;
-    //        case 2:
-    //            return level2Prefab;
-    //        case 3:
-    //            return level3Prefab;
-    //    }
-    //    return null;
-    //}
 }

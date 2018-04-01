@@ -10,15 +10,11 @@ public class LymphNode : MonoBehaviour
     private Color highlightedColor = Color.green;
 
     private TowerBlueprint towerBlueprint;
-    //private GameObject towerPrefab;
     private GameObject currentLevelTowerObject;
     private GameObject menu;
-
-    //private Tower tower; // todo: can Tower be abstract? the different tower types could extend it
-
+    
     private bool selected;
-    //private bool vacant;
-
+    
     private Vector2 startTouchPoint;
 
     void Start()
@@ -31,15 +27,12 @@ public class LymphNode : MonoBehaviour
         // make sure the opacity of the selectedColor isn't 0
         if (highlightedColor.a < 0.1f) highlightedColor.a = 0.1f;
         
-
         // get this lymph node's default renderer color, for disabled its highlight
         defaultColor = rend.color;
     }
     
     private void OnMouseUpAsButton()
     {
-        Debug.Log("LymphNode.OnMouseUpAsButton");
-
         // if there's a ui element above, don't do anything
         if (EventSystem.current.IsPointerOverGameObject())
         {
@@ -57,12 +50,12 @@ public class LymphNode : MonoBehaviour
             UIManager uim = buildManager.gameObject.GetComponent<UIManager>();
             if (IsVacant()) // if there's no tower here, show building menu
             {
-                Debug.Log("vacant: showing building menu");
+                // vacant: show building menu
                 menu = uim.ShowBuildingMenu(this.transform);
             }
             else // if there's a tower here, show other menu (sell, upgrade, rally point..)
             {
-                Debug.Log("not vacant: showing tower menu");
+                // not vacant: show tower menu
                 int currLevel = currentLevelTowerObject.GetComponent<TowerLevel>().level;
                 int maxLevel = towerBlueprint.numberOfLevels;
                 bool upgradeable = currLevel < maxLevel;
@@ -104,7 +97,8 @@ public class LymphNode : MonoBehaviour
 
         currentLevelTowerObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
         currentLevelTowerObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
-        //towerObject.AddComponent<TowerLevel>();
+
+        // todo: it might be useful to have a reference to the TowerBlueprint object from the TowerLevel object
         //TowerLevel towerLevel = towerObject.GetComponent<TowerLevel>();
         //towerLevel.SetBlueprint(towerBlueprint);
 

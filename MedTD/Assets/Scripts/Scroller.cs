@@ -54,14 +54,12 @@ public class Scroller : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
-            //Debug.Log("mouse button 0 down");
             totalDrag = 0f;
             prevPoint = Input.mousePosition.y;
             dragging = false;
         }
         else if (Input.GetMouseButton(0))
         {
-            //Debug.Log("mouse button 0 drag");
             if (cam == null) cam = Camera.main;
 
             // if camHeight > fieldHeight (i.e. there's extra vertical space), then don't enable drag!
@@ -108,7 +106,6 @@ public class Scroller : MonoBehaviour
                 LymphNode selLN = buildManager.GetSelectedLymphNode();
                 if (selLN != null)
                 {
-                    //Debug.Log("there's a lymph node selected");
                     GameObject buildingMenu = selLN.GetBuildingMenu();
                     if (buildingMenu != null)
                     {   // there's a building menu shown; move the menu
@@ -126,16 +123,12 @@ public class Scroller : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            //Debug.Log("mouse button 0 up");
-            
             dragging = false;
         }
     }
 
     private void OnMouseUpAsButton()
     {
-        //Debug.Log("Scroller.OnMouseUpAsButton");
-
         // if there's a ui element above, don't do anything
         if (EventSystem.current.IsPointerOverGameObject())
         {
@@ -154,7 +147,6 @@ public class Scroller : MonoBehaviour
             else // still selecting SS
             {
                 // this is a click outside any valid strategic sites
-                Debug.Log("INVALID STRATEGIC SITE!");
                 UIManager uim = buildManager.gameObject.GetComponent<UIManager>();
                 uim.FlashXAtTouch(0.5f);
             }

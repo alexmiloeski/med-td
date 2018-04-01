@@ -9,21 +9,9 @@ public class TowerLevel : MonoBehaviour
     
     private TowerBlueprint blueprint;
     
+    // todo: this might be useful
     internal void SetBlueprint(TowerBlueprint blueprint)
     {
         this.blueprint = blueprint;
     }
-
-    private void Start()
-    {
-        Debug.Log("TowerLevel.Start");
-    
-    }
-
-    
-    
-    //internal Tower GetTower()
-    //{
-    //    return blueprint;
-    //}
 }
