@@ -35,7 +35,8 @@ public class SSPoint : MonoBehaviour
             return;
         }
 
-        if (Scroller.instance.IsDragging()) return;
+        //if (Scroller.instance.IsDragging()) return;
+        if (Scroller.IsDragging()) return;
 
         if (buildManager == null) return;//todo
 

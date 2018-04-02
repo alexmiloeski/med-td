@@ -6,19 +6,20 @@ public class Scroller : MonoBehaviour
     // TODO this could and should be relative to the vertical offset (difference between screen height and field height)
     public float scrollSpeed = 0.018f;
     public Transform uICanvas;
+    private static Transform staticCanvas;
 
-    public static Scroller instance;
+    //public static Scroller instance;
 
-    private Camera cam;
-    private float currentAspect;
+    private static Camera cam;
+    private static float currentAspect;
 
-    private float totalDrag;
-    private float prevPoint;
-    private float newPoint;
-    private float camLowerBound;
-    private float camUpperBound;
+    private static float totalDrag;
+    private static float prevPoint;
+    private static float newPoint;
+    private static float camLowerBound;
+    private static float camUpperBound;
 
-    private bool dragging;
+    private static bool dragging;
 
     // total drag allowed before the scrolling starts; useful for clicking buttons
     private const float totalDragAllowed = 5f;
@@ -33,12 +34,7 @@ public class Scroller : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null)
-        {
-            Debug.Log("More than one Scroller in scene!");
-            return;
-        }
-        instance = this;
+        staticCanvas = uICanvas;
     }
 
     private void Update()
@@ -98,28 +94,9 @@ public class Scroller : MonoBehaviour
                 cam.transform.Translate(new Vector2(0, moveDist));
             }
 
-            
-            // move any build menus along with the cam
-            BuildManager buildManager = BuildManager.instance;
-            if (buildManager.IsFinishedWithSS())
-            {
-                LymphNode selLN = buildManager.GetSelectedLymphNode();
-                if (selLN != null)
-                {
-                    GameObject buildingMenu = selLN.GetBuildingMenu();
-                    if (buildingMenu != null)
-                    {   // there's a building menu shown; move the menu
-                        RectTransform buildingMenuRT = buildingMenu.GetComponent<RectTransform>();
-                        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
-                        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(selLN.transform.position);
-                        Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
-                        Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
 
-                        // set the position and remove the screen offset
-                        buildingMenuRT.localPosition = proportionalPosition - uiOffset;
-                    }
-                }
-            }
+            // move any build menus along with the cam
+            MoveMenuWithCam();
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -153,6 +130,42 @@ public class Scroller : MonoBehaviour
         }
     }
 
+    public static void ScrollToTop()
+    {
+        cam.transform.position = new Vector3(cam.transform.position.x, camUpperBound, cam.transform.position.z);
+        MoveMenuWithCam();
+    }
+    public static void ScrollToBottom()
+    {
+        cam.transform.position = new Vector3(cam.transform.position.x, camLowerBound, cam.transform.position.z);
+        MoveMenuWithCam();
+    }
+
+    private static void MoveMenuWithCam()
+    {
+        // move any build menus along with the cam
+        BuildManager buildManager = BuildManager.instance;
+        if (buildManager.IsFinishedWithSS())
+        {
+            LymphNode selLN = buildManager.GetSelectedLymphNode();
+            if (selLN != null)
+            {
+                GameObject buildingMenu = selLN.GetBuildingMenu();
+                if (buildingMenu != null)
+                {   // there's a building menu shown; move the menu
+                    RectTransform buildingMenuRT = buildingMenu.GetComponent<RectTransform>();
+                    RectTransform canvasRT = staticCanvas.GetComponent<RectTransform>();
+                    Vector2 viewportPosition = Camera.main.WorldToViewportPoint(selLN.transform.position);
+                    Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
+                    Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
+
+                    // set the position and remove the screen offset
+                    buildingMenuRT.localPosition = proportionalPosition - uiOffset;
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Saves the aspect ratio value;
     /// Resizes the camera so it fits the field's width;
@@ -165,7 +178,7 @@ public class Scroller : MonoBehaviour
 
         // save the current aspect ratio
         currentAspect = cam.aspect;
-
+        
         // get the width of the field and use it to calculate the camera width (which is exactly half that)
         float scrollFieldWidth = this.GetComponent<BoxCollider2D>().bounds.size.x;
         float cameraWidth = scrollFieldWidth / 2;
@@ -192,7 +205,7 @@ public class Scroller : MonoBehaviour
         camUpperBound = cam.transform.position.y + diffTop;
     }
 
-    internal bool IsDragging()
+    internal static bool IsDragging()
     {
         return dragging;
     }

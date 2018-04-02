@@ -45,7 +45,8 @@ public class Shop : MonoBehaviour
     
     public void ButtonDoneWithSSAction()
     {
-        if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
+        //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
+        if (Scroller.IsDragging()) return; // don't do button action while scrolling
         if (buildManager == null) buildManager = BuildManager.instance;
         
         buildManager.FinishWithSS();
@@ -111,7 +112,8 @@ public class Shop : MonoBehaviour
     }
     private void ButtonAction(GameObject buttonObject, SelectedAction sa, TowerBlueprint tower)
     {
-        if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
+        //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
+        if (Scroller.IsDragging()) return; // don't do button action while scrolling
 
         // destroy the info panel, if it was present
         if (infoPanel != null)

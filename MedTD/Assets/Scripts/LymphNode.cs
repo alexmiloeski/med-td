@@ -39,7 +39,8 @@ public class LymphNode : MonoBehaviour
             return;
         }
 
-        if (Scroller.instance.IsDragging()) return;
+        //if (Scroller.instance.IsDragging()) return;
+        if (Scroller.IsDragging()) return;
 
         // if not selected, select it
         if (!selected)
@@ -57,6 +58,28 @@ public class LymphNode : MonoBehaviour
             {
                 // not vacant: show tower menu
                 menu = uim.ShowTowerMenu(this.transform, towerBlueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
+            }
+
+
+            // if menu is too low or too high, scroll the camera
+            int scrH = Screen.height;
+            RectTransform menuRT = menu.GetComponent<RectTransform>();
+            float menuCenterY = menuRT.position.y;
+            float menuHalfHeight = menuRT.sizeDelta.y / 2;
+            
+            float menuTop = menuCenterY + menuHalfHeight;
+            float menuBottom = menuCenterY - menuHalfHeight;
+            
+            float spaceToBottom = 0 + menuBottom;
+            float spaceToTop = scrH - menuTop;
+
+            if (spaceToBottom < 10)
+            {   // scroll to bottom
+                Scroller.ScrollToBottom();
+            }
+            else if (spaceToTop < 10)
+            {   // scroll to top
+                Scroller.ScrollToTop();
             }
         }
         // if selected, deselect it
