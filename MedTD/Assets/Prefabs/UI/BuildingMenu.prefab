@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 222599400710516822}
   - component: {fileID: 114663580308375008}
   m_Layer: 5
-  m_Name: TextCost
+  m_Name: TextCost3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 222539307703698958}
   - component: {fileID: 114449735438921812}
   m_Layer: 5
-  m_Name: TextCost
+  m_Name: TextCost4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 222344559867964366}
   - component: {fileID: 114906522202702112}
   m_Layer: 5
-  m_Name: TextCost
+  m_Name: TextCost1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 222531782738964142}
   - component: {fileID: 114462572871982030}
   m_Layer: 5
-  m_Name: TextCost
+  m_Name: TextCost2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,6 +158,7 @@ GameObject:
   - component: {fileID: 224014481107853784}
   - component: {fileID: 222644484660236338}
   - component: {fileID: 114336267546208824}
+  - component: {fileID: 114984002121146660}
   m_Layer: 5
   m_Name: BuildingMenu
   m_TagString: Untagged
@@ -428,7 +429,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Cost
+  m_Text: 
 --- !u!114 &114462572871982030
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -461,7 +462,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Cost
+  m_Text: 
 --- !u!114 &114495452734859468
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -634,7 +635,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Cost
+  m_Text: 
 --- !u!114 &114702317100512374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -813,7 +814,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Cost
+  m_Text: 
 --- !u!114 &114981798088925514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -847,6 +848,23 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Tower3
+--- !u!114 &114984002121146660
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1761165996097940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e6097747a8b0e84199a9efa04ff00a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textCostTower1: {fileID: 114906522202702112}
+  textCostTower2: {fileID: 114462572871982030}
+  textCostTower3: {fileID: 114663580308375008}
+  textCostTower4: {fileID: 114449735438921812}
+  textValueSell: {fileID: 0}
+  textCostUpgrade: {fileID: 0}
 --- !u!222 &222124723545864304
 CanvasRenderer:
   m_ObjectHideFlags: 1

@@ -18,6 +18,7 @@ public class TowerBlueprint
     /// <summary> Just returns the TowerLevel component of the first level of this tower. </summary>
     internal TowerLevel GetBaseLevel()
     {
+        if (level1Prefab == null) return null;
         return level1Prefab.GetComponent<TowerLevel>();
     }
 

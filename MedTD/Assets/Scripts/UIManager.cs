@@ -94,7 +94,35 @@ public class UIManager : MonoBehaviour
     {
         GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
         buildingMenu.transform.SetParent(uICanvas, false);
+
+        /////////////////////////////////////
+
+        // gather the cost data
         
+        ShopMenu shopMenu = buildingMenu.GetComponent<ShopMenu>();
+        Shop shop = Shop.instance;
+        if (shopMenu != null)
+        {
+            int cost1 = -1;
+            int cost2 = -1;
+            int cost3 = -1;
+            int cost4 = -1;
+            if (shop.tower1 != null && shop.tower1.GetBaseLevel() != null)
+                cost1 = shop.tower1.GetBaseLevel().cost;
+            if (shop.tower2 != null && shop.tower2.GetBaseLevel() != null)
+                cost2 = shop.tower2.GetBaseLevel().cost;
+            if (shop.tower3 != null && shop.tower3.GetBaseLevel() != null)
+                cost3 = shop.tower3.GetBaseLevel().cost;
+            if (shop.tower4 != null && shop.tower4.GetBaseLevel() != null)
+                cost4 = shop.tower4.GetBaseLevel().cost;
+            shopMenu.SetCostTower1(cost1);
+            shopMenu.SetCostTower2(cost2);
+            shopMenu.SetCostTower3(cost3);
+            shopMenu.SetCostTower4(cost4);
+        }
+
+        /////////////////////////////////////
+
         // UI elements and other scene objects use different coordinate systems;
         // in order to position the menu where the lymph node is (on the screen)...
         // ...we have to do some conversions between World and Viewport
@@ -112,13 +140,16 @@ public class UIManager : MonoBehaviour
     /// <summary> Shows the tower menu (see <see cref="towerMenuPrefab"/>) at the same
     /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called
     /// by a LymphNode object when it is clicked with a tower on it. </summary>
-    internal GameObject ShowTowerMenu(Transform lymphNode, bool upgradeable)
+    internal GameObject ShowTowerMenu(Transform lymphNode, TowerBlueprint towerBlueprint, TowerLevel currentTowerLevel)
     {
         GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
         towerMenu.transform.SetParent(uICanvas, false);
 
         // if this tower is not upgradeable (i.e. the current tower...
         // ...level is the last one), don't show the "upgrade" button
+        int currLevel = currentTowerLevel.level;
+        int maxLevel = towerBlueprint.numberOfLevels;
+        bool upgradeable = currLevel < maxLevel;
         if (!upgradeable)
         {
             for (int i = 0; i < towerMenu.transform.childCount; i++)
@@ -129,6 +160,25 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+
+        /////////////////////////////////////
+
+        // gather the cost data
+        
+        TowerLevel nextTowerLevel = towerBlueprint.GetNextTowerLevel(currLevel);
+
+        int sellValue = -1;
+        int upgradeCost = -1;
+
+        sellValue = currentTowerLevel.sellValue;
+        if (nextTowerLevel != null)
+            upgradeCost = nextTowerLevel.cost;
+
+        ShopMenu shopMenu = towerMenu.GetComponent<ShopMenu>();
+        shopMenu.SetValueSell(sellValue);
+        shopMenu.SetCostUpgrade(upgradeCost);
+        
+        /////////////////////////////////////
 
         // UI elements and other scene objects use different coordinate systems;
         // in order to position the menu where the lymph node is (on the screen)...
@@ -147,12 +197,12 @@ public class UIManager : MonoBehaviour
     internal GameObject CreateMenuSelectionInfo(Transform menu, SelectedAction sa, TowerBlueprint towerBlueprint)
     {
         GameObject infoPanel = Instantiate(menuSelectionInfoPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        infoPanel.transform.SetParent(uICanvas, false);
-
+        // set the menu as this panel's parent (so that it scrolls together with it)
+        infoPanel.transform.SetParent(menu, false);
 
         ///////////////////////////
-        
-        // todo: gather the data for the info panel
+
+        // gather the data for the info panel
         string name = "";
         string description = "";
         int cost = 0;

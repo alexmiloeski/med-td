@@ -5,8 +5,12 @@ public enum SelectedAction { Nothing, BuildTower1, BuildTower2, BuildTower3, Bui
 
 public class Shop : MonoBehaviour
 {
+    public static Shop instance;
+
     public TowerBlueprint tower1;
     public TowerBlueprint tower2;
+    public TowerBlueprint tower3;
+    public TowerBlueprint tower4;
 
     // needed for changing button appearance when "selected"
     public Sprite spriteButtonRegular;
@@ -22,6 +26,17 @@ public class Shop : MonoBehaviour
     private Sprite tempButtonSprite;
 
     public static GameObject infoPanel;
+
+    private void Awake()
+    {
+        // initialize an instance of this singleton for use in other classes
+        if (instance != null)
+        {
+            Debug.Log("More than one Shop in scene!");
+            return;
+        }
+        instance = this;
+    }
 
     private void Start()
     {
