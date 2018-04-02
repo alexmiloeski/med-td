@@ -11,10 +11,11 @@ public class UIManager : MonoBehaviour
     public Text textMoney;
     public Text textSelectSS;
     public Text textSelectedSSCount;
-    public Text textMaxSSSelected;
+    public Text textWarningMessage;
     public Button buttonDoneWithSS;
     public GameObject buildingMenuPrefab;
     public GameObject towerMenuPrefab;
+    public GameObject menuSelectionInfoPrefab;
 
     private GameObject xSpriteObject;
     private bool interruptXAtTouch = false;
@@ -38,7 +39,7 @@ public class UIManager : MonoBehaviour
         textMoney.text = "Money: " + Player.Money;
         textSelectSS.text = "Pick " + buildManager.numberOfLymphNodes + " strategic sites.";
         textSelectedSSCount.text = "Number of selected sites: 0/" + buildManager.numberOfLymphNodes + ".";
-        textMaxSSSelected.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
+        textWarningMessage.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
     }
 
     
@@ -52,8 +53,8 @@ public class UIManager : MonoBehaviour
     }
     private void SetEnabledTextMaxSSSelected(bool newActiveState)
     {
-        if (textMaxSSSelected.gameObject.activeSelf != newActiveState)
-            textMaxSSSelected.gameObject.SetActive(newActiveState);
+        if (textWarningMessage.gameObject.activeSelf != newActiveState)
+            textWarningMessage.gameObject.SetActive(newActiveState);
     }
     private void DisableTextMaxSSSelected()
     {
@@ -63,8 +64,8 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        if (textMaxSSSelected.gameObject.activeSelf)
-            textMaxSSSelected.gameObject.SetActive(false);
+        if (textWarningMessage.gameObject.activeSelf)
+            textWarningMessage.gameObject.SetActive(false);
     }
     internal void SetEnabledButtonDoneWithSS(bool newActiveState)
     {
@@ -92,7 +93,7 @@ public class UIManager : MonoBehaviour
     internal GameObject ShowBuildingMenu(Transform lymphNode)
     {
         GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        buildingMenu.transform.SetParent(uICanvas);
+        buildingMenu.transform.SetParent(uICanvas, false);
         
         // UI elements and other scene objects use different coordinate systems;
         // in order to position the menu where the lymph node is (on the screen)...
@@ -114,7 +115,7 @@ public class UIManager : MonoBehaviour
     internal GameObject ShowTowerMenu(Transform lymphNode, bool upgradeable)
     {
         GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        towerMenu.transform.SetParent(uICanvas);
+        towerMenu.transform.SetParent(uICanvas, false);
 
         // if this tower is not upgradeable (i.e. the current tower...
         // ...level is the last one), don't show the "upgrade" button
@@ -142,6 +143,118 @@ public class UIManager : MonoBehaviour
         towerMenuRT.localPosition = proportionalPosition - uiOffset;
 
         return towerMenu;
+    }
+    internal GameObject CreateMenuSelectionInfo(Transform menu, SelectedAction sa, TowerBlueprint towerBlueprint)
+    {
+        GameObject infoPanel = Instantiate(menuSelectionInfoPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
+        infoPanel.transform.SetParent(uICanvas, false);
+
+
+        ///////////////////////////
+        
+        // todo: gather the data for the info panel
+        string name = "";
+        string description = "";
+        int cost = 0;
+        int level = -1;
+        int maxLevel = -1;
+        int health = -1;
+        int damage = -1;
+        int defense = -1;
+
+        LymphNode selectedLymphNode = null;
+        TowerLevel currentTowerLevel = null;
+
+        switch (sa)
+        {
+            case SelectedAction.BuildTower1:
+            case SelectedAction.BuildTower2:
+            case SelectedAction.BuildTower3:
+            case SelectedAction.BuildTower4:
+            {
+                if (towerBlueprint != null)
+                {
+                    currentTowerLevel = towerBlueprint.GetBaseLevel();
+                    name = towerBlueprint.name;
+                    description = towerBlueprint.description;
+                    cost = currentTowerLevel.cost;
+                    level = currentTowerLevel.level;
+                    maxLevel = towerBlueprint.numberOfLevels;
+                    health = currentTowerLevel.health;
+                    damage = currentTowerLevel.damage;
+                    defense = currentTowerLevel.defense;
+                }
+            }
+            break;
+
+            case SelectedAction.SellTower:
+            {
+                selectedLymphNode = BuildManager.instance.GetSelectedLymphNode();
+                if (selectedLymphNode != null)
+                {
+                    towerBlueprint = selectedLymphNode.GetTowerBlueprint();
+                    currentTowerLevel = selectedLymphNode.GetTowerLevel();
+                }
+                if (towerBlueprint != null && currentTowerLevel != null)
+                {
+                    name = "Sell tower";
+                    cost = -currentTowerLevel.sellValue;
+                    description = "Sell this tower. You will receive " + (-cost) + " money, and you'll be able to build another tower on the same spot.";
+                }
+            }
+            break;
+
+            case SelectedAction.UpgradeTower:
+            {
+                selectedLymphNode = BuildManager.instance.GetSelectedLymphNode();
+                TowerLevel nextTowerLevel = null;
+                if (selectedLymphNode != null)
+                {
+                    towerBlueprint = selectedLymphNode.GetTowerBlueprint();
+                    currentTowerLevel = selectedLymphNode.GetTowerLevel();
+                    if (currentTowerLevel != null && towerBlueprint != null)
+                    {
+                        nextTowerLevel = towerBlueprint.GetNextTowerLevel(currentTowerLevel.level);
+                    }
+                }
+                if (towerBlueprint != null && currentTowerLevel != null)
+                {
+                    name = towerBlueprint.name;
+                    description = nextTowerLevel.description;
+                    cost = nextTowerLevel.cost;
+                    level = nextTowerLevel.level;
+                    maxLevel = towerBlueprint.numberOfLevels;
+                    health = nextTowerLevel.health;
+                    damage = nextTowerLevel.damage;
+                    defense = nextTowerLevel.defense;
+                }
+            }
+            break;
+        }
+
+        infoPanel.GetComponent<InfoPanel>().SetAll(name, description, level, maxLevel, cost, health, damage, defense);
+        
+        ///////////////////////////
+
+        // no conversion is done now, because param menu is already a UI element
+        RectTransform panelRT = infoPanel.GetComponent<RectTransform>();
+        RectTransform menuRT = menu.GetComponent<RectTransform>();
+
+        // calculate the panel's x position so that it appears to the right of the menu
+        float panelHalfWidth = panelRT.sizeDelta.x / 2;
+        float menuHalfWidth = menuRT.sizeDelta.x / 2;
+        float xPos = menu.position.x + menuHalfWidth + panelHalfWidth;
+
+        // if there's not enough space on the right, show it on the left
+        // i.e. if the panel's width is longer than the space between xPos and right screen boundary
+        if (panelRT.sizeDelta.x > Screen.width - xPos)
+        {
+            xPos = menu.position.x - menuHalfWidth - panelHalfWidth;
+        }
+        
+        panelRT.position = new Vector3(xPos, menu.position.y, menu.position.z);
+
+        return infoPanel;
     }
 
     /// <summary> Shows an X at the touch position for <paramref name="delay"/> seconds. </summary>
@@ -178,7 +291,17 @@ public class UIManager : MonoBehaviour
     }
     internal void FlashMaxSSSelected(float delay)
     {
-        if (textMaxSSSelected.gameObject.activeSelf)
+        textWarningMessage.text = "Can't pick more than " + BuildManager.instance.numberOfLymphNodes + " strategic sites.";
+        FlashWarningMessage(delay);
+    }
+    internal void FlashNotEnoughMoney(float delay)
+    {
+        textWarningMessage.text = "Not enough money.";
+        FlashWarningMessage(delay);
+    }
+    private void FlashWarningMessage(float delay)
+    {
+        if (textWarningMessage.gameObject.activeSelf)
         {
             DisableTextMaxSSSelected();
             interruptTextMaxSSSelected = true;

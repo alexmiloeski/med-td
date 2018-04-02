@@ -52,6 +52,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tower1:
+    name: Tower One
+    description: This is the most basic tower.
     level1Prefab: {fileID: 1364557980695860, guid: fa59afe8d5fbea545a5bc926c3c9f23f,
       type: 2}
     level2Prefab: {fileID: 1364557980695860, guid: df0b006913e17a54aa6cd422256aac65,
@@ -62,6 +64,8 @@ MonoBehaviour:
       type: 2}
     numberOfLevels: 4
   tower2:
+    name: Tower Two
+    description: This is a different tower. It has less armor, but does more damage.
     level1Prefab: {fileID: 1364557980695860, guid: e3f6e82aba002b14fa9d6af8853072bd,
       type: 2}
     level2Prefab: {fileID: 1364557980695860, guid: 92e2510de5c6de647b59f1f9e63b12b0,
@@ -74,3 +78,4 @@ MonoBehaviour:
   spriteButtonRegular: {fileID: 21300000, guid: ec82a3ab20b9e274f9fbb585940cbc0f,
     type: 3}
   spriteCheckmark: {fileID: 21300000, guid: 906db8f00ba26234c9d18cee2f5e05cb, type: 3}
+  spriteButtonX: {fileID: 21300000, guid: c39b14da124994b4a8bd247b8e3938b6, type: 3}

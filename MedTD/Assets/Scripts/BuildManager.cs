@@ -176,6 +176,10 @@ public class BuildManager : MonoBehaviour
     internal void DeselectLymphNode()
     {
         SelectAction(SelectedAction.Nothing);
+        if (Shop.infoPanel != null)
+        {
+            Destroy(Shop.infoPanel);
+        }
 
         if (selectedLymphNode != null)
         {
@@ -302,5 +306,35 @@ public class BuildManager : MonoBehaviour
                 break;
         }
         selectedAction = SelectedAction.Nothing;
+    }
+    internal bool IsActionPossible(SelectedAction sa, TowerBlueprint towerBlueprint)
+    {
+        switch (sa)
+        {
+            case SelectedAction.BuildTower1:
+            case SelectedAction.BuildTower2:
+            case SelectedAction.BuildTower3:
+            case SelectedAction.BuildTower4:
+                if (towerBlueprint != null)
+                {
+                    TowerLevel baseLevel = towerBlueprint.GetBaseLevel();
+                    return Player.HasEnoughMoney(baseLevel.cost);
+                }
+                break;
+
+            case SelectedAction.SellTower:
+                return true;
+
+            case SelectedAction.UpgradeTower:
+            {
+                if (selectedLymphNode == null || selectedLymphNode.IsVacant()) return false;
+                int currentTowerLevel = selectedLymphNode.GetTowerLevel().level;
+                GameObject nextLevelTowerPrefab = selectedLymphNode.GetTowerBlueprint().GetNextLevelPrefab(currentTowerLevel);
+                if (nextLevelTowerPrefab == null) return false;
+                int nextLevelCost = nextLevelTowerPrefab.GetComponent<TowerLevel>().cost;
+                return Player.HasEnoughMoney(nextLevelCost);
+            }
+        }
+        return false;
     }
 }

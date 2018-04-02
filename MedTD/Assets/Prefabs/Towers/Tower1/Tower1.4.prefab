@@ -52,10 +52,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fedb28a153400da4e9ed16984b7901e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  description: The final level of this tower. Most durable.
   level: 4
   cost: 60
   sellValue: 120
   damage: 200
+  health: 180
+  defense: 200
 --- !u!212 &212208300386307692
 SpriteRenderer:
   m_ObjectHideFlags: 1

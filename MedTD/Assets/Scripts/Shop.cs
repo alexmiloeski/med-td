@@ -11,7 +11,8 @@ public class Shop : MonoBehaviour
     // needed for changing button appearance when "selected"
     public Sprite spriteButtonRegular;
     public Sprite spriteCheckmark;
-    
+    public Sprite spriteButtonX;
+
     private BuildManager buildManager;
 
     /// <summary> Reference(s) to a button's state before it's been clicked and changed to "selected";
@@ -19,6 +20,8 @@ public class Shop : MonoBehaviour
     private GameObject tempButton;
     private string tempButtonText;
     private Sprite tempButtonSprite;
+
+    public static GameObject infoPanel;
 
     private void Start()
     {
@@ -61,7 +64,7 @@ public class Shop : MonoBehaviour
         //ButtonAction(null, SelectedAction.SetRallyPoint, null);
     }
 
-    private void SetButtonAsSelected(GameObject buttonObject)
+    private void SetButtonAsSelected(GameObject buttonObject, bool possible)
     {
         Image image = buttonObject.GetComponent<Image>();
         Text text = buttonObject.transform.GetChild(0).GetComponent<Text>();
@@ -72,7 +75,13 @@ public class Shop : MonoBehaviour
         if (text != null) tempButtonText = text.text;
 
         // change this button's values so as to appear "selected"
-        if (image != null) image.sprite = spriteCheckmark;
+        if (image != null)
+        {
+            if (possible)
+                image.sprite = spriteCheckmark;
+            else
+                image.sprite = spriteButtonX;
+        }
         if (text != null) text.text = "";
     }
     private void ResetPreviouslySelectedButton()
@@ -89,8 +98,14 @@ public class Shop : MonoBehaviour
     {
         if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
 
+        // destroy the info panel, if it was present
+        if (infoPanel != null)
+        {
+            Destroy(infoPanel);
+        }
+
         if (buildManager == null) buildManager = BuildManager.instance;
-        if (buildManager.GetSelectedAction() == sa)
+        if (buildManager.GetSelectedAction() == sa) // if this button is already selected, do the action
         {
             tempButton = null;
 
@@ -100,11 +115,23 @@ public class Shop : MonoBehaviour
             // then this has to be redone, because not destroying the menu leaves the selected button
             buildManager.DeselectLymphNode();
         }
-        else
+        else // if this button isn't selected, just select it
         {
             ResetPreviouslySelectedButton();
-            SetButtonAsSelected(buttonObject);
-            buildManager.SelectAction(sa);
+            bool possible = buildManager.IsActionPossible(sa, tower);
+            SetButtonAsSelected(buttonObject, possible);
+            if (possible)
+            {
+                buildManager.SelectAction(sa);
+                
+                // show info panel when selecting a button successfully
+                infoPanel = UIManager.instance.CreateMenuSelectionInfo(buttonObject.transform.parent, sa, tower);
+            }
+            else
+            {
+                buildManager.SelectAction(SelectedAction.Nothing);
+                UIManager.instance.FlashNotEnoughMoney(1f);
+            }
         }
     }
 }

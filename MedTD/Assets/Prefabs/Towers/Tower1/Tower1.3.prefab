@@ -52,10 +52,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fedb28a153400da4e9ed16984b7901e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  description: 
   level: 3
   cost: 40
   sellValue: 90
   damage: 160
+  health: 150
+  defense: 150
 --- !u!212 &212208300386307692
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -3196,7 +3196,7 @@ GameObject:
   - component: {fileID: 937759524}
   - component: {fileID: 937759523}
   m_Layer: 5
-  m_Name: TextMaxSSSelected
+  m_Name: TextWarningMessage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4586,11 +4586,13 @@ MonoBehaviour:
   textMoney: {fileID: 211602513}
   textSelectSS: {fileID: 1727947413}
   textSelectedSSCount: {fileID: 873286557}
-  textMaxSSSelected: {fileID: 937759527}
+  textWarningMessage: {fileID: 937759527}
   buttonDoneWithSS: {fileID: 34756851}
   buildingMenuPrefab: {fileID: 1761165996097940, guid: 2020d03ecd2ec53458abcc03d1a8718d,
     type: 2}
   towerMenuPrefab: {fileID: 1298636571941120, guid: 87a22a30b62541845b137f2b9f9d2b37,
+    type: 2}
+  menuSelectionInfoPrefab: {fileID: 1323912810102374, guid: f04f0eab43140a446b0e01dc98b61265,
     type: 2}
 --- !u!114 &1378128245
 MonoBehaviour:
