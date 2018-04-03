@@ -147,6 +147,8 @@ public class BuildManager : MonoBehaviour
         // destroy the text elements and the done button
         UIManager uim = this.GetComponent<UIManager>();
         uim.DestroySSUIElements();
+
+        WaveSpawner.StartSpawning();
     }
     internal bool IsFinishedWithSS()
     {
