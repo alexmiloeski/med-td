@@ -3,6 +3,7 @@
 public class Enemy : MonoBehaviour
 {
     public float speed = 1f;
+    public int damageToPlayer = 1;
 
     private Transform target;
     private int waypointIndex = 0;
@@ -28,9 +29,15 @@ public class Enemy : MonoBehaviour
 
     private void GetNextWaypoint()
     {
+        // if the enemy has reached the last waypoint (end)
         if (waypointIndex >= Waypoints.waypoints.Length - 1)
         {
+            // destroy the enemy object
             Destroy(gameObject);
+
+            // subtract player health
+            Player.DoDamage(damageToPlayer);
+
             return;
         }
 

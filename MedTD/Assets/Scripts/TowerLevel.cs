@@ -17,4 +17,9 @@ public class TowerLevel : MonoBehaviour
     {
         this.blueprint = blueprint;
     }
+
+    internal TowerBlueprint GetBlueprint()
+    {
+        return blueprint;
+    }
 }

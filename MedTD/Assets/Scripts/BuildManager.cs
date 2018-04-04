@@ -215,11 +215,7 @@ public class BuildManager : MonoBehaviour
             selectedLymphNode.BuildTower(towerBlueprint);
             DeselectLymphNode();
         }
-        else
-        {
-            Debug.Log("not enough money; " + baseLevel.cost + " needed, player has " + Player.Money);
-            // todo: not enough money, show info, maybe deselect, etc.
-        }
+        // this method shouldn't be able to be called if the player doesn't have enough money for the action
     }
     /// <summary> Sells (destroys) the tower built on the currently selected lymph node, and returns
     /// money (<see cref="TowerLevel.sellValue"/>) to the player. </summary>
@@ -270,11 +266,7 @@ public class BuildManager : MonoBehaviour
             selectedLymphNode.UpgradeTower(nextLevelTowerPrefab);
             DeselectLymphNode(); // the selected lymph node is deselected after upgrading the tower // todo: design decision
         }
-        else
-        {
-            Debug.Log("not enough money; " + nextLevelCost + " needed, player has " + Player.Money);
-            // todo: not enough money, show info, maybe deselect, etc.
-        }
+        // this method shouldn't be able to be called if the player doesn't have enough money for the action
     }
 
     internal void SelectAction(SelectedAction sa)

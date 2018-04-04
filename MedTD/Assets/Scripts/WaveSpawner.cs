@@ -5,9 +5,10 @@ using UnityEngine.UI;
 public class WaveSpawner : MonoBehaviour
 {
     public static WaveSpawner instance; // this is a singleton class
-
+    
     public int numberOfWaves = 10;
     public float timeBetweenWaves = 8f; // todo: could be different for each wave
+    public Transform enemyFolder;
     public Transform spawnPoint;
     public Transform enemyPrefab1;
     public Transform enemyPrefab2;
@@ -132,11 +133,15 @@ public class WaveSpawner : MonoBehaviour
         if (enemyPrefab == null) enemyPrefab = enemyPrefab1;
 
         if (enemyPrefab != null)
-            Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        {
+            Transform enemyTr = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+            enemyTr.SetParent(enemyFolder);
+        }
     }
 
-    private void SpawnEnemy()
-    {
-        Instantiate(enemyPrefab1, spawnPoint.position, spawnPoint.rotation);
-    }
+    //private void SpawnEnemy()
+    //{
+    //    Transform enemyTr = Instantiate(enemyPrefab1, spawnPoint.position, spawnPoint.rotation);
+    //    enemyTr.SetParent(enemyFolder);
+    //}
 }

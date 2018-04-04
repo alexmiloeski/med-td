@@ -2,8 +2,8 @@
 
 public class Player : MonoBehaviour
 {
-    public static int Health;
-    public static int Money;
+    private static int Health;
+    private static int Money;
     public int startHealth = 1000;
     public int startMoney = 500;
 
@@ -11,9 +11,11 @@ public class Player : MonoBehaviour
 
 	private void Awake()
     {
+        Debug.Log("Player.Awake");
         Health = startHealth;
         Money = startMoney;
-	}
+        Debug.Log("after setting health and money");
+    }
 
     private void Start()
     {
@@ -40,4 +42,7 @@ public class Player : MonoBehaviour
         Money += money;
         uIManager.UpdateTextMoney();
     }
+
+    internal static int GetHealth() { return Health; }
+    internal static int GetMoney() { return Money; }
 }
