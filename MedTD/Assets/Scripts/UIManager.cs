@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     public Text textSelectSS;
     public Text textSelectedSSCount;
     public Text textWarningMessage;
-    public Button buttonDoneWithSS;
+    public Button buttonBottomCenter;
     public GameObject buildingMenuPrefab;
     public GameObject towerMenuPrefab;
     public GameObject menuSelectionInfoPrefab;
@@ -67,10 +67,39 @@ public class UIManager : MonoBehaviour
         if (textWarningMessage.gameObject.activeSelf)
             textWarningMessage.gameObject.SetActive(false);
     }
-    internal void SetEnabledButtonDoneWithSS(bool newActiveState)
+    internal bool SetEnabledButtonBottomCenter(bool newActiveState)
     {
-        if (buttonDoneWithSS.gameObject.activeSelf != newActiveState)
-            buttonDoneWithSS.gameObject.SetActive(newActiveState);
+        if (buttonBottomCenter.gameObject.activeSelf != newActiveState)
+        {
+            //if (!newActiveState) Debug.Log("disabling button");
+            //else Debug.Log("enabling button");
+            buttonBottomCenter.gameObject.SetActive(newActiveState);
+            return true; // if state changed, return true
+        }
+        else
+        {
+            return false; // if state not changed, return false
+        }
+    }
+    internal void SetEnabledButtonBottomCenterDonePicking(bool newActiveState)
+    {
+        bool stateChanged = SetEnabledButtonBottomCenter(newActiveState);
+        if (!stateChanged) return; // if state hasn't changed, no need to update text
+
+        Transform bottomCenterTextTransform = buttonBottomCenter.transform.GetChild(0);
+        if (bottomCenterTextTransform == null) return;
+        Text textBottomCenter = bottomCenterTextTransform.GetComponent<Text>();
+        textBottomCenter.text = "Done picking";
+    }
+    internal void SetEnabledButtonBottomCenterStartWave(bool newActiveState)
+    {
+        bool stateChanged = SetEnabledButtonBottomCenter(newActiveState);
+        if (!stateChanged) return; // if state hasn't changed, no need to update text
+
+        Transform bottomCenterTextTransform = buttonBottomCenter.transform.GetChild(0);
+        if (bottomCenterTextTransform == null) return;
+        Text textBottomCenter = bottomCenterTextTransform.GetComponent<Text>();
+        textBottomCenter.text = "Start wave";
     }
     internal void UpdateSelectedSSCount(int count)
     {
@@ -84,7 +113,8 @@ public class UIManager : MonoBehaviour
     {
         Destroy(textSelectSS.gameObject);
         Destroy(textSelectedSSCount.gameObject);
-        Destroy(buttonDoneWithSS.gameObject);
+        //Destroy(buttonBottomCenter.gameObject);
+        SetEnabledButtonBottomCenter(false);
     }
 
     /// <summary> Shows the building menu (see <see cref="buildingMenuPrefab"/>) at the same

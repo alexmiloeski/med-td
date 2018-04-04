@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
-    public int numberofWaves = 10;
+    public static WaveSpawner instance; // this is a singleton class
+
+    public int numberOfWaves = 10;
     public float timeBetweenWaves = 8f; // todo: could be different for each wave
     public Transform spawnPoint;
     public Transform enemyPrefab1;
@@ -13,50 +15,87 @@ public class WaveSpawner : MonoBehaviour
     public Text waveNumberText;
     public Text waveCountdownText;
 
-    private float countdown = 2f;
+    private float countdown = 0f;
     private int waveIndex = 0;
-    private static bool levelEnded = true;
+    private bool levelStarted = false;
+    private bool levelEnded = false;
 
-    private void Start()
+    private void Awake()
     {
-        //levelEnded = true;
+        // initialize an instance of this singleton for use in other classes
+        if (instance != null)
+        {
+            Debug.Log("More than one WaveSpawner in scene!");
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+
+        countdown = timeBetweenWaves;
     }
 
-    internal static void StartSpawning()
+    internal void StartLevel()
     {
+        levelStarted = true;
         levelEnded = false;
+    }
+
+    internal bool IsLevelStarted()
+    {
+        return levelStarted;
+    }
+    internal bool IsLevelEnded()
+    {
+        return levelEnded;
     }
 
     private void Update()
     {
-        if (levelEnded) return;
+        if (!levelStarted || levelEnded) return;
 
-        if (waveIndex >= numberofWaves)
+        // if this is the last wave
+        if (waveIndex >= numberOfWaves)
         {
             levelEnded = true;
             //countdown = timeBetweenWaves;
             waveCountdownText.text = "No more waves.";
         }
 
+        // if time to next wave is less than half, enable "start wave" button; if not, disable it
+        UIManager.instance.SetEnabledButtonBottomCenterStartWave(countdown <= (timeBetweenWaves * 0.5));
+
         if (countdown <= 0f)
         {
-            StartCoroutine(SpawnWave());
-            countdown = timeBetweenWaves;
+            //StartCoroutine(SpawnWave());
+            //countdown = timeBetweenWaves;
+            NextWave();
         }
-
-        if (waveIndex < numberofWaves)
+        
+        // while there are still more waves coming, update the text showing time until next wave
+        if (waveIndex < numberOfWaves)
         {
             countdown -= Time.deltaTime;
             waveCountdownText.text = "Next wave in " + Mathf.Floor(countdown + 1).ToString() + " seconds";
         }
     }
 
-    IEnumerator SpawnWave()
+    internal void NextWave()
     {
+        StartCoroutine(SpawnWave());
+        countdown = timeBetweenWaves;
+    }
+
+    private IEnumerator SpawnWave()
+    {
+        UIManager.instance.SetEnabledButtonBottomCenter(false);
+
         waveIndex++;
 
         // update UI element showing the current level number
-        waveNumberText.text = "Wave: " + waveIndex + "/" + numberofWaves;
+        waveNumberText.text = "Wave: " + waveIndex + "/" + numberOfWaves;
 
         // todo: this is just for testing, should be predefined
         // generate N enemies, where N is the number of the current wave

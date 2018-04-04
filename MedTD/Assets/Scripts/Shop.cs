@@ -43,13 +43,30 @@ public class Shop : MonoBehaviour
         buildManager = BuildManager.instance;
     }
     
-    public void ButtonDoneWithSSAction()
+    public void ButtonBottomCenterAction()
     {
         //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
         if (Scroller.IsDragging()) return; // don't do button action while scrolling
         if (buildManager == null) buildManager = BuildManager.instance;
-        
-        buildManager.FinishWithSS();
+
+        if (buildManager.IsFinishedWithSS())
+        {
+            if (WaveSpawner.instance.IsLevelEnded()) return;
+
+            if (WaveSpawner.instance.IsLevelStarted())
+            {
+                WaveSpawner.instance.NextWave();
+            }
+            else
+            {
+                WaveSpawner.instance.StartLevel();
+                UIManager.instance.SetEnabledButtonBottomCenter(false);
+            }
+        }
+        else
+        {
+            buildManager.FinishWithSS();
+        }
     }
     public void ButtonBuildTower1Action(GameObject buttonObject)
     {

@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 34756852}
   - component: {fileID: 34756851}
   m_Layer: 5
-  m_Name: ButtonDoneWithSS
+  m_Name: ButtonBottomCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,7 +194,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
           type: 2}
-        m_MethodName: ButtonDoneWithSSAction
+        m_MethodName: ButtonBottomCenterAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2201,7 +2201,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 741519239}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.376, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.0415, y: 1.0415, z: 1}
   m_Children:
   - {fileID: 355939890}
@@ -2337,7 +2337,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Done
+  m_Text: 
 --- !u!222 &756037787
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4783,7 +4783,7 @@ MonoBehaviour:
   textSelectSS: {fileID: 1727947413}
   textSelectedSSCount: {fileID: 873286557}
   textWarningMessage: {fileID: 937759527}
-  buttonDoneWithSS: {fileID: 34756851}
+  buttonBottomCenter: {fileID: 34756851}
   buildingMenuPrefab: {fileID: 1761165996097940, guid: 2020d03ecd2ec53458abcc03d1a8718d,
     type: 2}
   towerMenuPrefab: {fileID: 1298636571941120, guid: 87a22a30b62541845b137f2b9f9d2b37,
@@ -4814,8 +4814,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 318f7f4ecdbb7014b90f04bb2d6d066d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberofWaves: 10
-  timeBetweenWaves: 4
+  numberOfWaves: 10
+  timeBetweenWaves: 6
   spawnPoint: {fileID: 1374388779}
   enemyPrefab1: {fileID: 4232884418986182, guid: ac0d28d89417cf04c842d46892d8f2cd,
     type: 2}

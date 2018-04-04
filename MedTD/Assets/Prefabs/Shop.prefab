@@ -75,6 +75,22 @@ MonoBehaviour:
     level4Prefab: {fileID: 1364557980695860, guid: e39e4dde5b6cb2249b3597ec48b8525f,
       type: 2}
     numberOfLevels: 4
+  tower3:
+    name: 
+    description: 
+    level1Prefab: {fileID: 0}
+    level2Prefab: {fileID: 0}
+    level3Prefab: {fileID: 0}
+    level4Prefab: {fileID: 0}
+    numberOfLevels: 1
+  tower4:
+    name: 
+    description: 
+    level1Prefab: {fileID: 0}
+    level2Prefab: {fileID: 0}
+    level3Prefab: {fileID: 0}
+    level4Prefab: {fileID: 0}
+    numberOfLevels: 1
   spriteButtonRegular: {fileID: 21300000, guid: ec82a3ab20b9e274f9fbb585940cbc0f,
     type: 3}
   spriteCheckmark: {fileID: 21300000, guid: 906db8f00ba26234c9d18cee2f5e05cb, type: 3}

@@ -79,7 +79,7 @@ public class BuildManager : MonoBehaviour
         int selectedSSCount = GetSelectedSSCount();
         uim.UpdateSelectedSSCount(selectedSSCount);
         // if all SS have been selected, show the "done" button
-        uim.SetEnabledButtonDoneWithSS(selectedSSCount >= numberOfLymphNodes);
+        uim.SetEnabledButtonBottomCenterDonePicking(selectedSSCount >= numberOfLymphNodes);
 
         return success;
     }
@@ -100,7 +100,7 @@ public class BuildManager : MonoBehaviour
         uim.UpdateSelectedSSCount(selectedSSCount);
         // if the number of select SS is less than the required number, hide the "done" button
         // this is a little redundant, but is kept here as an additional safeguard
-        uim.SetEnabledButtonDoneWithSS(selectedSSCount >= numberOfLymphNodes);
+        uim.SetEnabledButtonBottomCenterDonePicking(selectedSSCount >= numberOfLymphNodes);
     }
     /// <summary> Returns the number of currently selected strategic points. </summary>
     private int GetSelectedSSCount()
@@ -148,7 +148,9 @@ public class BuildManager : MonoBehaviour
         UIManager uim = this.GetComponent<UIManager>();
         uim.DestroySSUIElements();
 
-        WaveSpawner.StartSpawning();
+
+        //WaveSpawner.StartLevel();
+        uim.SetEnabledButtonBottomCenterStartWave(true);
     }
     internal bool IsFinishedWithSS()
     {
