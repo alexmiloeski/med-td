@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4983499573084888}
   - component: {fileID: 114811035225112506}
+  - component: {fileID: 114758596586525068}
   m_Layer: 0
   m_Name: Tower1Blueprint
   m_TagString: Untagged
@@ -40,6 +41,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114758596586525068
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1232955715799632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72edcc51b27e97a44b90acee31404974, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towerName: 
+  description: 
+  level1Prefab: {fileID: 0}
+  level2Prefab: {fileID: 0}
+  level3Prefab: {fileID: 0}
+  level4Prefab: {fileID: 0}
+  numberOfLevels: 1
 --- !u!114 &114811035225112506
 MonoBehaviour:
   m_ObjectHideFlags: 1

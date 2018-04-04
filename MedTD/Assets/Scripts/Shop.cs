@@ -7,6 +7,7 @@ public class Shop : MonoBehaviour
 {
     public static Shop instance;
 
+    public TowerTest1 towerTest1;
     public TowerBlueprint tower1;
     public TowerBlueprint tower2;
     public TowerBlueprint tower3;
@@ -79,6 +80,7 @@ public class Shop : MonoBehaviour
     public void ButtonBuildTower3Action(GameObject buttonObject)
     {
         //ButtonAction(buttonObject, SelectedAction.BuildTower2, tower3);
+        ButtonAction2(buttonObject, SelectedAction.BuildTower3, towerTest1);
     }
     public void ButtonBuildTower4Action(GameObject buttonObject)
     {
@@ -160,6 +162,46 @@ public class Shop : MonoBehaviour
                 
                 // show info panel when selecting a button successfully
                 infoPanel = UIManager.instance.CreateMenuSelectionInfo(buttonObject.transform.parent, sa, tower);
+            }
+            else
+            {
+                buildManager.SelectAction(SelectedAction.Nothing);
+                UIManager.instance.FlashNotEnoughMoney(1f);
+            }
+        }
+    }
+    private void ButtonAction2(GameObject buttonObject, SelectedAction sa, TowerTest1 tower)
+    {
+        if (Scroller.IsDragging()) return; // don't do button action while scrolling
+
+        // destroy the info panel, if it was present
+        if (infoPanel != null)
+        {
+            Destroy(infoPanel);
+        }
+
+        if (buildManager == null) buildManager = BuildManager.instance;
+        if (buildManager.GetSelectedAction() == sa) // if this button is already selected, do the action
+        {
+            tempButton = null;
+
+            buildManager.DoSelectedAction(tower);
+            // destroy the menu; deselecting the lymph node also destroys the menu, so that works fine
+            // todo: if a design decision is made to not deselect the node after starting the action,
+            // then this has to be redone, because not destroying the menu leaves the selected button
+            buildManager.DeselectLymphNode();
+        }
+        else // if this button isn't selected, just select it (if the action is possible)
+        {
+            ResetPreviouslySelectedButton();
+            bool possible = buildManager.IsActionPossible(sa, tower);
+            SetButtonAsSelected(buttonObject, possible);
+            if (possible)
+            {
+                buildManager.SelectAction(sa);
+
+                // show info panel when selecting a button successfully
+                //infoPanel = UIManager.instance.CreateMenuSelectionInfo(buttonObject.transform.parent, sa, tower);
             }
             else
             {

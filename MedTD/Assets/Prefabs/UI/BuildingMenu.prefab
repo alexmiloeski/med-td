@@ -279,10 +279,10 @@ MonoBehaviour:
       - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower3Action
-        m_Mode: 1
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1952170056242216}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

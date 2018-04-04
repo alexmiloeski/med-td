@@ -333,4 +333,74 @@ public class BuildManager : MonoBehaviour
         }
         return false;
     }
+
+
+
+
+
+    internal bool IsActionPossible(SelectedAction sa, TowerTest1 towerToBuild)
+    {
+        switch (sa)
+        {
+            case SelectedAction.BuildTower1:
+            case SelectedAction.BuildTower2:
+            case SelectedAction.BuildTower3:
+            case SelectedAction.BuildTower4:
+                if (towerToBuild != null)
+                {
+                    //return Player.HasEnoughMoney(towerToBuild.level1Cost);
+                    return Player.HasEnoughMoney(towerToBuild.GetCurrentCost());
+                }
+                break;
+
+            case SelectedAction.SellTower:
+                return true;
+
+            case SelectedAction.UpgradeTower:
+                {
+                    if (selectedLymphNode == null || selectedLymphNode.IsVacant()) return false;
+                    return Player.HasEnoughMoney(selectedLymphNode.GetNextLevelCost());
+                }
+        }
+        return false;
+    }
+    internal void DoSelectedAction(TowerTest1 towerToBuild)
+    {
+        switch (selectedAction)
+        {
+            case SelectedAction.BuildTower1:
+            case SelectedAction.BuildTower2:
+            case SelectedAction.BuildTower3:
+            case SelectedAction.BuildTower4:
+                if (towerToBuild != null)
+                {
+                    BuildTower(towerToBuild);
+                }
+                break;
+
+            case SelectedAction.SellTower:
+                SellTower();
+                break;
+
+            case SelectedAction.UpgradeTower:
+                UpgradeTower();
+                break;
+        }
+        selectedAction = SelectedAction.Nothing;
+    }
+    internal void BuildTower(TowerTest1 tower)
+    {
+        if (selectedLymphNode == null || !selectedLymphNode.IsVacant())
+        {
+            throw new Exception("Error! There's no selected lymph node or it is not vacant.");
+        }
+        
+        if (Player.HasEnoughMoney(tower.GetBaseLevelCost()))
+        {
+            Player.SubtractMoney(tower.GetBaseLevelCost());
+            selectedLymphNode.BuildTower(tower);
+            DeselectLymphNode();
+        }
+        // this method shouldn't be able to be called if the player doesn't have enough money for the action
+    }
 }

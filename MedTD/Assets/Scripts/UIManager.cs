@@ -389,4 +389,68 @@ public class UIManager : MonoBehaviour
         SetEnabledTextMaxSSSelected(true);
         Invoke("DisableTextMaxSSSelected", delay);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    internal GameObject ShowTowerMenu(Transform lymphNode, TowerTest1 tower)
+    {
+        GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
+        towerMenu.transform.SetParent(uICanvas, false);
+
+        // if this tower is not upgradeable (i.e. the current tower...
+        // ...level is the last one), don't show the "upgrade" button
+        int currLevel = tower.GetCurrentLevel();
+        //int maxLevel = tower.numberOfLevels;
+        int maxLevel = tower.GetNumberOfLevels();
+        bool upgradeable = currLevel < maxLevel;
+        if (!upgradeable)
+        {
+            for (int i = 0; i < towerMenu.transform.childCount; i++)
+            {
+                if (towerMenu.transform.GetChild(i).CompareTag("ButtonUpgradeTower"))
+                {
+                    towerMenu.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
+        }
+
+        /////////////////////////////////////
+
+        // gather the cost data
+        
+        int sellValue = -1;
+        int upgradeCost = -1;
+
+        sellValue = tower.GetCurrentSellValue();
+        upgradeCost = tower.GetNextLevelCost();
+
+        ShopMenu shopMenu = towerMenu.GetComponent<ShopMenu>();
+        shopMenu.SetValueSell(sellValue);
+        shopMenu.SetCostUpgrade(upgradeCost);
+
+        /////////////////////////////////////
+
+        // UI elements and other scene objects use different coordinate systems;
+        // in order to position the menu where the lymph node is (on the screen)...
+        // ...we have to do some conversions between World and Viewport
+        RectTransform towerMenuRT = towerMenu.GetComponent<RectTransform>();
+        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
+        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
+        Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
+        Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
+
+        // set the position and remove the screen offset
+        towerMenuRT.localPosition = proportionalPosition - uiOffset;
+
+        return towerMenu;
+    }
 }

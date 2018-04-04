@@ -58,7 +58,8 @@ public class LymphNode : MonoBehaviour
             {
                 // not vacant: show tower menu
                 //menu = uim.ShowTowerMenu(this.transform, towerBlueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
-                menu = uim.ShowTowerMenu(this.transform, currentLevelTowerObject.GetComponent<TowerLevel>().blueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
+                //menu = uim.ShowTowerMenu(this.transform, currentLevelTowerObject.GetComponent<TowerLevel>().blueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
+                menu = uim.ShowTowerMenu(this.transform, towerTestObject.GetComponent<TowerTest1>());
             }
 
 
@@ -147,7 +148,8 @@ public class LymphNode : MonoBehaviour
 
     internal bool IsVacant()
     {
-        return currentLevelTowerObject == null;
+        //return currentLevelTowerObject == null;
+        return towerTestObject == null;
     }
 
     internal TowerLevel GetTowerLevel()
@@ -171,5 +173,39 @@ public class LymphNode : MonoBehaviour
     private void HighlightOn()
     {
         rend.color = highlightedColor;
+    }
+
+
+
+
+
+
+
+    private GameObject towerTestObject;
+
+    internal void BuildTower(TowerTest1 tower)
+    {
+        GameObject towerPrefab = tower.gameObject;
+        Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
+        towerPosition.z = -0.3f;
+
+        towerTestObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
+        towerTestObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
+
+        TowerTest1 towerTest1 = towerTestObject.GetComponent<TowerTest1>();
+        towerTest1.BuildBaseLevel();
+        
+
+
+        // deselect this lymph node (which also destroys the building menu)
+        Deselect(); // redundant, called from BuildManager too
+    }
+    internal int GetTowerLevel2()
+    {
+        return towerTestObject.GetComponent<TowerTest1>().GetCurrentLevel();
+    }
+    internal int GetNextLevelCost()
+    {
+        return towerTestObject.GetComponent<TowerTest1>().GetNextLevelCost();
     }
 }

@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4907888239235750}
   - component: {fileID: 114843060016989172}
+  - component: {fileID: 114854088534952788}
   m_Layer: 0
   m_Name: Tower2Blueprint
   m_TagString: Untagged
@@ -62,3 +63,21 @@ MonoBehaviour:
   level4Prefab: {fileID: 1364557980695860, guid: e39e4dde5b6cb2249b3597ec48b8525f,
     type: 2}
   numberOfLevels: 4
+--- !u!114 &114854088534952788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1352711465801506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31b7b20a82be53468c017bf017dbafd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towerName: 
+  description: 
+  level1Prefab: {fileID: 0}
+  level2Prefab: {fileID: 0}
+  level3Prefab: {fileID: 0}
+  level4Prefab: {fileID: 0}
+  numberOfLevels: 1
