@@ -31,6 +31,7 @@ public class BuildManager : MonoBehaviour
     /// See <see cref="SelectedAction"/>; Relevant only when <see cref="finishedWithSS"/> is true. </summary>
     private SelectedAction selectedAction;
 
+
     private void Awake()
     {
         // initialize an instance of this singleton for use in other classes
@@ -196,79 +197,7 @@ public class BuildManager : MonoBehaviour
         return selectedLymphNode;
     }
 
-    /// <summary> Builds the base level of the provided <paramref name="towerBlueprint"/> on the
-    /// current <see cref="selectedLymphNode"/>, IF the player has enough money. </summary>
-    /// <param name="towerBlueprint">The TowerBlueprint of the tower to be built.</param>
-    /// <remarks>Throws an exception if there is no lymph node selected or if there
-    /// is already a tower on it.</remarks>
-    internal void BuildTower(TowerBlueprint towerBlueprint)
-    {
-        if (selectedLymphNode == null || !selectedLymphNode.IsVacant())
-        {
-            throw new Exception("Error! There's no selected lymph node or it is not vacant.");
-        }
-
-        TowerLevel baseLevel = towerBlueprint.GetBaseLevel();
-        if (Player.HasEnoughMoney(baseLevel.cost))
-        {
-            Player.SubtractMoney(baseLevel.cost);
-            selectedLymphNode.BuildTower(towerBlueprint);
-            DeselectLymphNode();
-        }
-        // this method shouldn't be able to be called if the player doesn't have enough money for the action
-    }
-    /// <summary> Sells (destroys) the tower built on the currently selected lymph node, and returns
-    /// money (<see cref="TowerLevel.sellValue"/>) to the player. </summary>
-    /// <remark>Throws an exception if there is no lymph node selected or if there is no tower on it.</remark>
-    internal void SellTower()
-    {
-        if (selectedLymphNode == null || selectedLymphNode.IsVacant())
-        {
-            throw new Exception("Error! There's no selected lymph node or no tower on it.");
-        }
-        
-        TowerLevel towerToSell = selectedLymphNode.GetTowerLevel();
-        if (towerToSell == null)
-        {
-            throw new Exception("Error! This lymph node's tower is null.");
-        }
-
-        Player.AddMoney(towerToSell.sellValue);
-        selectedLymphNode.DestroyTower();
-        DeselectLymphNode();
-    }
-    /// <summary> The currently selected lymph node's tower is destroyed and replaced with the next level of the same tower.
-    /// This method just checks if the player has enough money for the upgrade, and if yes, provides the prefab for the next
-    /// level of the tower and passes it to <see cref="LymphNode.UpgradeTower(GameObject)"/>. </summary>
-    /// <remarks>Throws an exception if there is no lymph node selected or if there is no tower on it.</remarks>
-    internal void UpgradeTower()
-    {
-        if (selectedLymphNode == null || selectedLymphNode.IsVacant())
-        {
-            throw new Exception("Error! There's no selected lymph node or no tower on it.");
-        }
-        
-        int currentTowerLevel = selectedLymphNode.GetTowerLevel().level;
-        GameObject nextLevelTowerPrefab = selectedLymphNode.GetTowerBlueprint().GetNextLevelPrefab(currentTowerLevel);
-        if (nextLevelTowerPrefab == null)
-        {
-            // top level: this tower can't be upgraded further; this should never happen,
-            // because the "upgrade" button is disabled when the max level tower is built
-
-            // todo: maybe show some info here, as na additional safeguard
-            return;
-        }
-
-        int nextLevelCost = nextLevelTowerPrefab.GetComponent<TowerLevel>().cost;
-        if (Player.HasEnoughMoney(nextLevelCost))
-        {
-            Player.SubtractMoney(nextLevelCost);
-            selectedLymphNode.UpgradeTower(nextLevelTowerPrefab);
-            DeselectLymphNode(); // the selected lymph node is deselected after upgrading the tower // todo: design decision
-        }
-        // this method shouldn't be able to be called if the player doesn't have enough money for the action
-    }
-
+    
     internal void SelectAction(SelectedAction sa)
     {
         selectedAction = sa;
@@ -277,68 +206,12 @@ public class BuildManager : MonoBehaviour
     {
         return selectedAction;
     }
-    /// <param name="towerToBuild">Provide the TowerBlueprint for the tower that is to be built.
-    /// If the action isn't building a base level tower, pass null here.</param>
-    internal void DoSelectedAction(TowerBlueprint towerToBuild)
-    {
-        switch (selectedAction)
-        {
-            case SelectedAction.BuildTower1:
-            case SelectedAction.BuildTower2:
-            case SelectedAction.BuildTower3:
-            case SelectedAction.BuildTower4:
-                if (towerToBuild != null)
-                {
-                    BuildTower(towerToBuild);
-                }
-                break;
+    
 
-            case SelectedAction.SellTower:
-                SellTower();
-                break;
-
-            case SelectedAction.UpgradeTower:
-                UpgradeTower();
-                break;
-        }
-        selectedAction = SelectedAction.Nothing;
-    }
-    internal bool IsActionPossible(SelectedAction sa, TowerBlueprint towerBlueprint)
-    {
-        switch (sa)
-        {
-            case SelectedAction.BuildTower1:
-            case SelectedAction.BuildTower2:
-            case SelectedAction.BuildTower3:
-            case SelectedAction.BuildTower4:
-                if (towerBlueprint != null)
-                {
-                    TowerLevel baseLevel = towerBlueprint.GetBaseLevel();
-                    return Player.HasEnoughMoney(baseLevel.cost);
-                }
-                break;
-
-            case SelectedAction.SellTower:
-                return true;
-
-            case SelectedAction.UpgradeTower:
-            {
-                if (selectedLymphNode == null || selectedLymphNode.IsVacant()) return false;
-                int currentTowerLevel = selectedLymphNode.GetTowerLevel().level;
-                GameObject nextLevelTowerPrefab = selectedLymphNode.GetTowerBlueprint().GetNextLevelPrefab(currentTowerLevel);
-                if (nextLevelTowerPrefab == null) return false;
-                int nextLevelCost = nextLevelTowerPrefab.GetComponent<TowerLevel>().cost;
-                return Player.HasEnoughMoney(nextLevelCost);
-            }
-        }
-        return false;
-    }
-
-
-
-
-
-    internal bool IsActionPossible(SelectedAction sa, TowerTest1 towerToBuild)
+    /// <summary> Returns true if the player has enough money for the provided
+    /// <see cref="SelectedAction"/> <paramref name="sa"/>. Provide the <paramref name="sa"/>
+    /// only if the action is building a new tower. Otherwise pass null. </summary>
+    internal bool IsActionPossible(SelectedAction sa, Tower towerToBuild)
     {
         switch (sa)
         {
@@ -348,8 +221,7 @@ public class BuildManager : MonoBehaviour
             case SelectedAction.BuildTower4:
                 if (towerToBuild != null)
                 {
-                    //return Player.HasEnoughMoney(towerToBuild.level1Cost);
-                    return Player.HasEnoughMoney(towerToBuild.GetCurrentCost());
+                    return Player.HasEnoughMoney(towerToBuild.GetBaseLevelCost());
                 }
                 break;
 
@@ -364,7 +236,10 @@ public class BuildManager : MonoBehaviour
         }
         return false;
     }
-    internal void DoSelectedAction(TowerTest1 towerToBuild)
+
+    /// <param name="towerToBuild">Provide the Tower for the tower that is to be built.
+    /// If the action isn't building a base level tower, pass null here.</param>
+    internal void DoSelectedAction(Tower towerToBuild)
     {
         switch (selectedAction)
         {
@@ -388,7 +263,13 @@ public class BuildManager : MonoBehaviour
         }
         selectedAction = SelectedAction.Nothing;
     }
-    internal void BuildTower(TowerTest1 tower)
+
+    /// <summary> Builds the base level of the provided <paramref name="tower"/> on the
+    /// current <see cref="selectedLymphNode"/>, IF the player has enough money. </summary>
+    /// <param name="tower">The Tower of the tower to be built.</param>
+    /// <remarks>Throws an exception if there is no lymph node selected or if there
+    /// is already a tower on it.</remarks>
+    internal void BuildTower(Tower tower)
     {
         if (selectedLymphNode == null || !selectedLymphNode.IsVacant())
         {
@@ -400,6 +281,58 @@ public class BuildManager : MonoBehaviour
             Player.SubtractMoney(tower.GetBaseLevelCost());
             selectedLymphNode.BuildTower(tower);
             DeselectLymphNode();
+        }
+        // this method shouldn't be able to be called if the player doesn't have enough money for the action
+    }
+
+    /// <summary> Sells (destroys) the tower built on the currently selected lymph node,
+    /// and returns money to the player. </summary>
+    /// <remark>Throws an exception if there is no lymph node selected or if there is no tower on it.</remark>
+    internal void SellTower()
+    {
+        if (selectedLymphNode == null || selectedLymphNode.IsVacant())
+        {
+            throw new Exception("Error! There's no selected lymph node or no tower on it.");
+        }
+
+        Tower currentTowerComponent = selectedLymphNode.GetTowerComponent();
+        if (currentTowerComponent == null)
+        {
+            throw new Exception("Error! This lymph node's tower is null.");
+        }
+
+        Player.AddMoney(currentTowerComponent.GetCurrentSellValue());
+        selectedLymphNode.DestroyTower();
+        DeselectLymphNode();
+    }
+
+    /// <summary> The currently selected lymph node's tower has its level index and its sprite changed.
+    /// This method just checks if the player has enough money for the upgrade, and if yes, calls
+    /// <see cref="LymphNode.UpgradeTower()"/>, which takes care of the upgrading. </summary>
+    /// <remarks>Throws an exception if there is no lymph node selected or if there is no tower on it.</remarks>
+    internal void UpgradeTower()
+    {
+        if (selectedLymphNode == null || selectedLymphNode.IsVacant())
+        {
+            throw new Exception("Error! There's no selected lymph node or no tower on it.");
+        }
+
+        Tower currentTowerComponent = selectedLymphNode.GetTowerComponent();
+
+        if (currentTowerComponent.IsAtMaxLevel())
+        {
+            // top level: this tower can't be upgraded further; this should never happen,
+            // because the "upgrade" button is disabled when the max level tower is built
+
+            // todo: maybe show some info here, as na additional safeguard
+            return;
+        }
+        
+        if (Player.HasEnoughMoney(currentTowerComponent.GetNextLevelCost()))
+        {
+            Player.SubtractMoney(currentTowerComponent.GetNextLevelCost());
+            selectedLymphNode.UpgradeTower();
+            DeselectLymphNode(); // the selected lymph node is deselected after upgrading the tower // todo: design decision
         }
         // this method shouldn't be able to be called if the player doesn't have enough money for the action
     }

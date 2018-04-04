@@ -51,11 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec7dab2bdbb7e34f838059cebc7504b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerTest1: {fileID: 114561497985624330, guid: 5c14bd36418844e469a2722e8fe33f0a,
-    type: 2}
-  tower1: {fileID: 114811035225112506, guid: 53ae88e2ff1f7cb4d93082a619a65491, type: 2}
-  tower2: {fileID: 114843060016989172, guid: 5674bab53ada7414ba6bc9b665a0c4fc, type: 2}
-  tower3: {fileID: 0}
+  tower1: {fileID: 114561497985624330, guid: 5c14bd36418844e469a2722e8fe33f0a, type: 2}
+  tower2: {fileID: 114561497985624330, guid: 069de8b49849a8649a622b7234d72b54, type: 2}
+  tower3: {fileID: 114561497985624330, guid: 39ca1a0721f45c746a7ba4bce16d6395, type: 2}
   tower4: {fileID: 0}
   spriteButtonRegular: {fileID: 21300000, guid: ec82a3ab20b9e274f9fbb585940cbc0f,
     type: 3}

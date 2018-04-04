@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212487595534256636}
   - component: {fileID: 114561497985624330}
   m_Layer: 0
-  m_Name: TowerTest1
+  m_Name: Tower3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,10 +52,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4d30b54dc54dc409f8d99505c9dbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerName: TowerOne
-  description: TowerOneDesc
+  towerName: TowerTwo
+  description: TowerTwoDesc
   towerLevels:
-  - {fileID: 114852852328400930, guid: d1b0307bfd45c9f48b4e1b082c35e955, type: 2}
+  - {fileID: 114852852328400930, guid: 844261fbb965f3c49b2a591fcbc1a6d2, type: 2}
 --- !u!212 &212487595534256636
 SpriteRenderer:
   m_ObjectHideFlags: 1

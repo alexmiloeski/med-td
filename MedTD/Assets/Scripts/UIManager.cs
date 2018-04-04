@@ -116,226 +116,7 @@ public class UIManager : MonoBehaviour
         //Destroy(buttonBottomCenter.gameObject);
         SetEnabledButtonBottomCenter(false);
     }
-
-    /// <summary> Shows the building menu (see <see cref="buildingMenuPrefab"/>) at the same
-    /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called by a
-    /// LymphNode object when it is clicked without a tower on it. </summary>
-    internal GameObject ShowBuildingMenu(Transform lymphNode)
-    {
-        GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        buildingMenu.transform.SetParent(uICanvas, false);
-
-        /////////////////////////////////////
-
-        // gather the cost data
-        
-        ShopMenu shopMenu = buildingMenu.GetComponent<ShopMenu>();
-        Shop shop = Shop.instance;
-        if (shopMenu != null)
-        {
-            int cost1 = -1;
-            int cost2 = -1;
-            int cost3 = -1;
-            int cost4 = -1;
-            if (shop.tower1 != null && shop.tower1.GetBaseLevel() != null)
-                cost1 = shop.tower1.GetBaseLevel().cost;
-            if (shop.tower2 != null && shop.tower2.GetBaseLevel() != null)
-                cost2 = shop.tower2.GetBaseLevel().cost;
-            if (shop.tower3 != null && shop.tower3.GetBaseLevel() != null)
-                cost3 = shop.tower3.GetBaseLevel().cost;
-            if (shop.tower4 != null && shop.tower4.GetBaseLevel() != null)
-                cost4 = shop.tower4.GetBaseLevel().cost;
-            shopMenu.SetCostTower1(cost1);
-            shopMenu.SetCostTower2(cost2);
-            shopMenu.SetCostTower3(cost3);
-            shopMenu.SetCostTower4(cost4);
-        }
-
-        /////////////////////////////////////
-
-        // UI elements and other scene objects use different coordinate systems;
-        // in order to position the menu where the lymph node is (on the screen)...
-        // ...we have to do some conversions between World and Viewport
-        RectTransform buildingMenuRT = buildingMenu.GetComponent<RectTransform>();
-        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
-        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
-        Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
-        Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
-
-        // set the position and remove the screen offset
-        buildingMenuRT.localPosition = proportionalPosition - uiOffset;
-        
-        return buildingMenu;
-    }
-    /// <summary> Shows the tower menu (see <see cref="towerMenuPrefab"/>) at the same
-    /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called
-    /// by a LymphNode object when it is clicked with a tower on it. </summary>
-    internal GameObject ShowTowerMenu(Transform lymphNode, TowerBlueprint towerBlueprint, TowerLevel currentTowerLevel)
-    {
-        GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        towerMenu.transform.SetParent(uICanvas, false);
-
-        // if this tower is not upgradeable (i.e. the current tower...
-        // ...level is the last one), don't show the "upgrade" button
-        int currLevel = currentTowerLevel.level;
-        int maxLevel = towerBlueprint.numberOfLevels;
-        bool upgradeable = currLevel < maxLevel;
-        if (!upgradeable)
-        {
-            for (int i = 0; i < towerMenu.transform.childCount; i++)
-            {
-                if (towerMenu.transform.GetChild(i).CompareTag("ButtonUpgradeTower"))
-                {
-                    towerMenu.transform.GetChild(i).gameObject.SetActive(false);
-                }
-            }
-        }
-
-        /////////////////////////////////////
-
-        // gather the cost data
-        
-        TowerLevel nextTowerLevel = towerBlueprint.GetNextTowerLevel(currLevel);
-
-        int sellValue = -1;
-        int upgradeCost = -1;
-
-        sellValue = currentTowerLevel.sellValue;
-        if (nextTowerLevel != null)
-            upgradeCost = nextTowerLevel.cost;
-
-        ShopMenu shopMenu = towerMenu.GetComponent<ShopMenu>();
-        shopMenu.SetValueSell(sellValue);
-        shopMenu.SetCostUpgrade(upgradeCost);
-        
-        /////////////////////////////////////
-
-        // UI elements and other scene objects use different coordinate systems;
-        // in order to position the menu where the lymph node is (on the screen)...
-        // ...we have to do some conversions between World and Viewport
-        RectTransform towerMenuRT = towerMenu.GetComponent<RectTransform>();
-        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
-        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
-        Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
-        Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
-
-        // set the position and remove the screen offset
-        towerMenuRT.localPosition = proportionalPosition - uiOffset;
-
-        return towerMenu;
-    }
-    internal GameObject CreateMenuSelectionInfo(Transform menu, SelectedAction sa, TowerBlueprint towerBlueprint)
-    {
-        GameObject infoPanel = Instantiate(menuSelectionInfoPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        // set the menu as this panel's parent (so that it scrolls together with it)
-        infoPanel.transform.SetParent(menu, false);
-
-        ///////////////////////////
-
-        // gather the data for the info panel
-        string name = "";
-        string description = "";
-        int cost = 0;
-        int level = -1;
-        int maxLevel = -1;
-        int health = -1;
-        int damage = -1;
-        int defense = -1;
-
-        LymphNode selectedLymphNode = null;
-        TowerLevel currentTowerLevel = null;
-
-        switch (sa)
-        {
-            case SelectedAction.BuildTower1:
-            case SelectedAction.BuildTower2:
-            case SelectedAction.BuildTower3:
-            case SelectedAction.BuildTower4:
-            {
-                if (towerBlueprint != null)
-                {
-                    currentTowerLevel = towerBlueprint.GetBaseLevel();
-                    name = towerBlueprint.towerName;
-                    description = towerBlueprint.description;
-                    cost = currentTowerLevel.cost;
-                    level = currentTowerLevel.level;
-                    maxLevel = towerBlueprint.numberOfLevels;
-                    health = currentTowerLevel.health;
-                    damage = currentTowerLevel.damage;
-                    defense = currentTowerLevel.defense;
-                }
-            }
-            break;
-
-            case SelectedAction.SellTower:
-            {
-                selectedLymphNode = BuildManager.instance.GetSelectedLymphNode();
-                if (selectedLymphNode != null)
-                {
-                    towerBlueprint = selectedLymphNode.GetTowerBlueprint();
-                    currentTowerLevel = selectedLymphNode.GetTowerLevel();
-                }
-                if (towerBlueprint != null && currentTowerLevel != null)
-                {
-                    name = "Sell tower";
-                    cost = -currentTowerLevel.sellValue;
-                    description = "Sell this tower. You will receive " + (-cost) + " money, and you'll be able to build another tower on the same spot.";
-                }
-            }
-            break;
-
-            case SelectedAction.UpgradeTower:
-            {
-                selectedLymphNode = BuildManager.instance.GetSelectedLymphNode();
-                TowerLevel nextTowerLevel = null;
-                if (selectedLymphNode != null)
-                {
-                    towerBlueprint = selectedLymphNode.GetTowerBlueprint();
-                    currentTowerLevel = selectedLymphNode.GetTowerLevel();
-                    if (currentTowerLevel != null && towerBlueprint != null)
-                    {
-                        nextTowerLevel = towerBlueprint.GetNextTowerLevel(currentTowerLevel.level);
-                    }
-                }
-                if (towerBlueprint != null && currentTowerLevel != null)
-                {
-                    name = towerBlueprint.towerName;
-                    description = nextTowerLevel.description;
-                    cost = nextTowerLevel.cost;
-                    level = nextTowerLevel.level;
-                    maxLevel = towerBlueprint.numberOfLevels;
-                    health = nextTowerLevel.health;
-                    damage = nextTowerLevel.damage;
-                    defense = nextTowerLevel.defense;
-                }
-            }
-            break;
-        }
-
-        infoPanel.GetComponent<InfoPanel>().SetAll(name, description, level, maxLevel, cost, health, damage, defense);
-        
-        ///////////////////////////
-
-        // no conversion is done now, because param menu is already a UI element
-        RectTransform panelRT = infoPanel.GetComponent<RectTransform>();
-        RectTransform menuRT = menu.GetComponent<RectTransform>();
-
-        // calculate the panel's x position so that it appears to the right of the menu
-        float panelHalfWidth = panelRT.sizeDelta.x / 2;
-        float menuHalfWidth = menuRT.sizeDelta.x / 2;
-        float xPos = menu.position.x + menuHalfWidth + panelHalfWidth;
-
-        // if there's not enough space on the right, show it on the left
-        // i.e. if the panel's width is longer than the space between xPos and right screen boundary
-        if (panelRT.sizeDelta.x > Screen.width - xPos)
-        {
-            xPos = menu.position.x - menuHalfWidth - panelHalfWidth;
-        }
-        
-        panelRT.position = new Vector3(xPos, menu.position.y, menu.position.z);
-
-        return infoPanel;
-    }
+    
 
     /// <summary> Shows an X at the touch position for <paramref name="delay"/> seconds. </summary>
     /// <param name="delay">Time in seconds that the X should stay on the screen.</param>
@@ -389,19 +170,64 @@ public class UIManager : MonoBehaviour
         SetEnabledTextMaxSSSelected(true);
         Invoke("DisableTextMaxSSSelected", delay);
     }
+    
 
+    /// <summary> Shows the building menu (see <see cref="buildingMenuPrefab"/>) at the same
+    /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called by a
+    /// LymphNode object when it is clicked without a tower on it. </summary>
+    internal GameObject ShowBuildingMenu(Transform lymphNode)
+    {
+        GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
+        buildingMenu.transform.SetParent(uICanvas, false);
 
+        /////////////////////////////////////
 
+        // gather the cost data
 
+        // todo: the building menu should dim towers that are unavailable for whatever reason
 
+        ShopMenu shopMenu = buildingMenu.GetComponent<ShopMenu>();
+        Shop shop = Shop.instance;
+        if (shopMenu != null)
+        {
+            int cost1 = -1;
+            int cost2 = -1;
+            int cost3 = -1;
+            int cost4 = -1;
+            if (shop.tower1 != null)
+                cost1 = shop.tower1.GetBaseLevelCost();
+            if (shop.tower2 != null)
+                cost2 = shop.tower2.GetBaseLevelCost();
+            if (shop.tower3 != null)
+                cost3 = shop.tower3.GetBaseLevelCost();
+            if (shop.tower4 != null)
+                cost4 = shop.tower4.GetBaseLevelCost();
+            shopMenu.SetCostTower1(cost1);
+            shopMenu.SetCostTower2(cost2);
+            shopMenu.SetCostTower3(cost3);
+            shopMenu.SetCostTower4(cost4);
+        }
 
+        /////////////////////////////////////
 
+        // UI elements and other scene objects use different coordinate systems;
+        // in order to position the menu where the lymph node is (on the screen)...
+        // ...we have to do some conversions between World and Viewport
+        RectTransform buildingMenuRT = buildingMenu.GetComponent<RectTransform>();
+        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
+        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
+        Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
+        Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
 
+        // set the position and remove the screen offset
+        buildingMenuRT.localPosition = proportionalPosition - uiOffset;
 
-
-
-
-    internal GameObject ShowTowerMenu(Transform lymphNode, TowerTest1 tower)
+        return buildingMenu;
+    }
+    /// <summary> Shows the tower menu (see <see cref="towerMenuPrefab"/>) at the same
+    /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called
+    /// by a LymphNode object when it is clicked with a tower on it. </summary>
+    internal GameObject ShowTowerMenu(Transform lymphNode, Tower tower)
     {
         GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
         towerMenu.transform.SetParent(uICanvas, false);
@@ -452,5 +278,110 @@ public class UIManager : MonoBehaviour
         towerMenuRT.localPosition = proportionalPosition - uiOffset;
 
         return towerMenu;
+    }
+    internal GameObject ShowInfoPanel(Transform menu, SelectedAction sa, Tower newTower)
+    {
+        GameObject infoPanel = Instantiate(menuSelectionInfoPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
+        // set the menu as this panel's parent (so that it scrolls together with it)
+        infoPanel.transform.SetParent(menu, false);
+
+        ///////////////////////////
+
+        // gather the data for the info panel
+        string name = "";
+        string description = "";
+        int cost = 0;
+        int level = -1;
+        int maxLevel = -1;
+        int health = -1;
+        int damage = -1;
+        int defense = -1;
+
+        LymphNode selectedLymphNode = null;
+        Tower currentTower = null;
+
+        switch (sa)
+        {
+            case SelectedAction.BuildTower1:
+            case SelectedAction.BuildTower2:
+            case SelectedAction.BuildTower3:
+            case SelectedAction.BuildTower4:
+                {
+                    if (newTower != null)
+                    {
+                        name = newTower.towerName;
+                        description = newTower.description;
+                        level = 1; // todo: does this even make sense? towers should always start at level 1
+                        cost = newTower.GetBaseLevelCost();
+                        maxLevel = newTower.GetNumberOfLevels();
+                        health = newTower.GetBaseLevelHealth();
+                        damage = newTower.GetBaseLevelDamage();
+                        //defense = newTower.getDefen
+                    }
+                }
+                break;
+
+            case SelectedAction.SellTower:
+                {
+                    selectedLymphNode = BuildManager.instance.GetSelectedLymphNode();
+                    if (selectedLymphNode != null)
+                    {
+                        currentTower = selectedLymphNode.GetTowerComponent();
+                    }
+                    if (currentTower != null)
+                    {
+                        name = "Sell tower";
+                        cost = -currentTower.GetCurrentSellValue();
+                        description = "Sell this tower. You will receive " + (-cost) + " money, and you'll be able to build another tower on the same spot.";
+                    }
+                }
+                break;
+
+            case SelectedAction.UpgradeTower:
+                {
+                    selectedLymphNode = BuildManager.instance.GetSelectedLymphNode();
+                    
+                    if (selectedLymphNode != null)
+                    {
+                        currentTower = selectedLymphNode.GetTowerComponent();
+                    }
+                    if (currentTower != null)
+                    {
+                        name = currentTower.GetNextLevelName();
+                        description = currentTower.GetNextLevelDescription();
+                        cost = currentTower.GetNextLevelCost();
+                        level = currentTower.GetCurrentLevel() + 1;
+                        maxLevel = currentTower.GetNumberOfLevels();
+                        health = currentTower.GetNextLevelHealth();
+                        damage = currentTower.GetNextLevelDamage();
+                        //defense = tower1.GetNextLevelDe();
+                    }
+                }
+                break;
+        }
+
+        infoPanel.GetComponent<InfoPanel>().SetAll(name, description, level, maxLevel, cost, health, damage, defense);
+
+        ///////////////////////////
+
+        // no conversion is done now, because param menu is already a UI element
+        RectTransform panelRT = infoPanel.GetComponent<RectTransform>();
+        RectTransform menuRT = menu.GetComponent<RectTransform>();
+
+        // calculate the panel's x position so that it appears to the right of the menu
+        float panelHalfWidth = panelRT.sizeDelta.x / 2;
+        float menuHalfWidth = menuRT.sizeDelta.x / 2;
+        float xPos = menu.position.x + menuHalfWidth + panelHalfWidth;
+
+        // if there's not enough space on the right, show it on the left
+        // i.e. if the panel's width is longer than the space between xPos and right screen boundary
+        if (panelRT.sizeDelta.x > Screen.width - xPos)
+        {
+            xPos = menu.position.x - menuHalfWidth - panelHalfWidth;
+        }
+
+        panelRT.position = new Vector3(xPos, menu.position.y, menu.position.z);
+
+        return infoPanel;
     }
 }

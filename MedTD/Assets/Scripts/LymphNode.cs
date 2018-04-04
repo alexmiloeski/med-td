@@ -3,14 +3,11 @@ using UnityEngine.EventSystems;
 
 public class LymphNode : MonoBehaviour
 {
-    private BuildManager buildManager;
-
     private SpriteRenderer rend;
     private Color defaultColor;
     private Color highlightedColor = Color.green;
-
-    //private TowerBlueprint towerBlueprint;
-    private GameObject currentLevelTowerObject;
+    
+    private GameObject towerGameObject;
     private GameObject menu;
     
     private bool selected;
@@ -19,8 +16,6 @@ public class LymphNode : MonoBehaviour
 
     void Start()
     {
-        buildManager = BuildManager.instance;
-
         selected = false;
         
         rend = GetComponent<SpriteRenderer>();
@@ -45,21 +40,19 @@ public class LymphNode : MonoBehaviour
         // if not selected, select it
         if (!selected)
         {
-            buildManager.SelectLymphNode(this);
-            this.Select(); // could be redundant, if it's called from BuildManager too
+            BuildManager.instance.SelectLymphNode(this);
+            Select(); // could be redundant, if it's called from BuildManager too
 
-            UIManager uim = buildManager.gameObject.GetComponent<UIManager>();
+            UIManager uim = BuildManager.instance.gameObject.GetComponent<UIManager>();
             if (IsVacant()) // if there's no tower here, show building menu
             {
                 // vacant: show building menu
-                menu = uim.ShowBuildingMenu(this.transform);
+                menu = uim.ShowBuildingMenu(transform);
             }
             else // if there's a tower here, show other menu (sell, upgrade, rally point..)
             {
                 // not vacant: show tower menu
-                //menu = uim.ShowTowerMenu(this.transform, towerBlueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
-                //menu = uim.ShowTowerMenu(this.transform, currentLevelTowerObject.GetComponent<TowerLevel>().blueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
-                menu = uim.ShowTowerMenu(this.transform, towerTestObject.GetComponent<TowerTest1>());
+                menu = uim.ShowTowerMenu(this.transform, GetTowerComponent());
             }
 
 
@@ -87,7 +80,7 @@ public class LymphNode : MonoBehaviour
         // if selected, deselect it
         else
         {
-            buildManager.DeselectLymphNode();
+            BuildManager.instance.DeselectLymphNode();
             Deselect(); // redundant, called from BuildManager too
         }
     }
@@ -108,63 +101,71 @@ public class LymphNode : MonoBehaviour
             Destroy(menu);
         }
     }
-
-    internal void BuildTower(TowerBlueprint _towerBlueprint)
+    
+    internal bool IsVacant()
     {
-        //towerBlueprint = _towerBlueprint;
+        return towerGameObject == null || GetTowerComponent() == null;
+    }
+    
 
-        GameObject towerPrefab = _towerBlueprint.level1Prefab;
+    internal void BuildTower(Tower tower)
+    {
+        // get the GameObject that this Tower game component is attached to
+        GameObject towerPrefab = tower.gameObject;
         Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
         towerPosition.z = -0.3f;
 
-        currentLevelTowerObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
-        currentLevelTowerObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
-
-        // todo: it might be useful to have a reference to the TowerBlueprint object from the TowerLevel object
-        //TowerLevel towerLevel = towerObject.GetComponent<TowerLevel>();
-        //towerLevel.SetBlueprint(towerBlueprint);
-
+        towerGameObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
+        towerGameObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
         
+        GetTowerComponent().BuildBaseLevel();
+        
+
         // deselect this lymph node (which also destroys the building menu)
         Deselect(); // redundant, called from BuildManager too
     }
     internal void DestroyTower()
     {
-        Destroy(currentLevelTowerObject);
-        //towerBlueprint = null;
+        Destroy(towerGameObject);
         Deselect();
     }
-    internal void UpgradeTower(GameObject nextLevelTowerPrefab)
+    internal void UpgradeTower()
     {
-        Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
-        towerPosition.z = -0.3f;
-
-        // destroy the current tower before creating the next level tower
-        Destroy(currentLevelTowerObject);
-
-        currentLevelTowerObject = Instantiate(nextLevelTowerPrefab, towerPosition, transform.rotation);
-        currentLevelTowerObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
+        if (GetTowerComponent() != null)
+        {
+            GetTowerComponent().Upgrade();
+        }
+        else
+        {
+            // todo: show some error info
+        }
     }
 
-    internal bool IsVacant()
+    internal GameObject GetTowerGameObject()
     {
-        //return currentLevelTowerObject == null;
-        return towerTestObject == null;
+        return towerGameObject;
     }
-
-    internal TowerLevel GetTowerLevel()
+    internal Tower GetTowerComponent()
     {
-        return currentLevelTowerObject.GetComponent<TowerLevel>();
-    }
-    internal TowerBlueprint GetTowerBlueprint()
-    {
-        //return towerBlueprint;
-        return currentLevelTowerObject.GetComponent<TowerLevel>().blueprint;
+        if (towerGameObject == null) return null;
+        return towerGameObject.GetComponent<Tower>();
     }
     internal GameObject GetBuildingMenu()
     {
         return menu;
     }
+    
+    
+    internal int GetNextLevelCost()
+    {
+        if (GetTowerComponent() == null) return -1;
+        return GetTowerComponent().GetNextLevelCost();
+    }
+    //internal int GetCurrentTowerLevel()
+    //{
+    //    if (GetTowerComponent() == null) return -1;
+    //    return GetTowerComponent().GetCurrentLevel();
+    //}
 
     internal void HighlightOff()
     {
@@ -173,39 +174,5 @@ public class LymphNode : MonoBehaviour
     private void HighlightOn()
     {
         rend.color = highlightedColor;
-    }
-
-
-
-
-
-
-
-    private GameObject towerTestObject;
-
-    internal void BuildTower(TowerTest1 tower)
-    {
-        GameObject towerPrefab = tower.gameObject;
-        Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
-        towerPosition.z = -0.3f;
-
-        towerTestObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
-        towerTestObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
-
-        TowerTest1 towerTest1 = towerTestObject.GetComponent<TowerTest1>();
-        towerTest1.BuildBaseLevel();
-        
-
-
-        // deselect this lymph node (which also destroys the building menu)
-        Deselect(); // redundant, called from BuildManager too
-    }
-    internal int GetTowerLevel2()
-    {
-        return towerTestObject.GetComponent<TowerTest1>().GetCurrentLevel();
-    }
-    internal int GetNextLevelCost()
-    {
-        return towerTestObject.GetComponent<TowerTest1>().GetNextLevelCost();
     }
 }

@@ -7,19 +7,16 @@ public class Shop : MonoBehaviour
 {
     public static Shop instance;
 
-    public TowerTest1 towerTest1;
-    public TowerBlueprint tower1;
-    public TowerBlueprint tower2;
-    public TowerBlueprint tower3;
-    public TowerBlueprint tower4;
+    public Tower tower1;
+    public Tower tower2;
+    public Tower tower3;
+    public Tower tower4;
 
     // needed for changing button appearance when "selected"
     public Sprite spriteButtonRegular;
     public Sprite spriteCheckmark;
     public Sprite spriteButtonX;
-
-    private BuildManager buildManager;
-
+    
     /// <summary> Reference(s) to a button's state before it's been clicked and changed to "selected";
     /// Used for changing it back to its original state when another button becomes "selected" </summary>
     private GameObject tempButton;
@@ -38,17 +35,14 @@ public class Shop : MonoBehaviour
         }
         instance = this;
     }
-
-    private void Start()
-    {
-        buildManager = BuildManager.instance;
-    }
+    
     
     public void ButtonBottomCenterAction()
     {
         //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
         if (Scroller.IsDragging()) return; // don't do button action while scrolling
-        if (buildManager == null) buildManager = BuildManager.instance;
+
+        BuildManager buildManager = BuildManager.instance;
 
         if (buildManager.IsFinishedWithSS())
         {
@@ -79,12 +73,11 @@ public class Shop : MonoBehaviour
     }
     public void ButtonBuildTower3Action(GameObject buttonObject)
     {
-        //ButtonAction(buttonObject, SelectedAction.BuildTower2, tower3);
-        ButtonAction2(buttonObject, SelectedAction.BuildTower3, towerTest1);
+        ButtonAction(buttonObject, SelectedAction.BuildTower3, tower3);
     }
     public void ButtonBuildTower4Action(GameObject buttonObject)
     {
-        //ButtonAction(buttonObject, SelectedAction.BuildTower2, tower4);
+        ButtonAction(buttonObject, SelectedAction.BuildTower4, tower4);
     }
     public void ButtonSellTowerAction(GameObject buttonObject)
     {
@@ -96,7 +89,6 @@ public class Shop : MonoBehaviour
     }
     public void ButtonSetRallyPointAction()
     {
-        //ButtonAction(null, SelectedAction.SetRallyPoint, null);
     }
 
     private void SetButtonAsSelected(GameObject buttonObject, bool possible)
@@ -129,48 +121,7 @@ public class Shop : MonoBehaviour
                 tempButton.transform.GetChild(0).GetComponent<Text>().text = tempButtonText;
         }
     }
-    private void ButtonAction(GameObject buttonObject, SelectedAction sa, TowerBlueprint tower)
-    {
-        //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
-        if (Scroller.IsDragging()) return; // don't do button action while scrolling
-
-        // destroy the info panel, if it was present
-        if (infoPanel != null)
-        {
-            Destroy(infoPanel);
-        }
-
-        if (buildManager == null) buildManager = BuildManager.instance;
-        if (buildManager.GetSelectedAction() == sa) // if this button is already selected, do the action
-        {
-            tempButton = null;
-
-            buildManager.DoSelectedAction(tower);
-            // destroy the menu; deselecting the lymph node also destroys the menu, so that works fine
-            // todo: if a design decision is made to not deselect the node after starting the action,
-            // then this has to be redone, because not destroying the menu leaves the selected button
-            buildManager.DeselectLymphNode();
-        }
-        else // if this button isn't selected, just select it (if the action is possible)
-        {
-            ResetPreviouslySelectedButton();
-            bool possible = buildManager.IsActionPossible(sa, tower);
-            SetButtonAsSelected(buttonObject, possible);
-            if (possible)
-            {
-                buildManager.SelectAction(sa);
-                
-                // show info panel when selecting a button successfully
-                infoPanel = UIManager.instance.CreateMenuSelectionInfo(buttonObject.transform.parent, sa, tower);
-            }
-            else
-            {
-                buildManager.SelectAction(SelectedAction.Nothing);
-                UIManager.instance.FlashNotEnoughMoney(1f);
-            }
-        }
-    }
-    private void ButtonAction2(GameObject buttonObject, SelectedAction sa, TowerTest1 tower)
+    private void ButtonAction(GameObject buttonObject, SelectedAction sa, Tower tower)
     {
         if (Scroller.IsDragging()) return; // don't do button action while scrolling
 
@@ -180,7 +131,7 @@ public class Shop : MonoBehaviour
             Destroy(infoPanel);
         }
 
-        if (buildManager == null) buildManager = BuildManager.instance;
+        BuildManager buildManager = BuildManager.instance;
         if (buildManager.GetSelectedAction() == sa) // if this button is already selected, do the action
         {
             tempButton = null;
@@ -201,7 +152,7 @@ public class Shop : MonoBehaviour
                 buildManager.SelectAction(sa);
 
                 // show info panel when selecting a button successfully
-                //infoPanel = UIManager.instance.CreateMenuSelectionInfo(buttonObject.transform.parent, sa, tower);
+                infoPanel = UIManager.instance.ShowInfoPanel(buttonObject.transform.parent, sa, tower);
             }
             else
             {
