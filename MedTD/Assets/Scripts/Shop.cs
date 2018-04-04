@@ -149,7 +149,7 @@ public class Shop : MonoBehaviour
             // then this has to be redone, because not destroying the menu leaves the selected button
             buildManager.DeselectLymphNode();
         }
-        else // if this button isn't selected, just select it
+        else // if this button isn't selected, just select it (if the action is possible)
         {
             ResetPreviouslySelectedButton();
             bool possible = buildManager.IsActionPossible(sa, tower);

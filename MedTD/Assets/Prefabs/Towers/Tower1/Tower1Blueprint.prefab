@@ -9,30 +9,30 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1921000317947102}
+  m_RootGameObject: {fileID: 1232955715799632}
   m_IsPrefabParent: 1
---- !u!1 &1921000317947102
+--- !u!1 &1232955715799632
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4241162217075398}
-  - component: {fileID: 114923827210648730}
-  m_Layer: 5
-  m_Name: Shop
+  - component: {fileID: 4983499573084888}
+  - component: {fileID: 114811035225112506}
+  m_Layer: 0
+  m_Name: Tower1Blueprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4241162217075398
+--- !u!4 &4983499573084888
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1921000317947102}
+  m_GameObject: {fileID: 1232955715799632}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,22 +40,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114923827210648730
+--- !u!114 &114811035225112506
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1921000317947102}
+  m_GameObject: {fileID: 1232955715799632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eec7dab2bdbb7e34f838059cebc7504b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ca6b12813de25f45a1895412b8678ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower1: {fileID: 114811035225112506, guid: 53ae88e2ff1f7cb4d93082a619a65491, type: 2}
-  tower2: {fileID: 114843060016989172, guid: 5674bab53ada7414ba6bc9b665a0c4fc, type: 2}
-  tower3: {fileID: 0}
-  tower4: {fileID: 0}
-  spriteButtonRegular: {fileID: 21300000, guid: ec82a3ab20b9e274f9fbb585940cbc0f,
-    type: 3}
-  spriteCheckmark: {fileID: 21300000, guid: 906db8f00ba26234c9d18cee2f5e05cb, type: 3}
-  spriteButtonX: {fileID: 21300000, guid: c39b14da124994b4a8bd247b8e3938b6, type: 3}
+  towerName: Tower1
+  description: Tower1desc
+  level1Prefab: {fileID: 1364557980695860, guid: fa59afe8d5fbea545a5bc926c3c9f23f,
+    type: 2}
+  level2Prefab: {fileID: 1364557980695860, guid: df0b006913e17a54aa6cd422256aac65,
+    type: 2}
+  level3Prefab: {fileID: 1364557980695860, guid: b5c156c96133a314089d283012e8d76d,
+    type: 2}
+  level4Prefab: {fileID: 1364557980695860, guid: bbf2c02ee58e9774782289c443bbf137,
+    type: 2}
+  numberOfLevels: 4

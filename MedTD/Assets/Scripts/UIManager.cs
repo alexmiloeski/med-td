@@ -255,7 +255,7 @@ public class UIManager : MonoBehaviour
                 if (towerBlueprint != null)
                 {
                     currentTowerLevel = towerBlueprint.GetBaseLevel();
-                    name = towerBlueprint.name;
+                    name = towerBlueprint.towerName;
                     description = towerBlueprint.description;
                     cost = currentTowerLevel.cost;
                     level = currentTowerLevel.level;
@@ -299,7 +299,7 @@ public class UIManager : MonoBehaviour
                 }
                 if (towerBlueprint != null && currentTowerLevel != null)
                 {
-                    name = towerBlueprint.name;
+                    name = towerBlueprint.towerName;
                     description = nextTowerLevel.description;
                     cost = nextTowerLevel.cost;
                     level = nextTowerLevel.level;

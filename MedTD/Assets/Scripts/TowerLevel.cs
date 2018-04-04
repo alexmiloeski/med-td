@@ -2,6 +2,7 @@
 
 public class TowerLevel : MonoBehaviour
 {
+    public TowerBlueprint blueprint;
     public string description;
     public int level;
     public int cost;
@@ -9,17 +10,13 @@ public class TowerLevel : MonoBehaviour
     public int damage;
     public int health;
     public int defense;
-
-    private TowerBlueprint blueprint;
     
-    // todo: this might be useful
-    internal void SetBlueprint(TowerBlueprint blueprint)
-    {
-        this.blueprint = blueprint;
-    }
-
-    internal TowerBlueprint GetBlueprint()
-    {
-        return blueprint;
-    }
+    //internal void SetBlueprint(TowerBlueprint blueprint)
+    //{
+    //    this.blueprint = blueprint;
+    //}
+    //internal TowerBlueprint GetBlueprint()
+    //{
+    //    return blueprint;
+    //}
 }

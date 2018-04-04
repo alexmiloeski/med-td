@@ -9,7 +9,7 @@ public class LymphNode : MonoBehaviour
     private Color defaultColor;
     private Color highlightedColor = Color.green;
 
-    private TowerBlueprint towerBlueprint;
+    //private TowerBlueprint towerBlueprint;
     private GameObject currentLevelTowerObject;
     private GameObject menu;
     
@@ -57,7 +57,8 @@ public class LymphNode : MonoBehaviour
             else // if there's a tower here, show other menu (sell, upgrade, rally point..)
             {
                 // not vacant: show tower menu
-                menu = uim.ShowTowerMenu(this.transform, towerBlueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
+                //menu = uim.ShowTowerMenu(this.transform, towerBlueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
+                menu = uim.ShowTowerMenu(this.transform, currentLevelTowerObject.GetComponent<TowerLevel>().blueprint, currentLevelTowerObject.GetComponent<TowerLevel>());
             }
 
 
@@ -109,7 +110,7 @@ public class LymphNode : MonoBehaviour
 
     internal void BuildTower(TowerBlueprint _towerBlueprint)
     {
-        towerBlueprint = _towerBlueprint;
+        //towerBlueprint = _towerBlueprint;
 
         GameObject towerPrefab = _towerBlueprint.level1Prefab;
         Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
@@ -129,7 +130,7 @@ public class LymphNode : MonoBehaviour
     internal void DestroyTower()
     {
         Destroy(currentLevelTowerObject);
-        towerBlueprint = null;
+        //towerBlueprint = null;
         Deselect();
     }
     internal void UpgradeTower(GameObject nextLevelTowerPrefab)
@@ -155,7 +156,8 @@ public class LymphNode : MonoBehaviour
     }
     internal TowerBlueprint GetTowerBlueprint()
     {
-        return towerBlueprint;
+        //return towerBlueprint;
+        return currentLevelTowerObject.GetComponent<TowerLevel>().blueprint;
     }
     internal GameObject GetBuildingMenu()
     {

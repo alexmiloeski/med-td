@@ -11,10 +11,8 @@ public class Player : MonoBehaviour
 
 	private void Awake()
     {
-        Debug.Log("Player.Awake");
         Health = startHealth;
         Money = startMoney;
-        Debug.Log("after setting health and money");
     }
 
     private void Start()

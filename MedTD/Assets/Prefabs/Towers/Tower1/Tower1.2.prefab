@@ -52,6 +52,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fedb28a153400da4e9ed16984b7901e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blueprint: {fileID: 114811035225112506, guid: 53ae88e2ff1f7cb4d93082a619a65491,
+    type: 2}
   description: 
   level: 2
   cost: 20

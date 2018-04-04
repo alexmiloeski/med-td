@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class TowerBlueprint
+public class TowerBlueprint : MonoBehaviour
 {
-    public string name;
+    public string towerName;
     public string description;
 
     public GameObject level1Prefab;
@@ -13,8 +13,6 @@ public class TowerBlueprint
 
     public int numberOfLevels = 1;
     
-    //public bool ranged = true;
-
     /// <summary> Just returns the TowerLevel component of the first level of this tower. </summary>
     internal TowerLevel GetBaseLevel()
     {
