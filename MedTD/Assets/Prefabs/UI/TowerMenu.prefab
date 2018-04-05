@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 224888453862293704}
   - component: {fileID: 222552210976754802}
   - component: {fileID: 114333232458562156}
-  - component: {fileID: 114875847595739174}
+  - component: {fileID: 114360393744261788}
   m_Layer: 5
   m_Name: TowerMenu
   m_TagString: Untagged
@@ -267,7 +267,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
+      - m_Target: {fileID: 114005406896707126, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonSetRallyPointAction
         m_Mode: 1
@@ -308,6 +308,23 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114360393744261788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1298636571941120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4b0d6acc525814dbfe46bfdd4c45d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textCostTower1: {fileID: 0}
+  textCostTower2: {fileID: 0}
+  textCostTower3: {fileID: 0}
+  textCostTower4: {fileID: 0}
+  textValueSell: {fileID: 114716455009635444}
+  textCostUpgrade: {fileID: 114872099137528688}
 --- !u!114 &114505302709420998
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -407,7 +424,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
+      - m_Target: {fileID: 114005406896707126, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonSellTowerAction
         m_Mode: 2
@@ -514,23 +531,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
---- !u!114 &114875847595739174
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1298636571941120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e6097747a8b0e84199a9efa04ff00a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textCostTower1: {fileID: 0}
-  textCostTower2: {fileID: 0}
-  textCostTower3: {fileID: 0}
-  textCostTower4: {fileID: 0}
-  textValueSell: {fileID: 114716455009635444}
-  textCostUpgrade: {fileID: 114872099137528688}
 --- !u!114 &114897942755957192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -603,7 +603,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
+      - m_Target: {fileID: 114005406896707126, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonUpgradeTowerAction
         m_Mode: 2

@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 224014481107853784}
   - component: {fileID: 222644484660236338}
   - component: {fileID: 114336267546208824}
-  - component: {fileID: 114984002121146660}
+  - component: {fileID: 114627013145881328}
   m_Layer: 5
   m_Name: BuildingMenu
   m_TagString: Untagged
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
+      - m_Target: {fileID: 114005406896707126, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower3Action
         m_Mode: 2
@@ -356,7 +356,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
+      - m_Target: {fileID: 114005406896707126, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower1Action
         m_Mode: 2
@@ -562,13 +562,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
+      - m_Target: {fileID: 114005406896707126, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower4Action
-        m_Mode: 1
+        m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -576,6 +576,23 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114627013145881328
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1761165996097940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4b0d6acc525814dbfe46bfdd4c45d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textCostTower1: {fileID: 114906522202702112}
+  textCostTower2: {fileID: 114462572871982030}
+  textCostTower3: {fileID: 114663580308375008}
+  textCostTower4: {fileID: 114449735438921812}
+  textValueSell: {fileID: 0}
+  textCostUpgrade: {fileID: 0}
 --- !u!114 &114650385041801264
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -708,7 +725,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114923827210648730, guid: 0647752763239664eae89098747ec890,
+      - m_Target: {fileID: 114005406896707126, guid: 0647752763239664eae89098747ec890,
           type: 2}
         m_MethodName: ButtonBuildTower2Action
         m_Mode: 2
@@ -848,23 +865,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Tower3
---- !u!114 &114984002121146660
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1761165996097940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e6097747a8b0e84199a9efa04ff00a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textCostTower1: {fileID: 114906522202702112}
-  textCostTower2: {fileID: 114462572871982030}
-  textCostTower3: {fileID: 114663580308375008}
-  textCostTower4: {fileID: 114449735438921812}
-  textValueSell: {fileID: 0}
-  textCostUpgrade: {fileID: 0}
 --- !u!222 &222124723545864304
 CanvasRenderer:
   m_ObjectHideFlags: 1

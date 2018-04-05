@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 224397863289750220}
   - component: {fileID: 222640490230676986}
   - component: {fileID: 114727241115204040}
-  - component: {fileID: 114714333295166588}
+  - component: {fileID: 114473536117334672}
   m_Layer: 5
   m_Name: MenuSelectionInfo
   m_TagString: Untagged
@@ -313,6 +313,24 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Tower name
+--- !u!114 &114473536117334672
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1323912810102374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b444b013da3cc3459828c768e2f4fee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textItemName: {fileID: 114283758734031432}
+  textItemDescription: {fileID: 114554961209935588}
+  textItemLevel: {fileID: 114914737371112498}
+  textItemCost: {fileID: 114190217321300812}
+  textItemHealth: {fileID: 114065111375237566}
+  textItemDamage: {fileID: 114050486458872066}
+  textItemDefense: {fileID: 114184615400015876}
 --- !u!114 &114554961209935588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -347,24 +365,6 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: Long ass description. Ok, it shouldn't be too long, but it's definitely
     a sentence or two.
---- !u!114 &114714333295166588
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1323912810102374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 121058468a2a7bd4d80447e545110f6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textItemName: {fileID: 114283758734031432}
-  textItemDescription: {fileID: 114554961209935588}
-  textItemLevel: {fileID: 114914737371112498}
-  textItemCost: {fileID: 114190217321300812}
-  textItemHealth: {fileID: 114065111375237566}
-  textItemDamage: {fileID: 114050486458872066}
-  textItemDefense: {fileID: 114184615400015876}
 --- !u!114 &114727241115204040
 MonoBehaviour:
   m_ObjectHideFlags: 1
