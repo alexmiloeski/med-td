@@ -9,19 +9,17 @@ public class GenerateTiles : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //Renderer rend = tilePrefab.GetComponent<Renderer>();
-        //Vector3 size = rend.bounds.size;
-        BoxCollider2D coll = tilePrefab.GetComponent<BoxCollider2D>();
-        Vector3 size = coll.bounds.size;
-        float width = 1;// size.x;
-        float height = 1;//size.y;
+        Renderer rend = tilePrefab.GetComponent<Renderer>();
+        Vector3 size = rend.bounds.size;
+        float width = size.x;
+        float height = size.y;
         Debug.Log(width + " x " + height);
 
         int halfBoardWidth = boardSizeX / 2;
         int halfBoardHeight = boardSizeY / 2;
 
         GameObject board = new GameObject();
-        board.name = "NewBoard";
+        board.name = "Board";
         for (int x = -halfBoardWidth; x < halfBoardWidth; x++)
         {
             for (int y = -halfBoardHeight; y < halfBoardHeight; y++)

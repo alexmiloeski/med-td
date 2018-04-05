@@ -132,13 +132,11 @@ public class Scroller : MonoBehaviour
 
     public static void ScrollToTop()
     {
-        if (cam == null) cam = Camera.main;
         cam.transform.position = new Vector3(cam.transform.position.x, camUpperBound, cam.transform.position.z);
         MoveMenuWithCam();
     }
     public static void ScrollToBottom()
     {
-        if (cam == null) cam = Camera.main;
         cam.transform.position = new Vector3(cam.transform.position.x, camLowerBound, cam.transform.position.z);
         MoveMenuWithCam();
     }
