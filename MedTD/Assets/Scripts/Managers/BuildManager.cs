@@ -211,7 +211,7 @@ public class BuildManager : MonoBehaviour
     /// <summary> Returns true if the player has enough money for the provided
     /// <see cref="SelectedAction"/> <paramref name="sa"/>. Provide the <paramref name="sa"/>
     /// only if the action is building a new tower. Otherwise pass null. </summary>
-    internal bool IsActionPossible(SelectedAction sa, Tower towerToBuild)
+    internal bool EnoughMoneyForAction(SelectedAction sa, Tower towerToBuild)
     {
         switch (sa)
         {

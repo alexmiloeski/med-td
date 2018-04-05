@@ -145,20 +145,19 @@ public class Shop : MonoBehaviour
         else // if this button isn't selected, just select it (if the action is possible)
         {
             ResetPreviouslySelectedButton();
-            bool possible = buildManager.IsActionPossible(sa, tower);
-            SetButtonAsSelected(buttonObject, possible);
-            if (possible)
+            bool enoughMoney = buildManager.EnoughMoneyForAction(sa, tower);
+            SetButtonAsSelected(buttonObject, enoughMoney);
+            if (enoughMoney)
             {
                 buildManager.SelectAction(sa);
-
-                // show info panel when selecting a button successfully
-                infoPanel = UIManager.instance.ShowInfoPanel(buttonObject.transform.parent, sa, tower);
             }
             else
             {
                 buildManager.SelectAction(SelectedAction.Nothing);
                 UIManager.instance.FlashNotEnoughMoney(1f);
             }
+            // show info panel when selecting a button
+            infoPanel = UIManager.instance.ShowInfoPanel(buttonObject.transform.parent, sa, tower);
         }
     }
 }
