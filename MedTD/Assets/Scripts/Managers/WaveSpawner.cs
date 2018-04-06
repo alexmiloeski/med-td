@@ -35,7 +35,7 @@ public class WaveSpawner : MonoBehaviour
             instance = this;
         }
 
-        countdown = timeBetweenWaves;
+        countdown = 1f;// timeBetweenWaves;
     }
 
     internal void StartLevel()

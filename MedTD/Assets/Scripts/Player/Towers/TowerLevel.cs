@@ -10,4 +10,11 @@ public class TowerLevel : MonoBehaviour
     public int sellValue;
     public int damage;
     public int health;
+    public int defense;
+    public float range;
+    public int cooldown;
+
+    public float unitSpeed;
+    public float meleeHitRange = 1f;
+    public float hitCooldown = 1f;
 }

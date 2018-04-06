@@ -49,7 +49,14 @@ public class Tower : MonoBehaviour
     internal int GetCurrentSellValue() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].sellValue : -1; }
     internal int GetCurrentDamage() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].damage : -1; }
     internal int GetCurrentHealth() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].health : -1; }
-    
+    internal int GetCurrentDefense() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].defense : -1; }
+    internal float GetCurrentRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].range : 0; }
+    internal int GetCurrentCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cooldown : 1; }
+
+    internal float GetCurrentUnitSpeed() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].unitSpeed : 0f; }
+    internal float GetCurrentMeleeHitRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].meleeHitRange : 1f; }
+    internal float GetCurrentHitCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].hitCooldown : 1f; }
+
     internal string GetBaseLevelName()
     {
         // return the name of the first valid TowerLevel
@@ -249,4 +256,13 @@ public class Tower : MonoBehaviour
             return -1;
         }
     }
+
+
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, GetCurrentRange());
+    }
+
 }

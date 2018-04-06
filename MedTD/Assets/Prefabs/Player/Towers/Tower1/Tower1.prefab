@@ -55,8 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 1935786120892614, guid: f5d8d07c668cff74796a2286e4a04543, type: 2}
   pathBoard: {fileID: 4925667004981864, guid: 5f9485573c8dc864dac6f2bf668d6cb1, type: 2}
-  cooldown: 4
-  unitCount: 3
+  unitCount: 1
 --- !u!114 &114721365122771560
 MonoBehaviour:
   m_ObjectHideFlags: 1

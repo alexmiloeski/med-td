@@ -10,6 +10,7 @@ TagManager:
   - Level3
   - Level4
   - ButtonUpgradeTower
+  - Enemy
   layers:
   - Default
   - TransparentFX
