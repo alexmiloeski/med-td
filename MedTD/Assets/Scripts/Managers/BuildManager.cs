@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildManager : MonoBehaviour
@@ -34,6 +35,42 @@ public class BuildManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("BuildManager.Awake");
+
+        List<Vector2> list = new List<Vector2>();
+        Vector2 v1 = new Vector2(1f, 2f);
+        Vector2 v2 = new Vector2(2f, 3f);
+        Vector2 v3 = new Vector2(3f, 4f);
+        Vector2 v4 = new Vector2(4f, 5f);
+        list.Add(v1);
+        //list.Add(v2);
+        list.Add(v3);
+        list.Add(v4);
+
+        Vector2 a1 = new Vector2(2f, 3f);
+        bool b1 = list.Contains(a1);
+
+        Vector2 f1 = list.Find(x => x.Equals(a1));
+        bool b2 = f1 != null;
+
+        Vector2 f2 = list.Find(x => x.x == a1.x && x.y == a1.y);
+        bool b3 = f2 != null;
+
+        Debug.Log("b1 = " + b1);
+        Debug.Log("b2 = " + b2);
+        Debug.Log("b3 = " + b3);
+
+        list.Add(v2);
+        bool b4 = list.Contains(a1);
+        Debug.Log("b4 = " + b4);
+
+
+
+
+
+
+
+
         // initialize an instance of this singleton for use in other classes
         if (instance != null)
         {
@@ -75,7 +112,7 @@ public class BuildManager : MonoBehaviour
             uim.FlashXAtTouch(0.8f);
             uim.FlashMaxSSSelected(1.5f);
         }
-        
+
         // update the UI
         int selectedSSCount = GetSelectedSSCount();
         uim.UpdateSelectedSSCount(selectedSSCount);
@@ -197,7 +234,7 @@ public class BuildManager : MonoBehaviour
         return selectedLymphNode;
     }
 
-    
+
     internal void SelectAction(SelectedAction sa)
     {
         selectedAction = sa;
@@ -206,7 +243,7 @@ public class BuildManager : MonoBehaviour
     {
         return selectedAction;
     }
-    
+
 
     /// <summary> Returns true if the player has enough money for the provided
     /// <see cref="SelectedAction"/> <paramref name="sa"/>. Provide the <paramref name="sa"/>
@@ -275,7 +312,7 @@ public class BuildManager : MonoBehaviour
         {
             throw new Exception("Error! There's no selected lymph node or it is not vacant.");
         }
-        
+
         if (Player.HasEnoughMoney(tower.GetBaseLevelCost()))
         {
             Player.SubtractMoney(tower.GetBaseLevelCost());
@@ -327,7 +364,7 @@ public class BuildManager : MonoBehaviour
             // todo: maybe show some info here, as na additional safeguard
             return;
         }
-        
+
         if (Player.HasEnoughMoney(currentTowerComponent.GetNextLevelCost()))
         {
             Player.SubtractMoney(currentTowerComponent.GetNextLevelCost());

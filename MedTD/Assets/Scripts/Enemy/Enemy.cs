@@ -14,30 +14,26 @@ public class Enemy : MonoBehaviour
 
     private Transform currTile;
     private Transform nextTile;
-    private Transform previousWaypoint;
     private Transform meleeAttacker;
 
     private float hitCountdown = 0f;
 
-    private int waypointIndex = 0;
-
     private List<Transform> visitedTiles = new List<Transform>();
     private float allowedTileDistance;
-    //private Transform nextTile = null;
 
     void Start ()
     {
         //Debug.Log("Enemy.Start");
-        //waypoint = Waypoints.waypoints[0];
 
         if (PathBoard.container != null && PathBoard.container.childCount > 0)
         {
+            // set the first tile as... the first tile
+            nextTile = PathBoard.container.GetChild(0);
+            
             Transform tile = PathBoard.container.GetChild(0);
             BoxCollider2D tileColl = tile.GetComponent<BoxCollider2D>();
             allowedTileDistance = tileColl.bounds.size.x + (tileColl.bounds.size.x * 0.15f);
         }
-
-        GetNextWaypoint();
 	}
 
     private void Update()
@@ -56,10 +52,9 @@ public class Enemy : MonoBehaviour
 
                 if (Vector2.Distance(transform.position, nextTile.position) <= 0.4f)
                 {
-                    Debug.Log("reached waypoint...");
-                    // it's reached the waypoint; go to the next waypoint
+                    // it's reached the tile; go to the next tile
                     VisitTile(nextTile);
-                    GetNextWaypoint();
+                    GetNextTile();
                 }
             }
         }
@@ -149,68 +144,40 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void GetNextWaypoint()
+    private void GetNextTile()
     {
-        //PathBoard.container.GetChild(1);
+        //Debug.Log("GetNextTile");
+        System.Random random = new System.Random();
 
-        // todo: get the nearest tile
-        float shortestDistance = Mathf.Infinity;
-        Transform nearestTile = null;
+        // get a random tile from those that are within allowedTileDistance
+        Transform chosenTile = null;
+
         foreach (Transform tile in PathBoard.container)
         {
             if (!visitedTiles.Contains(tile))
             {
-                //float distanceToTile = Vector2.Distance(transform.position, tile.position);
                 float distanceToTile = Vector2.Distance(currTile.position, tile.position);
-                if (distanceToTile < shortestDistance && distanceToTile < allowedTileDistance)
+                if (distanceToTile < allowedTileDistance)
                 {
-                    // see if tile is next to current waypoint
-                    //bool tileIsNeighboring = true;
-                    //bool tileIsNeighboring = ((tile.position.x <= currTile.position.x + allowedTileDistance)
-                    //    && (tile.position.x >= currTile.position.x - allowedTileDistance))
-                    //    && ((tile.position.y <= currTile.position.y + allowedTileDistance)
-                    //    && (tile.position.y >= currTile.position.y - allowedTileDistance));
-                    //if (tileIsNeighboring)
-                    //{
-                        //Debug.Log("currTile.position.x = " + currTile.position.x);
-                        //Debug.Log("tile.position.x = " + tile.position.x);
-                        //Debug.Log("currTile.position.y = " + currTile.position.y);
-                        //Debug.Log("tile.position.y = " + tile.position.y);
-                        //Debug.Log(" ");
-                        shortestDistance = distanceToTile;
-                        nearestTile = tile;
-                    //}
+                    // if this is the first tile to be examined, pick it
+                    // else, pick it with a 50% chance
+                    int randomInt = random.Next(0, 2);
+                    if (chosenTile == null || randomInt > 0)
+                    {
+                        chosenTile = tile;
+                    }
                 }
             }
-            //else Debug.Log("tile already visited");
         }
 
-        if (nearestTile != null)
+        if (chosenTile != null)
         {
-            Debug.Log("found nearest tile");
-            nextTile = nearestTile;
+            nextTile = chosenTile;
         }
         else
         {
             visitedTiles.Clear();
         }
-
-
-
-        //// if the enemy has reached the last waypoint (end)
-        //if (waypointIndex >= Waypoints.waypoints.Length - 1)
-        //{
-        //    // destroy the enemy object
-        //    Destroy(gameObject);
-
-        //    // subtract player health
-        //    Player.DoDamage(damage);
-
-        //    return;
-        //}
-
-        //waypointIndex++;
-        //waypoint = Waypoints.waypoints[waypointIndex];
     }
 
     internal void SetAttacker(Transform _meleeAttacker)
@@ -225,29 +192,49 @@ public class Enemy : MonoBehaviour
     }
     private void VisitTile(Transform tile)
     {
-        currTile = tile;
+        //Debug.Log("VisitTile");
+        
         visitedTiles.Add(tile);
+        currTile = tile;
     }
 
 
 
 
-    private void OnDrawGizmosSelected()
-    {
-        if (currTile != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
-        }
-        if (nextTile != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
-        }
-        foreach (Transform t in visitedTiles)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(t.position, new Vector3(0.5f, 0.5f, 5f));
-        }
-    }
+    //private void OnDrawGizmosSelected()
+    //{
+    //    if (currTile != null)
+    //    {
+    //        Gizmos.color = Color.blue;
+    //        Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
+    //    }
+    //    if (nextTile != null)
+    //    {
+    //        Gizmos.color = Color.yellow;
+    //        Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
+    //    }
+    //    Gizmos.color = Color.red;
+    //    foreach (Transform tile in visitedTiles)
+    //    {
+    //        Gizmos.DrawWireCube(tile.position, new Vector3(0.5f, 0.5f, 5f));
+    //    }
+    //    if (currTile != null)
+    //    {
+    //        Gizmos.color = Color.green;
+    //        foreach (Transform tile in PathBoard.container)
+    //        {
+    //            //bool notVisited = !visitedPositions.Exists(x => x.Equals(tile.position));
+    //            bool notVisited = !visitedTiles.Contains(tile);
+
+    //            if (notVisited)
+    //            {
+    //                float distanceToTile = Vector2.Distance(currTile.position, tile.position);
+    //                if (distanceToTile < allowedTileDistance)
+    //                {
+    //                    Gizmos.DrawWireSphere(tile.position, 0.7f);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 }
