@@ -12,24 +12,34 @@ public class Enemy : MonoBehaviour
     public float hitCooldown = 5f;
     public float hitRange = 0.6f;
 
+    public float movementDelay = 0.5f;
+    public float cloneMovementDelay = 1.5f;
+
     private Transform currTile;
     private Transform nextTile;
     private Transform meleeAttacker;
 
     private float hitCountdown = 0f;
 
+    public int minReplicationTime = 10;
+    public int maxReplicationTime = 30;
+    private float replicationCoundtown = 10f;
+
     private List<Transform> visitedTiles = new List<Transform>();
     private float allowedTileDistance;
+
+    private bool started = false;
+
+    private System.Random random = new System.Random();
 
     void Start ()
     {
         //Debug.Log("Enemy.Start");
+        
+        replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
 
         if (PathBoard.container != null && PathBoard.container.childCount > 0)
         {
-            // set the first tile as... the first tile
-            nextTile = PathBoard.container.GetChild(0);
-            
             Transform tile = PathBoard.container.GetChild(0);
             BoxCollider2D tileColl = tile.GetComponent<BoxCollider2D>();
             allowedTileDistance = tileColl.bounds.size.x + (tileColl.bounds.size.x * 0.15f);
@@ -38,6 +48,17 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (!started) return;
+
+        // update the hit countdown and the replication countdown each frame
+        if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
+        if (replicationCoundtown > 0f) replicationCoundtown -= Time.deltaTime;
+
+        if (replicationCoundtown <= 0f)
+        {
+            Replicate();
+        }
+
         // if there's a melee unit attacking, start attacking it (face it, move towards it, and if in range, hit)
         if (meleeAttacker != null)
         {
@@ -58,6 +79,21 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void Replicate()
+    {
+        //Debug.Log("Replicate");
+
+        // don't move for a short while
+        started = false;
+        Invoke("StartMovement", movementDelay);
+        // spawn another of the same gameobject
+        GameObject clone = Instantiate(gameObject, transform.parent);
+        if (nextTile != null) clone.GetComponent<Enemy>().SetStartTile(nextTile, cloneMovementDelay);
+        else clone.GetComponent<Enemy>().SetStartTile(currTile, cloneMovementDelay);
+
+        replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
     }
 
     private void AttackMeleeAttacker()
@@ -112,10 +148,6 @@ public class Enemy : MonoBehaviour
             if (hitCountdown <= 0f)
             {
                 HitAttacker();
-            }
-            else
-            {
-                hitCountdown -= Time.deltaTime;
             }
         }
         
@@ -185,10 +217,10 @@ public class Enemy : MonoBehaviour
         meleeAttacker = _meleeAttacker;
     }
 
-    internal void SetStartTile(Transform startTile)
+    internal void SetStartTile(Transform _startTile, float delay)
     {
-        currTile = startTile;
-        VisitTile(startTile);
+        nextTile = _startTile;
+        Invoke("StartMovement", delay);
     }
     private void VisitTile(Transform tile)
     {
@@ -196,6 +228,10 @@ public class Enemy : MonoBehaviour
         
         visitedTiles.Add(tile);
         currTile = tile;
+    }
+    private void StartMovement()
+    {
+        started = true;
     }
 
 

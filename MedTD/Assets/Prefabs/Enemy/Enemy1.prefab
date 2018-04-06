@@ -74,6 +74,8 @@ MonoBehaviour:
   defense: 1
   hitCooldown: 4
   hitRange: 0.1
+  minReplicationTime: 5
+  maxReplicationTime: 10
 --- !u!212 &212716098509495440
 SpriteRenderer:
   m_ObjectHideFlags: 1

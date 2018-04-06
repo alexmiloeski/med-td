@@ -146,7 +146,7 @@ public class WaveSpawner : MonoBehaviour
             //Transform spawnPoint = pathBoard.GetChild(randomTileIndex);
             Transform enemyTr = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
             enemyTr.SetParent(enemyFolder);
-            //enemyTr.GetComponent<Enemy>().SetStartTile(spawnPoint);
+            enemyTr.GetComponent<Enemy>().SetStartTile(spawnPoint, 0f);
         }
     }
 
