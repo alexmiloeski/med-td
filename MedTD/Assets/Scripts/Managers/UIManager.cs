@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class UIManager : MonoBehaviour
     public Text textSelectedSSCount;
     public Text textWarningMessage;
     public Button buttonBottomCenter;
+    public Button buttonSpecial1;
     public GameObject buildingMenuPrefab;
     public GameObject towerMenuPrefab;
     public GameObject menuSelectionInfoPrefab;
@@ -51,6 +53,7 @@ public class UIManager : MonoBehaviour
     {
         textMoney.text = "Money: " + Player.GetMoney();
     }
+
     private void SetEnabledTextMaxSSSelected(bool newActiveState)
     {
         if (textWarningMessage.gameObject.activeSelf != newActiveState)
@@ -71,8 +74,6 @@ public class UIManager : MonoBehaviour
     {
         if (buttonBottomCenter.gameObject.activeSelf != newActiveState)
         {
-            //if (!newActiveState) Debug.Log("disabling button");
-            //else Debug.Log("enabling button");
             buttonBottomCenter.gameObject.SetActive(newActiveState);
             return true; // if state changed, return true
         }
@@ -101,6 +102,24 @@ public class UIManager : MonoBehaviour
         Text textBottomCenter = bottomCenterTextTransform.GetComponent<Text>();
         textBottomCenter.text = "Start wave";
     }
+
+    private bool SetEnabledButtonSpecial1(bool newActiveState)
+    {
+        if (buttonSpecial1.gameObject.activeSelf != newActiveState)
+        {
+            //if (!newActiveState) Debug.Log("disabling button");
+            //else Debug.Log("enabling button");
+            buttonSpecial1.gameObject.SetActive(newActiveState);
+            return true; // if state changed, return true
+        }
+        else
+        {
+            return false; // if state not changed, return false
+        }
+    }
+
+
+
     internal void UpdateSelectedSSCount(int count)
     {
         SetTextSelectedSSCount("Number of selected sites: " + count + "/" + BuildManager.instance.numberOfLymphNodes + ".");
@@ -116,7 +135,12 @@ public class UIManager : MonoBehaviour
         //Destroy(buttonBottomCenter.gameObject);
         SetEnabledButtonBottomCenter(false);
     }
-    
+
+    internal void ShowPostSSUIElements()
+    {
+        SetEnabledButtonSpecial1(true);
+    }
+
 
     /// <summary> Shows an X at the touch position for <paramref name="delay"/> seconds. </summary>
     /// <param name="delay">Time in seconds that the X should stay on the screen.</param>
@@ -171,6 +195,7 @@ public class UIManager : MonoBehaviour
         Invoke("DisableTextMaxSSSelected", delay);
     }
     
+
 
     /// <summary> Shows the building menu (see <see cref="buildingMenuPrefab"/>) at the same
     /// screen position as the parameter LymphNode <paramref name="lymphNode"/>. Called by a

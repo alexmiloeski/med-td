@@ -15,26 +15,33 @@ public class Enemy : MonoBehaviour
     public float movementDelay = 0.5f;
     public float cloneMovementDelay = 1.5f;
 
+    private float regularSpeed;
+    private bool started = false;
+
     private Transform currTile;
     private Transform nextTile;
-    private Transform meleeAttacker;
+    private List<Transform> visitedTiles = new List<Transform>();
+    private float allowedTileDistance;
 
+    private Transform meleeAttacker;
     private float hitCountdown = 0f;
 
     public int minReplicationTime = 10;
     public int maxReplicationTime = 30;
     private float replicationCoundtown = 10f;
-
-    private List<Transform> visitedTiles = new List<Transform>();
-    private float allowedTileDistance;
-
-    private bool started = false;
-
+    
+    private bool coughing = false;
+    private float coughStopCountdown = 5f;
+    private float coughSpeedIncrement;
+    
     private System.Random random = new System.Random();
 
-    void Start ()
+
+    void Start()
     {
         //Debug.Log("Enemy.Start");
+
+        regularSpeed = speed;
         
         replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
 
@@ -49,6 +56,9 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         if (!started) return;
+
+        if (coughing)
+            CoughEffect();
 
         // update the hit countdown and the replication countdown each frame
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
@@ -233,7 +243,30 @@ public class Enemy : MonoBehaviour
     {
         started = true;
     }
+    
+    internal void StartCough(float delay)
+    {
+        coughing = true;
+        speed = 0f;
+        
+        coughSpeedIncrement = regularSpeed / delay;
 
+        coughStopCountdown = delay;
+
+        Invoke("StopCough", delay);
+    }
+    internal void CoughEffect()
+    {
+        coughStopCountdown -= Time.deltaTime;
+        float newSpeed = speed + (coughSpeedIncrement * Time.deltaTime);
+        if (newSpeed <= regularSpeed)
+            speed = newSpeed;
+    }
+    private void StopCough()
+    {
+        coughing = false;
+        speed = regularSpeed;
+    }
 
 
 

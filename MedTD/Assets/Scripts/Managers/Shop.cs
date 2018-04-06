@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public enum SelectedAction { Nothing, BuildTower1, BuildTower2, BuildTower3, BuildTower4, SellTower, UpgradeTower };
 
@@ -16,6 +17,8 @@ public class Shop : MonoBehaviour
     public Sprite spriteButtonRegular;
     public Sprite spriteCheckmark;
     public Sprite spriteButtonX;
+
+    public float coughStopDelay = 6f;
     
     /// <summary> Reference(s) to a button's state before it's been clicked and changed to "selected";
     /// Used for changing it back to its original state when another button becomes "selected" </summary>
@@ -54,8 +57,12 @@ public class Shop : MonoBehaviour
             }
             else
             {
+                // start spawning waves of enemies
                 WaveSpawner.instance.StartLevel();
+
+                // show UI elements that should be visible once the waves have started
                 UIManager.instance.SetEnabledButtonBottomCenter(false);
+                UIManager.instance.ShowPostSSUIElements();
             }
         }
         else
@@ -89,6 +96,30 @@ public class Shop : MonoBehaviour
     }
     public void ButtonSetRallyPointAction()
     {
+    }
+    public void ButtonSpecial1Action()
+    {
+        //Debug.Log("ButtonSpecial1Action");
+
+        // cough
+        // shake camera
+        StartCoroutine(ShakeCamera(0f, 0.3f, 0.08f));
+        StartCoroutine(ShakeCamera(0.3f, 0.2f, 0.12f));
+        StartCoroutine(ShakeCamera(0.8f, 0.3f, 0.06f));
+        StartCoroutine(ShakeCamera(1f, 0.1f, 0.02f));
+
+        // slow down all enemies
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
+        foreach (GameObject enemyObj in enemies)
+        {
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            if (enemy != null) enemy.StartCough(coughStopDelay);
+        }
+    }
+    private IEnumerator ShakeCamera(float interval, float duration, float intensity)
+    {
+        yield return new WaitForSeconds(interval);
+        CameraShaker.StartShaking(duration, intensity);
     }
 
     private void SetButtonAsSelected(GameObject buttonObject, bool possible)
