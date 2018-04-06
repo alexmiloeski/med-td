@@ -9,13 +9,15 @@ public class WaveSpawner : MonoBehaviour
     public int numberOfWaves = 10;
     public float timeBetweenWaves = 8f; // todo: could be different for each wave
     public Transform enemyFolder;
-    public Transform spawnPoint;
+    //public Transform spawnPoint;
+    public Transform pathBoard;
     public Transform enemyPrefab1;
     public Transform enemyPrefab2;
     //public Transform enemyPrefab3; // todo: etc
     public Text waveNumberText;
     public Text waveCountdownText;
 
+    //private Transform[] pathTiles;
     private float countdown = 0f;
     private int waveIndex = 0;
     private bool levelStarted = false;
@@ -36,6 +38,12 @@ public class WaveSpawner : MonoBehaviour
         }
 
         countdown = 1f;// timeBetweenWaves;
+
+        //pathTiles = new Transform[pathBoard.childCount];
+        //for (int i = 0; i < pathTiles.Length; i++)
+        //{
+        //    pathTiles[i] = pathBoard.GetChild(i);
+        //}
     }
 
     internal void StartLevel()
@@ -132,10 +140,13 @@ public class WaveSpawner : MonoBehaviour
         // in case only enemyPrefab1 is set and the others are not
         if (enemyPrefab == null) enemyPrefab = enemyPrefab1;
 
-        if (enemyPrefab != null)
+        if (enemyPrefab != null && pathBoard.childCount > 0)
         {
+            int randomTileIndex = random.Next(0, pathBoard.childCount);
+            Transform spawnPoint = pathBoard.GetChild(randomTileIndex);
             Transform enemyTr = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
             enemyTr.SetParent(enemyFolder);
+            enemyTr.GetComponent<Enemy>().SetStartTile(spawnPoint);
         }
     }
 

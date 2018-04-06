@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -11,18 +12,32 @@ public class Enemy : MonoBehaviour
     public float hitCooldown = 5f;
     public float hitRange = 0.6f;
 
-    private Transform waypoint;
+    private Transform currTile;
+    private Transform nextTile;
     private Transform previousWaypoint;
     private Transform meleeAttacker;
 
     private float hitCountdown = 0f;
 
     private int waypointIndex = 0;
-    
-	void Start ()
+
+    private List<Transform> visitedTiles = new List<Transform>();
+    private float allowedTileDistance;
+    //private Transform nextTile = null;
+
+    void Start ()
     {
         //Debug.Log("Enemy.Start");
-        waypoint = Waypoints.waypoints[0];
+        //waypoint = Waypoints.waypoints[0];
+
+        if (PathBoard.container != null && PathBoard.container.childCount > 0)
+        {
+            Transform tile = PathBoard.container.GetChild(0);
+            BoxCollider2D tileColl = tile.GetComponent<BoxCollider2D>();
+            allowedTileDistance = tileColl.bounds.size.x + (tileColl.bounds.size.x * 0.15f);
+        }
+
+        GetNextWaypoint();
 	}
 
     private void Update()
@@ -34,14 +49,18 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Vector2 direction = waypoint.position - transform.position;
-            transform.Translate(direction.normalized * speed * Time.deltaTime, Space.World);
-
-            if (Vector2.Distance(transform.position, waypoint.position) <= 0.4f)
+            if (nextTile != null)
             {
-                //Debug.Log("reached waypoint...");
-                // it's reached the waypoint; go to the next waypoint
-                GetNextWaypoint();
+                Vector2 direction = nextTile.position - transform.position;
+                transform.Translate(direction.normalized * speed * Time.deltaTime, Space.World);
+
+                if (Vector2.Distance(transform.position, nextTile.position) <= 0.4f)
+                {
+                    Debug.Log("reached waypoint...");
+                    // it's reached the waypoint; go to the next waypoint
+                    VisitTile(nextTile);
+                    GetNextWaypoint();
+                }
             }
         }
     }
@@ -132,24 +151,103 @@ public class Enemy : MonoBehaviour
 
     private void GetNextWaypoint()
     {
-        // if the enemy has reached the last waypoint (end)
-        if (waypointIndex >= Waypoints.waypoints.Length - 1)
+        //PathBoard.container.GetChild(1);
+
+        // todo: get the nearest tile
+        float shortestDistance = Mathf.Infinity;
+        Transform nearestTile = null;
+        foreach (Transform tile in PathBoard.container)
         {
-            // destroy the enemy object
-            Destroy(gameObject);
-
-            // subtract player health
-            Player.DoDamage(damage);
-
-            return;
+            if (!visitedTiles.Contains(tile))
+            {
+                //float distanceToTile = Vector2.Distance(transform.position, tile.position);
+                float distanceToTile = Vector2.Distance(currTile.position, tile.position);
+                if (distanceToTile < shortestDistance && distanceToTile < allowedTileDistance)
+                {
+                    // see if tile is next to current waypoint
+                    //bool tileIsNeighboring = true;
+                    //bool tileIsNeighboring = ((tile.position.x <= currTile.position.x + allowedTileDistance)
+                    //    && (tile.position.x >= currTile.position.x - allowedTileDistance))
+                    //    && ((tile.position.y <= currTile.position.y + allowedTileDistance)
+                    //    && (tile.position.y >= currTile.position.y - allowedTileDistance));
+                    //if (tileIsNeighboring)
+                    //{
+                        //Debug.Log("currTile.position.x = " + currTile.position.x);
+                        //Debug.Log("tile.position.x = " + tile.position.x);
+                        //Debug.Log("currTile.position.y = " + currTile.position.y);
+                        //Debug.Log("tile.position.y = " + tile.position.y);
+                        //Debug.Log(" ");
+                        shortestDistance = distanceToTile;
+                        nearestTile = tile;
+                    //}
+                }
+            }
+            //else Debug.Log("tile already visited");
         }
 
-        waypointIndex++;
-        waypoint = Waypoints.waypoints[waypointIndex];
+        if (nearestTile != null)
+        {
+            Debug.Log("found nearest tile");
+            nextTile = nearestTile;
+        }
+        else
+        {
+            visitedTiles.Clear();
+        }
+
+
+
+        //// if the enemy has reached the last waypoint (end)
+        //if (waypointIndex >= Waypoints.waypoints.Length - 1)
+        //{
+        //    // destroy the enemy object
+        //    Destroy(gameObject);
+
+        //    // subtract player health
+        //    Player.DoDamage(damage);
+
+        //    return;
+        //}
+
+        //waypointIndex++;
+        //waypoint = Waypoints.waypoints[waypointIndex];
     }
 
     internal void SetAttacker(Transform _meleeAttacker)
     {
         meleeAttacker = _meleeAttacker;
+    }
+
+    internal void SetStartTile(Transform startTile)
+    {
+        currTile = startTile;
+        VisitTile(startTile);
+    }
+    private void VisitTile(Transform tile)
+    {
+        currTile = tile;
+        visitedTiles.Add(tile);
+    }
+
+
+
+
+    private void OnDrawGizmosSelected()
+    {
+        if (currTile != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
+        }
+        if (nextTile != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
+        }
+        foreach (Transform t in visitedTiles)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(t.position, new Vector3(0.5f, 0.5f, 5f));
+        }
     }
 }

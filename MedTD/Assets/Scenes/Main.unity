@@ -113,6 +113,22 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1792506 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1669565796128848, guid: 5f9485573c8dc864dac6f2bf668d6cb1,
+    type: 2}
+  m_PrefabInternal: {fileID: 336197960}
+--- !u!114 &1792507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1792506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb4f5db2c26057e4e87f8e74219a228e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &34756849
 GameObject:
   m_ObjectHideFlags: 0
@@ -5140,10 +5156,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58007593505ab44991fda1e28f62a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfWaves: 10
-  timeBetweenWaves: 20
+  numberOfWaves: 3
+  timeBetweenWaves: 30
   enemyFolder: {fileID: 624177191}
-  spawnPoint: {fileID: 1374388779}
+  pathBoard: {fileID: 499958959}
   enemyPrefab1: {fileID: 4232884418986182, guid: ac0d28d89417cf04c842d46892d8f2cd,
     type: 2}
   enemyPrefab2: {fileID: 4232884418986182, guid: 410e9f7bae8bd914c81f80bde6865bac,
