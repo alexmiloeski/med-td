@@ -13,11 +13,14 @@ public class Shop : MonoBehaviour
     public Tower tower3;
     public Tower tower4;
 
+    public float coughCooldown = 20f;
+    private float coughCountdown = 0f;
+
     // needed for changing button appearance when "selected"
     public Sprite spriteButtonRegular;
     public Sprite spriteCheckmark;
     public Sprite spriteButtonX;
-
+    
     public float coughStopDelay = 6f;
     
     /// <summary> Reference(s) to a button's state before it's been clicked and changed to "selected";
@@ -38,8 +41,21 @@ public class Shop : MonoBehaviour
         }
         instance = this;
     }
-    
-    
+
+    private void Update()
+    {
+        if (coughCountdown > 0f)
+        {
+            coughCountdown -= Time.deltaTime;
+            UIManager.instance.SetInteractableButtonSpecial1(false, coughCountdown);
+        }
+        else if (WaveSpawner.IsLevelStarted())
+        {
+            // this is fine: this method doesn't update the button if it'is already interactable
+            UIManager.instance.SetInteractableButtonSpecial1(true, 0f);
+        }
+    }
+
     public void ButtonBottomCenterAction()
     {
         //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
@@ -49,9 +65,9 @@ public class Shop : MonoBehaviour
 
         if (buildManager.IsFinishedWithSS())
         {
-            if (WaveSpawner.instance.IsLevelEnded()) return;
+            if (WaveSpawner.IsLevelEnded()) return;
 
-            if (WaveSpawner.instance.IsLevelStarted())
+            if (WaveSpawner.IsLevelStarted())
             {
                 WaveSpawner.instance.NextWave();
             }
@@ -101,12 +117,19 @@ public class Shop : MonoBehaviour
     {
         //Debug.Log("ButtonSpecial1Action");
 
+        UIManager.instance.SetInteractableButtonSpecial1(false, coughCooldown);
+        coughCountdown = coughCooldown;
+
         // cough
         // shake camera
+        float delay2 = 0.3f;
+        float delay3 = 0.8f;
+        float delay4 = 1f;
+        float lastDuration = 0.1f;
         StartCoroutine(ShakeCamera(0f, 0.3f, 0.08f));
-        StartCoroutine(ShakeCamera(0.3f, 0.2f, 0.12f));
-        StartCoroutine(ShakeCamera(0.8f, 0.3f, 0.06f));
-        StartCoroutine(ShakeCamera(1f, 0.1f, 0.02f));
+        StartCoroutine(ShakeCamera(delay2, 0.2f, 0.12f));
+        StartCoroutine(ShakeCamera(delay3, 0.3f, 0.06f));
+        StartCoroutine(ShakeCamera(delay4, lastDuration, 0.02f));
 
         // slow down all enemies
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
@@ -115,11 +138,23 @@ public class Shop : MonoBehaviour
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             if (enemy != null) enemy.StartCough(coughStopDelay);
         }
+
+        Invoke("StopCough", delay2+delay3+delay4+lastDuration);
     }
-    private IEnumerator ShakeCamera(float interval, float duration, float intensity)
+    private IEnumerator ShakeCamera(float delay, float duration, float intensity)
     {
-        yield return new WaitForSeconds(interval);
+        yield return new WaitForSeconds(delay);
         CameraShaker.StartShaking(duration, intensity);
+    }
+    private void StopCough()
+    {
+        // return all enemies' speeds to their regular speed
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
+        foreach (GameObject enemyObj in enemies)
+        {
+            Enemy enemy = enemyObj.GetComponent<Enemy>();
+            if (enemy != null) enemy.StopCough();
+        }
     }
 
     private void SetButtonAsSelected(GameObject buttonObject, bool possible)

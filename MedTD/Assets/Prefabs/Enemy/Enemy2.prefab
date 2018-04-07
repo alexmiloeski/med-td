@@ -68,12 +68,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a950107ccfad594aa1c9f89d495e367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
   health: 50
   damage: 3
   defense: 1
   hitCooldown: 6
   hitRange: 0.2
+  movementDelay: 0.5
+  cloneMovementDelay: 1.5
+  regularSpeed: 1
+  minReplicationTime: 10
+  maxReplicationTime: 30
 --- !u!212 &212716098509495440
 SpriteRenderer:
   m_ObjectHideFlags: 1

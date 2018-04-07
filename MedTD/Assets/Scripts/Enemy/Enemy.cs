@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float speed = 1f;
+    private float speed = 1f;
     public int health = 10;
     public int damage = 1;
     public int defense = 1;
@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     public float movementDelay = 0.5f;
     public float cloneMovementDelay = 1.5f;
 
-    private float regularSpeed;
+    public float regularSpeed;
     private bool started = false;
 
     private Transform currTile;
@@ -41,7 +41,8 @@ public class Enemy : MonoBehaviour
     {
         //Debug.Log("Enemy.Start");
 
-        regularSpeed = speed;
+
+        speed = regularSpeed;
         
         replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
 
@@ -262,7 +263,7 @@ public class Enemy : MonoBehaviour
         if (newSpeed <= regularSpeed)
             speed = newSpeed;
     }
-    private void StopCough()
+    internal void StopCough()
     {
         coughing = false;
         speed = regularSpeed;

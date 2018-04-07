@@ -55,7 +55,9 @@ MonoBehaviour:
   tower2: {fileID: 114978057822299256, guid: 069de8b49849a8649a622b7234d72b54, type: 2}
   tower3: {fileID: 114384646579666106, guid: 39ca1a0721f45c746a7ba4bce16d6395, type: 2}
   tower4: {fileID: 0}
+  coughCooldown: 6
   spriteButtonRegular: {fileID: 21300000, guid: ec82a3ab20b9e274f9fbb585940cbc0f,
     type: 3}
   spriteCheckmark: {fileID: 21300000, guid: 906db8f00ba26234c9d18cee2f5e05cb, type: 3}
   spriteButtonX: {fileID: 21300000, guid: c39b14da124994b4a8bd247b8e3938b6, type: 3}
+  coughStopDelay: 6

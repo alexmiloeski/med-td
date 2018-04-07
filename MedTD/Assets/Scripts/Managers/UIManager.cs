@@ -44,7 +44,11 @@ public class UIManager : MonoBehaviour
         textWarningMessage.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
     }
 
-    
+    private void Update()
+    {
+        
+    }
+
     internal void UpdateTextHealth()
     {
         textHealth.text = "Health: " + Player.GetHealth();
@@ -102,19 +106,42 @@ public class UIManager : MonoBehaviour
         Text textBottomCenter = bottomCenterTextTransform.GetComponent<Text>();
         textBottomCenter.text = "Start wave";
     }
-
-    private bool SetEnabledButtonSpecial1(bool newActiveState)
+    
+    //internal bool ShowHideButtonSpecial1(bool newActiveState)
+    //{
+    //    if (buttonSpecial1.gameObject.activeSelf != newActiveState)
+    //    {
+    //        //if (!newActiveState) Debug.Log("disabling button");
+    //        //else Debug.Log("enabling button");
+    //        //buttonSpecial1.gameObject.SetActive(newActiveState);
+    //        return true; // if state changed, return true
+    //    }
+    //    else
+    //    {
+    //        return false; // if state not changed, return false
+    //    }
+    //}
+    internal bool IsInteractableButtonSpecial1()
     {
-        if (buttonSpecial1.gameObject.activeSelf != newActiveState)
+        return buttonSpecial1.interactable;
+    }
+    internal void SetInteractableButtonSpecial1(bool interactable, float cooldown)
+    {
+        // if the button is already interactable and the new state is true, don't change anything
+        if (buttonSpecial1.interactable && interactable) return;
+
+        // if the current state is different from the new state, then update
+        if (buttonSpecial1.interactable != interactable)
+            buttonSpecial1.interactable = interactable;
+
+        // if it's not interactable, show the cooldown timer
+        if (interactable)
         {
-            //if (!newActiveState) Debug.Log("disabling button");
-            //else Debug.Log("enabling button");
-            buttonSpecial1.gameObject.SetActive(newActiveState);
-            return true; // if state changed, return true
+            buttonSpecial1.transform.GetChild(0).GetComponent<Text>().text = "Cough";
         }
         else
         {
-            return false; // if state not changed, return false
+            buttonSpecial1.transform.GetChild(0).GetComponent<Text>().text = Mathf.Floor(cooldown + 1).ToString();
         }
     }
 
@@ -138,7 +165,17 @@ public class UIManager : MonoBehaviour
 
     internal void ShowPostSSUIElements()
     {
-        SetEnabledButtonSpecial1(true);
+        //if (buttonSpecial1.gameObject.activeSelf != true)
+        //{
+        //if (!newActiveState) Debug.Log("disabling button");
+        //else Debug.Log("enabling button");
+        buttonSpecial1.gameObject.SetActive(true);
+        //return true; // if state changed, return true
+        //}
+        //else
+        //{
+        //    return false; // if state not changed, return false
+        //}
     }
 
 
