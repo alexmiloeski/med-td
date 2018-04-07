@@ -33,7 +33,9 @@ public class Enemy : MonoBehaviour
     private bool coughing = false;
     private float coughStopCountdown = 5f;
     private float coughSpeedIncrement;
-    
+    private bool startRegainingSpeed = false;
+
+
     private System.Random random = new System.Random();
 
 
@@ -41,8 +43,11 @@ public class Enemy : MonoBehaviour
     {
         //Debug.Log("Enemy.Start");
 
-
-        speed = regularSpeed;
+        if (!Shop.instance.IsCoughing())
+            speed = regularSpeed;
+        // todo: if coughing when this enemy is spawned, slow it down too
+        //else
+        //    speed = 
         
         replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
 
@@ -253,11 +258,14 @@ public class Enemy : MonoBehaviour
         coughSpeedIncrement = regularSpeed / delay;
 
         coughStopCountdown = delay;
-
+        
+        Invoke("StartRegainingSpeed", delay/3);
         Invoke("StopCough", delay);
     }
     internal void CoughEffect()
     {
+        if (!startRegainingSpeed) return;
+
         coughStopCountdown -= Time.deltaTime;
         float newSpeed = speed + (coughSpeedIncrement * Time.deltaTime);
         if (newSpeed <= regularSpeed)
@@ -267,6 +275,11 @@ public class Enemy : MonoBehaviour
     {
         coughing = false;
         speed = regularSpeed;
+        startRegainingSpeed = false;
+    }
+    private void StartRegainingSpeed()
+    {
+        startRegainingSpeed = true;
     }
 
 

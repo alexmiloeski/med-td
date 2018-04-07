@@ -15,6 +15,7 @@ public class Shop : MonoBehaviour
 
     public float coughCooldown = 20f;
     private float coughCountdown = 0f;
+    private bool coughing = false;
 
     // needed for changing button appearance when "selected"
     public Sprite spriteButtonRegular;
@@ -119,6 +120,7 @@ public class Shop : MonoBehaviour
 
         UIManager.instance.SetInteractableButtonSpecial1(false, coughCooldown);
         coughCountdown = coughCooldown;
+        coughing = true;
 
         // cough
         // shake camera
@@ -139,7 +141,9 @@ public class Shop : MonoBehaviour
             if (enemy != null) enemy.StartCough(coughStopDelay);
         }
 
-        Invoke("StopCough", delay2+delay3+delay4+lastDuration);
+        // todo: what the hell was i doing here?
+        //Invoke("StopCough", delay2+delay3+delay4+lastDuration);
+        Invoke("StopCough", coughStopDelay);
     }
     private IEnumerator ShakeCamera(float delay, float duration, float intensity)
     {
@@ -155,6 +159,12 @@ public class Shop : MonoBehaviour
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             if (enemy != null) enemy.StopCough();
         }
+
+        coughing = false;
+    }
+    internal bool IsCoughing()
+    {
+        return coughing;
     }
 
     private void SetButtonAsSelected(GameObject buttonObject, bool possible)

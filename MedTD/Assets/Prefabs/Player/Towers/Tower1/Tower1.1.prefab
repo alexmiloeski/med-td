@@ -58,12 +58,12 @@ MonoBehaviour:
   level: 1
   cost: 100
   sellValue: 80
-  damage: 10
+  damage: 25
   health: 120
   defense: 0
   range: 2
   cooldown: 2
-  unitSpeed: 0.3
+  unitSpeed: 1
   meleeHitRange: 0.2
   hitCooldown: 4
 --- !u!212 &212106210794766738

@@ -96,7 +96,7 @@ public class UIManager : MonoBehaviour
         Text textBottomCenter = bottomCenterTextTransform.GetComponent<Text>();
         textBottomCenter.text = "Done picking";
     }
-    internal void SetEnabledButtonBottomCenterStartWave(bool newActiveState)
+    internal void SetEnabledButtonBottomCenterStartWave(bool newActiveState, string text)
     {
         bool stateChanged = SetEnabledButtonBottomCenter(newActiveState);
         if (!stateChanged) return; // if state hasn't changed, no need to update text
@@ -104,7 +104,7 @@ public class UIManager : MonoBehaviour
         Transform bottomCenterTextTransform = buttonBottomCenter.transform.GetChild(0);
         if (bottomCenterTextTransform == null) return;
         Text textBottomCenter = bottomCenterTextTransform.GetComponent<Text>();
-        textBottomCenter.text = "Start wave";
+        textBottomCenter.text = text;
     }
     
     //internal bool ShowHideButtonSpecial1(bool newActiveState)

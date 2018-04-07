@@ -152,7 +152,7 @@ public class BuildManager : MonoBehaviour
 
 
         //WaveSpawner.StartLevel();
-        uim.SetEnabledButtonBottomCenterStartWave(true);
+        uim.SetEnabledButtonBottomCenterStartWave(true, "Start waves");
     }
     internal bool IsFinishedWithSS()
     {

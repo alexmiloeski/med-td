@@ -37,7 +37,8 @@ public class WaveSpawner : MonoBehaviour
             instance = this;
         }
 
-        countdown = 1f;// timeBetweenWaves;
+        //countdown = 1f;
+        countdown = timeBetweenWaves/3;
 
         //pathTiles = new Transform[pathBoard.childCount];
         //for (int i = 0; i < pathTiles.Length; i++)
@@ -74,7 +75,7 @@ public class WaveSpawner : MonoBehaviour
         }
 
         // if time to next wave is less than half, enable "start wave" button; if not, disable it
-        UIManager.instance.SetEnabledButtonBottomCenterStartWave(countdown <= (timeBetweenWaves * 0.5));
+        UIManager.instance.SetEnabledButtonBottomCenterStartWave(countdown <= (timeBetweenWaves * 0.5), "Start wave early");
 
         if (countdown <= 0f)
         {
