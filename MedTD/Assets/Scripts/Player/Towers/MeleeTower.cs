@@ -7,22 +7,23 @@ public class MeleeTower : MonoBehaviour
 
     public int unitCount = 3;
 
-    private int cooldown = 4;
+    private float unitRespawnCooldown = 4f;
     private int unitHealth = 10;
     private int unitDamage = 10;
     private int unitDefense = 10;
     private float unitSpeed = 1f;
     private float unitHitCooldown = 1f;
-    private float towerRange = 10;
     private float meleeHitRange = 10;
+    private float towerRange = 10;
 
     private MeleeUnit[] units;
+    //private float unitRespawnCountdown;
 
     private int currentUnitCount = 0;
     private Vector3 rallyPoint;
 
 
-	void Start ()
+    private void Start ()
     {
         UpdateStats();
         
@@ -33,30 +34,72 @@ public class MeleeTower : MonoBehaviour
         {
             units[i] = SpawnUnit();
         }
+
+        //InvokeRepeating("", 6f, 6f);
 	}
-	
-	void Update ()
+
+    private void Update ()
     {
 		
 	}
 
-    /// <summary>
-    /// Should be called each time when upgrading the tower.
-    /// </summary>
-    public void UpdateStats()
+    internal void RespawnUnitAfterCooldown()
     {
+        Invoke("SpawnUnit", unitRespawnCooldown);
+    }
+    //private void RespawnUnit()
+    //{
+    //    SpawnUnit();
+    //}
+    //private void RespawnMissingUnits()
+    //{
+    //    int missingCount = 0;
+    //    for (int i = 0; i < units.Length; i++)
+    //    {
+    //        if (units[i] == null) missingCount++;
+    //    }
+
+    //    if (missingCount > 0)
+    //    {
+
+    //    }
+    //}
+
+    /// <summary> Should be called each time when upgrading the tower. </summary>
+    internal void UpdateStats()
+    {
+        //Debug.Log("MeleeTower.UpdateStats");
         // get unit stats from TowerLevel component
         Tower tower = GetComponent<Tower>();
         if (tower != null)
         {
-            unitHealth = tower.GetCurrentHealth();
-            unitDamage = tower.GetCurrentDamage();
-            unitDefense = tower.GetCurrentDefense();
+            unitRespawnCooldown = tower.GetCurrentCooldown();
             towerRange = tower.GetCurrentRange();
+            unitSpeed = tower.GetCurrentMeleeUnitSpeed();
+            unitHealth = tower.GetCurrentMeleeUnitHealth();
+            unitDamage = tower.GetCurrentMeleeUnitDamage();
+            unitDefense = tower.GetCurrentMeleeUnitDefense();
             meleeHitRange = tower.GetCurrentMeleeHitRange();
-            cooldown = tower.GetCurrentCooldown();
-            unitSpeed = tower.GetCurrentUnitSpeed();
-            unitHitCooldown = tower.GetCurrentHitCooldown();
+            unitHitCooldown = tower.GetCurrentMeleeUnitHitCooldown();
+
+            // update the stats of each of this tower's melee units
+            if (units != null)
+            {
+                foreach (MeleeUnit unit in units)
+                {
+                    if (unit != null)
+                    {
+                        //unit.UpdateStats();
+                        unit.SetTowerRange(towerRange);
+                        unit.SetUnitSpeed(unitSpeed);
+                        unit.SetHealth(unitHealth);
+                        unit.SetDamage(unitDamage);
+                        unit.SetDefense(unitDefense);
+                        unit.SetHitRange(meleeHitRange);
+                        unit.SetHitCooldown(unitHitCooldown);
+                    }
+                }
+            }
         }
     }
 
@@ -91,11 +134,12 @@ public class MeleeTower : MonoBehaviour
         {
             rallyPoint = transform.position;
         }
-        Debug.Log("rallyPoint = " + rallyPoint.x + ", " + rallyPoint.y);
+        //Debug.Log("rallyPoint = " + rallyPoint.x + ", " + rallyPoint.y);
     }
 
     private MeleeUnit SpawnUnit()
     {
+        //Debug.Log("MeleeUnit.SpawnUnit");
         // todo: first spawn them at the tower; then they'll move to the rally point
 
         // todo: for now, spawn them at the rally point
@@ -110,11 +154,14 @@ public class MeleeTower : MonoBehaviour
         MeleeUnit meleeUnit = unit.GetComponent<MeleeUnit>();
         meleeUnit.SetNativeTower(this);
         meleeUnit.SetHealth(unitHealth);
+        //Debug.Log("unitHealth = " + unitHealth);
         meleeUnit.SetDamage(unitDamage);
+        //Debug.Log("unitDamage = " + unitDamage);
         meleeUnit.SetDefense(unitDefense);
         meleeUnit.SetTowerRange(towerRange);
         meleeUnit.SetHitRange(meleeHitRange);
         meleeUnit.SetUnitSpeed(unitSpeed);
+        //Debug.Log("unitSpeed = " + unitSpeed);
         meleeUnit.SetHitCooldown(unitHitCooldown);
         meleeUnit.SetRallyPoint(rallyPoint);
 

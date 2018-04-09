@@ -2,7 +2,7 @@
 
 public class Player : MonoBehaviour
 {
-    private static int Health;
+    private static float Health;
     private static int Money;
     public int startHealth = 1000;
     public int startMoney = 500;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
         uIManager = UIManager.instance;
     }
 
-    internal static void DoDamage(int damage)
+    internal static void DoDamage(float damage)
     {
         Health -= damage;
         uIManager.UpdateTextHealth();
@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
         uIManager.UpdateTextMoney();
     }
 
-    internal static int GetHealth() { return Health; }
+    internal static float GetHealthFloat() { return Health; }
+    internal static int GetHealthInt() { return (int) Mathf.Floor((float) Health); }
     internal static int GetMoney() { return Money; }
 }

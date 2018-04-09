@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         BuildManager buildManager = BuildManager.instance;
-        textHealth.text = "Health: " + Player.GetHealth();
+        textHealth.text = "Health: " + Player.GetHealthInt();
         textMoney.text = "Money: " + Player.GetMoney();
         textSelectSS.text = "Pick " + buildManager.numberOfLymphNodes + " strategic sites.";
         textSelectedSSCount.text = "Number of selected sites: 0/" + buildManager.numberOfLymphNodes + ".";
@@ -51,7 +51,7 @@ public class UIManager : MonoBehaviour
 
     internal void UpdateTextHealth()
     {
-        textHealth.text = "Health: " + Player.GetHealth();
+        textHealth.text = "Health: " + Player.GetHealthInt();
     }
     internal void UpdateTextMoney()
     {
@@ -355,7 +355,7 @@ public class UIManager : MonoBehaviour
         int cost = 0;
         int level = -1;
         int maxLevel = -1;
-        int health = -1;
+        //int health = -1;
         int damage = -1;
         int defense = -1;
 
@@ -376,7 +376,7 @@ public class UIManager : MonoBehaviour
                         level = 1; // todo: does this even make sense? towers should always start at level 1
                         cost = newTower.GetBaseLevelCost();
                         maxLevel = newTower.GetNumberOfLevels();
-                        health = newTower.GetBaseLevelHealth();
+                        //health = newTower.GetBaseLevelHealth();
                         damage = newTower.GetBaseLevelDamage();
                         //defense = newTower.getDefen
                     }
@@ -414,7 +414,7 @@ public class UIManager : MonoBehaviour
                         cost = currentTower.GetNextLevelCost();
                         level = currentTower.GetCurrentLevel() + 1;
                         maxLevel = currentTower.GetNumberOfLevels();
-                        health = currentTower.GetNextLevelHealth();
+                        //health = currentTower.GetNextLevelHealth();
                         damage = currentTower.GetNextLevelDamage();
                         //defense = tower1.GetNextLevelDe();
                     }
@@ -422,7 +422,8 @@ public class UIManager : MonoBehaviour
                 break;
         }
 
-        infoPanel.GetComponent<InfoPanel>().SetAll(name, description, level, maxLevel, cost, health, damage, defense);
+        //infoPanel.GetComponent<InfoPanel>().SetAll(name, description, level, maxLevel, cost, health, damage, defense);
+        infoPanel.GetComponent<InfoPanel>().SetAll(name, description, level, maxLevel, cost, damage, defense);
 
         ///////////////////////////
 

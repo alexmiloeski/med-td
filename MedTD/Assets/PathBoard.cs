@@ -3,8 +3,10 @@
 public class PathBoard : MonoBehaviour
 {
     public static Transform container;
-    
-	void Awake ()
+    public Transform attackPointsContainer;
+    public static Transform attackPoints;
+
+    void Awake ()
     {
         if (container != null)
         {
@@ -12,6 +14,7 @@ public class PathBoard : MonoBehaviour
             return;
         }
         container = transform;
+        attackPoints = attackPointsContainer;
     }
 	
 	// Update is called once per frame

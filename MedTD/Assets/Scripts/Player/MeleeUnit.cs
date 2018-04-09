@@ -6,9 +6,12 @@ public class MeleeUnit : MonoBehaviour
     public string enemyTag = "Enemy";
     public Transform head;
 
+    private Transform rotatingPart;
+
     private MeleeTower nativeTower;
     private float towerRange;
     private float speed;
+    private int startHealth;
     private int health;
     private int damage;
     private int defense;
@@ -22,6 +25,8 @@ public class MeleeUnit : MonoBehaviour
     
     private void Start()
     {
+        rotatingPart = transform.Find("RotatingPart");
+
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
     }
 
@@ -38,7 +43,7 @@ public class MeleeUnit : MonoBehaviour
         Vector2 direction = target.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10000f);
+        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
 
         // if hit countdown is over and target is in range, hit
         // otherwise, just move in closer while waiting for the cooldown
@@ -160,7 +165,7 @@ public class MeleeUnit : MonoBehaviour
         Vector2 vectorToTarget = rallyPoint - transform.position;
         float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10000f);
+        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
         
 
         transform.Translate(direction.normalized * distanceThisFrame, Space.World);
@@ -182,12 +187,28 @@ public class MeleeUnit : MonoBehaviour
         health -= damage;
         if (health <= 0)
             Die();
+        else
+        {
+            HealthBar healthBar = GetComponent<HealthBar>();
+            if (healthBar != null)
+            {
+                healthBar.UpdateGreenPercentage(health, startHealth);
+            }
+        }
     }
 
     private void Die()
     {
+        if (nativeTower != null)
+            nativeTower.RespawnUnitAfterCooldown();
+
         Destroy(gameObject);
     }
+
+    //internal void UpdateStats()
+    //{
+    //    nativeTower.
+    //}
 
     internal void SetNativeTower(MeleeTower tower)
     {
@@ -195,7 +216,8 @@ public class MeleeUnit : MonoBehaviour
     }
     internal void SetHealth(int _health)
     {
-        health = _health;
+        startHealth = _health;
+        health = startHealth;
     }
     internal void SetDamage(int _damage)
     {

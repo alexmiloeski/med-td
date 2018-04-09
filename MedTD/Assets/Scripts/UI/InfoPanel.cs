@@ -11,13 +11,22 @@ public class InfoPanel : MonoBehaviour
     public Text textItemDamage;
     public Text textItemDefense;
     
-    internal void SetAll(string name, string description, int level, int maxLevel, int cost, int health, int damage, int defense)
+    //internal void SetAll(string name, string description, int level, int maxLevel, int cost, int health, int damage, int defense)
+    //{
+    //    SetName(name);
+    //    SetDescription(description);
+    //    SetLevel(level, maxLevel);
+    //    SetCost(cost);
+    //    SetHealth(health);
+    //    SetDamage(damage);
+    //    SetDefense(defense);
+    //}
+    internal void SetAll(string name, string description, int level, int maxLevel, int cost, int damage, int defense)
     {
         SetName(name);
         SetDescription(description);
         SetLevel(level, maxLevel);
         SetCost(cost);
-        SetHealth(health);
         SetDamage(damage);
         SetDefense(defense);
     }

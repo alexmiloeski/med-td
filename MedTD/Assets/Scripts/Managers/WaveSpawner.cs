@@ -108,39 +108,54 @@ public class WaveSpawner : MonoBehaviour
         waveNumberText.text = "Wave: " + waveIndex + "/" + numberOfWaves;
 
         // todo: this is just for testing, should be predefined
-        // generate N enemies, where N is the number of the current wave
-        for (int i = 0; i < waveIndex; i++)
+        if (waveIndex == 1)
         {
-            //SpawnEnemy();
-            SpawnRandomEnemy();
+            SpawnEnemy(enemyPrefab1);
+        }
+        else if (waveIndex == 2)
+        {
+            SpawnEnemy(enemyPrefab1);
             yield return new WaitForSeconds(0.6f);
+            SpawnEnemy(enemyPrefab2);
+        }
+        else
+        {
+            // generate N enemies, where N is the number of the current wave
+            for (int i = 0; i < waveIndex; i++)
+            {
+                SpawnEnemy(null);
+                yield return new WaitForSeconds(0.6f);
+            }
         }
     }
 
-    private void SpawnRandomEnemy()
+    private void SpawnEnemy(Transform enemyPrefab)
     {
-        Transform enemyPrefab = null;
-
+        //Transform enemyPrefab = null;
         System.Random random = new System.Random();
-        // todo: number of enemies...
-        int randomInt = random.Next(1, 4); // generates a number between 1 and number of enemies
-        switch (randomInt)
+
+        if (enemyPrefab == null)
         {
-            case 1:
-            default:
-                enemyPrefab = enemyPrefab1;
-                break;
-            case 2:
-                enemyPrefab = enemyPrefab2;
-                break;
-            //case 3:
-            //    enemyPrefab = enemyPrefab3;
-            //    break;
+            // todo: number of enemies...
+            int randomInt = random.Next(1, 4); // generates a number between 1 and number of enemies
+            switch (randomInt)
+            {
+                case 1:
+                default:
+                    enemyPrefab = enemyPrefab1;
+                    break;
+                case 2:
+                    enemyPrefab = enemyPrefab2;
+                    break;
+                    //case 3:
+                    //    enemyPrefab = enemyPrefab3;
+                    //    break;
+            }
         }
 
         // in case only enemyPrefab1 is set and the others are not
         if (enemyPrefab == null) enemyPrefab = enemyPrefab1;
-
+        
         if (enemyPrefab != null && pathBoard.childCount > 0)
         {
             int randomTileIndex = random.Next(0, pathBoard.childCount);

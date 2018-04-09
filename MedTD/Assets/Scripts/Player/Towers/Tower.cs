@@ -24,6 +24,7 @@ public class Tower : MonoBehaviour
 
     internal void Upgrade()
     {
+        Debug.Log("Tower.Upgrade");
         int nextTowerLevelIndex = currentTowerLevelIndex + 1;
         if (towerLevels.Length > nextTowerLevelIndex)
         {
@@ -33,6 +34,15 @@ public class Tower : MonoBehaviour
                 GetComponent<SpriteRenderer>().sprite = towerLevels[nextTowerLevelIndex].sprite;
             }
         }
+
+        // if this is a melee tower, also update the unit stats
+        MeleeTower meleeTower = GetComponent<MeleeTower>();
+        if (meleeTower != null)
+        {
+            Debug.Log("meleeTower != null");
+            meleeTower.UpdateStats();
+        }
+        else Debug.Log("meleeTower == null");
     }
     
     
@@ -48,14 +58,53 @@ public class Tower : MonoBehaviour
     internal int GetCurrentCost() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cost : -1; }
     internal int GetCurrentSellValue() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].sellValue : -1; }
     internal int GetCurrentDamage() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].damage : -1; }
-    internal int GetCurrentHealth() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].health : -1; }
-    internal int GetCurrentDefense() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].defense : -1; }
+    //internal int GetCurrentHealth() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].health : -1; }
+    //internal int GetCurrentDefense() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].defense : -1; }
     internal float GetCurrentRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].range : 0; }
     internal int GetCurrentCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cooldown : 1; }
+    
+    internal int GetCurrentMeleeUnitHealth()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1;
 
-    internal float GetCurrentUnitSpeed() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].unitSpeed : 0f; }
-    internal float GetCurrentMeleeHitRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].meleeHitRange : 1f; }
-    internal float GetCurrentHitCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].hitCooldown : 1f; }
+        return meleeTowerLevel.unitHealth;
+    }
+    internal int GetCurrentMeleeUnitDamage()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1;
+
+        return meleeTowerLevel.unitDamage;
+    }
+    internal int GetCurrentMeleeUnitDefense()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 0;
+
+        return meleeTowerLevel.unitDefense;
+    }
+    internal float GetCurrentMeleeUnitSpeed()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel) towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 0f;
+
+        return meleeTowerLevel.unitSpeed;
+    }
+    internal float GetCurrentMeleeHitRange()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1f;
+
+        return meleeTowerLevel.meleeHitRange;
+    }
+    internal float GetCurrentMeleeUnitHitCooldown()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1f;
+
+        return meleeTowerLevel.unitHitCooldown;
+    }
 
     internal string GetBaseLevelName()
     {
@@ -112,17 +161,17 @@ public class Tower : MonoBehaviour
         // if no success, return -1
         return -1;
     }
-    internal int GetBaseLevelHealth()
-    {
-        // return the health of the first valid TowerLevel
-        for (int i = 0; i < towerLevels.Length; i++)
-        {
-            if (towerLevels[i] != null) return towerLevels[i].health;
-        }
+    //internal int GetBaseLevelHealth()
+    //{
+    //    // return the health of the first valid TowerLevel
+    //    for (int i = 0; i < towerLevels.Length; i++)
+    //    {
+    //        if (towerLevels[i] != null) return towerLevels[i].health;
+    //    }
 
-        // if no success, return -1
-        return -1;
-    }
+    //    // if no success, return -1
+    //    return -1;
+    //}
 
     internal string GetNextLevelName()
     {
@@ -234,28 +283,28 @@ public class Tower : MonoBehaviour
             return -1;
         }
     }
-    internal int GetNextLevelHealth()
-    {
-        int nextTowerLevelIndex = currentTowerLevelIndex + 1;
-        // if this is the last level, return -1
-        if (nextTowerLevelIndex >= towerLevels.Length)
-        {
-            return -1;
-        }
-        else // if the next tower level is not null, return its Health;
-        {
-            if (towerLevels[nextTowerLevelIndex] != null) return towerLevels[nextTowerLevelIndex].health;
+    //internal int GetNextLevelHealth()
+    //{
+    //    int nextTowerLevelIndex = currentTowerLevelIndex + 1;
+    //    // if this is the last level, return -1
+    //    if (nextTowerLevelIndex >= towerLevels.Length)
+    //    {
+    //        return -1;
+    //    }
+    //    else // if the next tower level is not null, return its Health;
+    //    {
+    //        if (towerLevels[nextTowerLevelIndex] != null) return towerLevels[nextTowerLevelIndex].health;
 
-            // otherwise try the other levels
-            for (int i = nextTowerLevelIndex + 1; i < towerLevels.Length; i++)
-            {
-                if (towerLevels[i] != null) return towerLevels[i].health;
-            }
+    //        // otherwise try the other levels
+    //        for (int i = nextTowerLevelIndex + 1; i < towerLevels.Length; i++)
+    //        {
+    //            if (towerLevels[i] != null) return towerLevels[i].health;
+    //        }
 
-            // if no success, return -1
-            return -1;
-        }
-    }
+    //        // if no success, return -1
+    //        return -1;
+    //    }
+    //}
 
 
 

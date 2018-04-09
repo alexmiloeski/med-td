@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -34,8 +33,7 @@ public class Enemy : MonoBehaviour
     private float coughStopCountdown = 5f;
     private float coughSpeedIncrement;
     private bool startRegainingSpeed = false;
-
-
+    
     private System.Random random = new System.Random();
 
 
@@ -171,7 +169,7 @@ public class Enemy : MonoBehaviour
 
     private void HitAttacker()
     {
-        Debug.Log("Enemy.Hitting attacker");
+        //Debug.Log("Enemy.Hitting attacker");
 
         if (meleeAttacker == null || meleeAttacker.GetComponent<MeleeUnit>() == null) return;
 
@@ -200,22 +198,53 @@ public class Enemy : MonoBehaviour
         // get a random tile from those that are within allowedTileDistance
         Transform chosenTile = null;
 
-        foreach (Transform tile in PathBoard.container)
+        // first look for vacant attack points next to the current tile
+        foreach (Transform attackPoint in PathBoard.attackPoints)
         {
-            if (!visitedTiles.Contains(tile))
+            if (attackPoint.GetComponent<AttackPoint>().IsVacant(this))
             {
-                float distanceToTile = Vector2.Distance(currTile.position, tile.position);
-                if (distanceToTile < allowedTileDistance)
+                float distanceToAttackPoint = Vector2.Distance(currTile.position, attackPoint.position);
+                if (distanceToAttackPoint < allowedTileDistance)
                 {
-                    // if this is the first tile to be examined, pick it
+                    // if this is the first attack point to be examined, pick it
                     // else, pick it with a 50% chance
                     int randomInt = random.Next(0, 2);
                     if (chosenTile == null || randomInt > 0)
                     {
-                        chosenTile = tile;
+                        chosenTile = attackPoint;
                     }
                 }
             }
+        }
+
+        if (chosenTile != null) // if found attack point, set it as occupied by this enemy object
+        {
+            AttackPoint attackPoint = chosenTile.GetComponent<AttackPoint>();
+            if (attackPoint != null)
+            {
+                attackPoint.SetOccupant(this);
+            }
+        }
+        else // if there weren't any attack points, find the next unvisited tile
+        {
+            foreach (Transform tile in PathBoard.container)
+            {
+                if (!visitedTiles.Contains(tile))
+                {
+                    float distanceToTile = Vector2.Distance(currTile.position, tile.position);
+                    if (distanceToTile < allowedTileDistance)
+                    {
+                        // if this is the first tile to be examined, pick it
+                        // else, pick it with a 50% chance
+                        int randomInt = random.Next(0, 2);
+                        if (chosenTile == null || randomInt > 0)
+                        {
+                            chosenTile = tile;
+                        }
+                    }
+                }
+            }
+
         }
 
         if (chosenTile != null)

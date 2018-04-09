@@ -70,10 +70,10 @@ MonoBehaviour:
   towerName: Tower1
   description: Tower one
   towerLevels:
-  - {fileID: 114868598680458102, guid: d1b0307bfd45c9f48b4e1b082c35e955, type: 2}
-  - {fileID: 114695358600443280, guid: f4ce8160ac7b84d42a8df9133591c139, type: 2}
-  - {fileID: 114570890647826272, guid: 884e308ffa4312549b17f3363cb38014, type: 2}
-  - {fileID: 114913257944076488, guid: 1851bd9b1734cdd45ad777628dd83e40, type: 2}
+  - {fileID: 114238171581901022, guid: d1b0307bfd45c9f48b4e1b082c35e955, type: 2}
+  - {fileID: 114844755604913970, guid: f4ce8160ac7b84d42a8df9133591c139, type: 2}
+  - {fileID: 114359782261602936, guid: 884e308ffa4312549b17f3363cb38014, type: 2}
+  - {fileID: 114657041409566276, guid: 1851bd9b1734cdd45ad777628dd83e40, type: 2}
 --- !u!212 &212487595534256636
 SpriteRenderer:
   m_ObjectHideFlags: 1

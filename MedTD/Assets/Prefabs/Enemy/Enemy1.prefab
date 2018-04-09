@@ -69,13 +69,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 60
-  damage: 4
+  damage: 5
   defense: 1
   hitCooldown: 4
   hitRange: 0.1
   movementDelay: 0.5
   cloneMovementDelay: 1.5
-  regularSpeed: 1
+  regularSpeed: 0.7
   minReplicationTime: 20
   maxReplicationTime: 40
 --- !u!212 &212716098509495440
