@@ -63,7 +63,7 @@ MonoBehaviour:
   range: 3
   unitSpeed: 0.3
   unitHealth: 160
-  unitDamage: 5
+  unitDamage: 40
   unitDefense: 10
   unitHitCooldown: 3
   meleeHitRange: 1

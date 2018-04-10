@@ -269,35 +269,11 @@ public class Enemy : MonoBehaviour
     {
         meleeAttackers.Remove(_meleeAttacker);
     }
-    //internal void SetAttacker(Transform _meleeAttacker)
-    //{
-    //    meleeAttacker = _meleeAttacker;
-    //}
-    //internal Transform GetAttacker()
-    //{
-    //    return meleeAttacker;
-    //}
-    //internal bool HasAttacker()
-    //{
-    //    return meleeAttacker != null;
-    //}
     internal bool HasAnotherAttacker(Transform _unit)
     {
         if (meleeAttackers == null || meleeAttackers.Count < 1) return false;
 
         return meleeAttackers.Count > 1 && meleeAttackers[0] != null && meleeAttackers[0] != _unit;
-
-
-        //foreach (Transform attacker in meleeAttackers)
-        //{
-        //    if (attacker != _unit)
-        //        return true;
-        //}
-        //return false;
-
-
-        //return meleeAttacker != null && meleeAttacker != _unit;
-        //return meleeAttackers.Count > 0 && meleeAttackers[0] != null && meleeAttackers[0] != _unit;
     }
 
     internal void SetStartTile(Transform _startTile, float delay)

@@ -68,7 +68,7 @@ public class MeleeUnit : MonoBehaviour
     /// <summary> Called with Invoke(). </summary>
     private void UpdateTarget()
     {
-        // if it already has a target, see if it's dead or too far away
+        // if it already has a target, see if it's dead or too far away, or if there's another one without an attacker
         if (target != null)
         {
             float distanceFromTowerToTarget = Vector2.Distance(nativeTower.transform.position, target.transform.position);
@@ -83,8 +83,6 @@ public class MeleeUnit : MonoBehaviour
             Enemy targetEnemy = target.GetComponent<Enemy>();
             if (targetEnemy != null && targetEnemy.HasAnotherAttacker(transform))
             {
-                Debug.Log("target has another attacker; looking for others");
-
                 // this target has another attacker; look for other targets without an attacker
                 GameObject[] enemies2 = GameObject.FindGameObjectsWithTag(enemyTag);
                 float shortestDistance2 = Mathf.Infinity;
@@ -95,7 +93,6 @@ public class MeleeUnit : MonoBehaviour
                     float distanceFromTowerToEnemy = Vector2.Distance(nativeTower.transform.position, enemy.transform.position);
                     if (distanceFromTowerToEnemy <= towerRange)
                     {
-                        Debug.Log("\tfound enemy within range");
                         // if the enemy has another attacker, ignore it
                         Enemy enemyEnemy = enemy.GetComponent<Enemy>();
                         if (enemyEnemy != null)
@@ -105,7 +102,6 @@ public class MeleeUnit : MonoBehaviour
                                 float distanceFromUnitToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
                                 if (distanceFromUnitToEnemy < shortestDistance2)
                                 {
-                                    Debug.Log("\t\tfound close enemy without attacker; assigning");
                                     shortestDistance2 = distanceFromUnitToEnemy;
                                     nearestEnemy2 = enemy;
                                 }
@@ -119,15 +115,11 @@ public class MeleeUnit : MonoBehaviour
                     AcquireTarget(nearestEnemy2.transform);
                 }
             }
-            Debug.Log(" ");
 
             return;
         }
 
-        // todo: find the nearest enemy; prioritize those without an attacker
-
-
-
+        // find the nearest enemy
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         float shortestDistance = Mathf.Infinity;
         GameObject nearestEnemy = null;
@@ -149,7 +141,7 @@ public class MeleeUnit : MonoBehaviour
 
         if (nearestEnemy != null)
         {
-            Debug.Log("FOUND TARGET");
+            //Debug.Log("FOUND TARGET");
             AcquireTarget(nearestEnemy.transform);
         }
         else
@@ -176,10 +168,11 @@ public class MeleeUnit : MonoBehaviour
     private void AcquireTarget(Transform _target)
     {
         // dismiss any previous target
-        if (target != null && target.GetComponent<Enemy>() != null)
-        {
-            target.GetComponent<Enemy>().RemoveAttacker(transform);
-        }
+        //if (target != null && target.GetComponent<Enemy>() != null)
+        //{
+        //    target.GetComponent<Enemy>().RemoveAttacker(transform);
+        //}
+        DismissTarget();
 
 
         target = _target;
@@ -195,6 +188,8 @@ public class MeleeUnit : MonoBehaviour
 
     private void ReturnToRallyPoint()
     {
+        if (target != null) return;
+
         // after it's done fighting/chasing a target, return to rally point
 
         // first see if it's close enough to the rally point
