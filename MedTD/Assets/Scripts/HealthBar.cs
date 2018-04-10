@@ -6,7 +6,8 @@ public class HealthBar : MonoBehaviour
 
     private void Start ()
     {
-        green = transform.Find(Constants.HealthBarGreen);
+        Transform healthBar = transform.Find(Constants.HealthBar);
+        green = healthBar.transform.Find(Constants.HealthBarGreen);
 
         //green.transform.localScale = new Vector3(0.5f, 1f, 1f);
     }

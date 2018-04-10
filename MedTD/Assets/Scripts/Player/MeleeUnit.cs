@@ -25,7 +25,7 @@ public class MeleeUnit : MonoBehaviour
     
     private void Start()
     {
-        rotatingPart = transform.Find("RotatingPart");
+        rotatingPart = transform.Find(Constants.RotatingPart);
 
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
     }
@@ -47,36 +47,58 @@ public class MeleeUnit : MonoBehaviour
 
         // if hit countdown is over and target is in range, hit
         // otherwise, just move in closer while waiting for the cooldown
-        bool readyToHit = false;
-        if (hitCountdown <= 0f)
-        {
-            float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
-            if (distanceToTarget < hitRange)
-            {
-                readyToHit = true;
-                //HitEnemy();
-            }
-            else
-            {
-                //Debug.Log("enemy out of reach..");
-            }
-        }
-        else
-        {
-            hitCountdown -= Time.deltaTime;
-        }
+        //bool readyToHit = false;
+        //if (hitCountdown <= 0f)
+        //{
+        //    float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
+        //    if (distanceToTarget < hitRange)
+        //    {
+        //        readyToHit = true;
+        //        //HitEnemy();
+        //    }
+        //    else
+        //    {
+        //        //Debug.Log("enemy out of reach..");
+        //    }
+        //}
+        //else
+        //{
+        //    hitCountdown -= Time.deltaTime;
+        //}
 
-        if (readyToHit)
+        //if (readyToHit)
+        //{
+        //    HitEnemy();
+        //}
+        //else
+        //{
+        //    float distanceThisFrame = speed * Time.deltaTime;
+        //    transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+        //}
+
+        //////////////////////////////////
+
+        if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
+
+        // if target is out of range, move in closer
+        float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
+        if (distanceToTarget > hitRange)
         {
-            HitEnemy();
-        }
-        else
-        {
+            // move towards target
             float distanceThisFrame = speed * Time.deltaTime;
             transform.Translate(direction.normalized * distanceThisFrame, Space.World);
         }
+        else
+        {
+            // hit or wait for cooldown
+            if (hitCountdown <= 0f)
+            {
+                HitEnemy();
+            }
+        }
     }
 
+    /// <summary> Called with Invoke(). </summary>
     private void UpdateTarget()
     {
         // if it already has a target, see if it's dead or too far away
@@ -134,6 +156,7 @@ public class MeleeUnit : MonoBehaviour
         }
         target = null;
     }
+
     private void AcquireTarget(Transform _target)
     {
         target = _target;
@@ -144,7 +167,7 @@ public class MeleeUnit : MonoBehaviour
             targetEnemy.SetAttacker(transform);
         }
     }
-    
+
 
     private void ReturnToRallyPoint()
     {

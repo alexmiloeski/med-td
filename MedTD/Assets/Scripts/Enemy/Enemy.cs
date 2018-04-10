@@ -4,7 +4,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private float speed = 1f;
-    public int health = 10;
+    public int startHealth = 10;
+    private int health = 10;
     public int damage = 1;
     public int defense = 1;
     
@@ -16,6 +17,8 @@ public class Enemy : MonoBehaviour
 
     public float regularSpeed;
     private bool started = false;
+
+    private Transform rotatingPart;
 
     private Transform currTile;
     private Transform nextTile;
@@ -40,6 +43,10 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         //Debug.Log("Enemy.Start");
+
+        health = startHealth;
+
+        rotatingPart = transform.Find(Constants.RotatingPart);
 
         if (!Shop.instance.IsCoughing())
             speed = regularSpeed;
@@ -66,8 +73,8 @@ public class Enemy : MonoBehaviour
 
         // update the hit countdown and the replication countdown each frame
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
-        if (replicationCoundtown > 0f) replicationCoundtown -= Time.deltaTime;
 
+        if (replicationCoundtown > 0f) replicationCoundtown -= Time.deltaTime;
         if (replicationCoundtown <= 0f)
         {
             Replicate();
@@ -94,22 +101,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
-    private void Replicate()
-    {
-        //Debug.Log("Replicate");
-
-        // don't move for a short while
-        started = false;
-        Invoke("StartMovement", movementDelay);
-        // spawn another of the same gameobject
-        GameObject clone = Instantiate(gameObject, transform.parent);
-        if (nextTile != null) clone.GetComponent<Enemy>().SetStartTile(nextTile, cloneMovementDelay);
-        else clone.GetComponent<Enemy>().SetStartTile(currTile, cloneMovementDelay);
-
-        replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
-    }
-
+    
     private void AttackMeleeAttacker()
     {
         //Debug.Log("AttackMeleeAttacker");
@@ -120,7 +112,7 @@ public class Enemy : MonoBehaviour
         Vector2 direction = meleeAttacker.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * 10000f);
+        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
 
 
         // if attacker is out of range, move towards it; else, hit it
@@ -154,11 +146,13 @@ public class Enemy : MonoBehaviour
         float distanceToAttacker = Vector2.Distance(transform.position, meleeAttacker.transform.position);
         if (distanceToAttacker > hitRange)
         {
+            // move towards attacker
             float distanceThisFrame = speed * Time.deltaTime;
             transform.Translate(direction.normalized * distanceThisFrame, Space.World);
         }
         else
         {
+            // hit or wait for cooldown
             if (hitCountdown <= 0f)
             {
                 HitAttacker();
@@ -183,6 +177,14 @@ public class Enemy : MonoBehaviour
         health -= damage;
         if (health <= 0)
             Die();
+        else
+        {
+            HealthBar healthBar = GetComponent<HealthBar>();
+            if (healthBar != null)
+            {
+                healthBar.UpdateGreenPercentage(health, startHealth);
+            }
+        }
     }
 
     private void Die()
@@ -278,7 +280,22 @@ public class Enemy : MonoBehaviour
     {
         started = true;
     }
-    
+
+    private void Replicate()
+    {
+        //Debug.Log("Replicate");
+
+        // don't move for a short while
+        started = false;
+        Invoke("StartMovement", movementDelay);
+        // spawn another of the same gameobject
+        GameObject clone = Instantiate(gameObject, transform.parent);
+        if (nextTile != null) clone.GetComponent<Enemy>().SetStartTile(nextTile, cloneMovementDelay);
+        else clone.GetComponent<Enemy>().SetStartTile(currTile, cloneMovementDelay);
+
+        replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
+    }
+
     internal void StartCough(float delay)
     {
         coughing = true;
@@ -313,40 +330,42 @@ public class Enemy : MonoBehaviour
 
 
 
-    //private void OnDrawGizmosSelected()
-    //{
-    //    if (currTile != null)
-    //    {
-    //        Gizmos.color = Color.blue;
-    //        Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
-    //    }
-    //    if (nextTile != null)
-    //    {
-    //        Gizmos.color = Color.yellow;
-    //        Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
-    //    }
-    //    Gizmos.color = Color.red;
-    //    foreach (Transform tile in visitedTiles)
-    //    {
-    //        Gizmos.DrawWireCube(tile.position, new Vector3(0.5f, 0.5f, 5f));
-    //    }
-    //    if (currTile != null)
-    //    {
-    //        Gizmos.color = Color.green;
-    //        foreach (Transform tile in PathBoard.container)
-    //        {
-    //            //bool notVisited = !visitedPositions.Exists(x => x.Equals(tile.position));
-    //            bool notVisited = !visitedTiles.Contains(tile);
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, hitRange);
+        //    if (currTile != null)
+        //    {
+        //        Gizmos.color = Color.blue;
+        //        Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
+        //    }
+        //    if (nextTile != null)
+        //    {
+        //        Gizmos.color = Color.yellow;
+        //        Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
+        //    }
+        //    Gizmos.color = Color.red;
+        //    foreach (Transform tile in visitedTiles)
+        //    {
+        //        Gizmos.DrawWireCube(tile.position, new Vector3(0.5f, 0.5f, 5f));
+        //    }
+        //    if (currTile != null)
+        //    {
+        //        Gizmos.color = Color.green;
+        //        foreach (Transform tile in PathBoard.container)
+        //        {
+        //            //bool notVisited = !visitedPositions.Exists(x => x.Equals(tile.position));
+        //            bool notVisited = !visitedTiles.Contains(tile);
 
-    //            if (notVisited)
-    //            {
-    //                float distanceToTile = Vector2.Distance(currTile.position, tile.position);
-    //                if (distanceToTile < allowedTileDistance)
-    //                {
-    //                    Gizmos.DrawWireSphere(tile.position, 0.7f);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+        //            if (notVisited)
+        //            {
+        //                float distanceToTile = Vector2.Distance(currTile.position, tile.position);
+        //                if (distanceToTile < allowedTileDistance)
+        //                {
+        //                    Gizmos.DrawWireSphere(tile.position, 0.7f);
+        //                }
+        //            }
+        //        }
+        //    }
+    }
 }
