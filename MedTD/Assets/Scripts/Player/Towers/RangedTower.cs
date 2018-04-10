@@ -1,23 +1,20 @@
 ﻿using UnityEngine;
 
-public class RangedTower : MonoBehaviour
+public class RangedTower : Tower
 {
-    private float range;
+    protected float range;
     private float damage;
     private float cooldown;
     private float countdown;
 
-    private Transform target;
+    protected Transform target;
     public GameObject projectilePrefab;
 
     private void Start ()
     {
-        Tower towerComponent = GetComponent<Tower>();
-        if (towerComponent == null) return;
-
-        range = towerComponent.GetCurrentRange();
-        damage = towerComponent.GetCurrentDamage();
-        cooldown = towerComponent.GetCurrentCooldown();
+        range = GetCurrentRange();
+        damage = GetCurrentDamage();
+        cooldown = GetCurrentCooldown();
         countdown = 0f; // resets to cooldown once it reaches zero
 
         InvokeRepeating("UpdateTarget", 0f, 1.5f);
@@ -38,9 +35,10 @@ public class RangedTower : MonoBehaviour
         }
     }
 
+    /// <summary> Targets the enemy with the lowest health percentage; if all have the same health, targets the nearest enemy. </summary>
     private void UpdateTarget()
     {
-        // todo: target the enemy with the least amount of health (percentage or absolute?); if all the same, get closest
+        // target the enemy with the lowest health percentage; if all the same, get closest
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
         float leastHealth = Mathf.Infinity;

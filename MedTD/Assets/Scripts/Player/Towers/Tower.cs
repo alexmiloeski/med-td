@@ -7,7 +7,7 @@ public class Tower : MonoBehaviour
 
     public TowerLevel[] towerLevels;
     
-    private int currentTowerLevelIndex;
+    protected int currentTowerLevelIndex;
     
 
     internal void BuildBaseLevel()
@@ -63,49 +63,6 @@ public class Tower : MonoBehaviour
     internal float GetCurrentRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].range : 0; }
     internal float GetCurrentCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cooldown : 1; }
     
-    internal float GetCurrentMeleeUnitHealth()
-    {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 1;
-
-        return meleeTowerLevel.unitHealth;
-    }
-    internal float GetCurrentMeleeUnitDamage()
-    {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 1;
-
-        return meleeTowerLevel.unitDamage;
-    }
-    internal int GetCurrentMeleeUnitDefense()
-    {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 0;
-
-        return meleeTowerLevel.unitDefense;
-    }
-    internal float GetCurrentMeleeUnitSpeed()
-    {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel) towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 0f;
-
-        return meleeTowerLevel.unitSpeed;
-    }
-    internal float GetCurrentMeleeHitRange()
-    {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 1f;
-
-        return meleeTowerLevel.meleeHitRange;
-    }
-    internal float GetCurrentMeleeUnitHitCooldown()
-    {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 1f;
-
-        return meleeTowerLevel.unitHitCooldown;
-    }
-
     internal string GetBaseLevelName()
     {
         // return the name of the first valid TowerLevel

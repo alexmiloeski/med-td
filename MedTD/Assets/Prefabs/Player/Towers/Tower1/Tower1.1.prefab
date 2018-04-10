@@ -60,10 +60,10 @@ MonoBehaviour:
   sellValue: 80
   damage: 0
   cooldown: 4
-  range: 3
+  range: 2
   unitSpeed: 0.3
   unitHealth: 160
-  unitDamage: 40
+  unitDamage: 20
   unitDefense: 10
   unitHitCooldown: 3
   meleeHitRange: 1

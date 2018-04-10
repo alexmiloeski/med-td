@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MeleeTower : MonoBehaviour
+public class MeleeTower : Tower
 {
     public GameObject unitPrefab; // prefab for the deployed friendly units
     public Transform pathBoard;
@@ -70,34 +70,64 @@ public class MeleeTower : MonoBehaviour
     {
         //Debug.Log("MeleeTower.UpdateStats");
         // get unit stats from TowerLevel component
-        Tower tower = GetComponent<Tower>();
-        if (tower != null)
-        {
-            unitRespawnCooldown = tower.GetCurrentCooldown();
-            towerRange = tower.GetCurrentRange();
-            unitSpeed = tower.GetCurrentMeleeUnitSpeed();
-            unitHealth = tower.GetCurrentMeleeUnitHealth();
-            unitDamage = tower.GetCurrentMeleeUnitDamage();
-            unitDefense = tower.GetCurrentMeleeUnitDefense();
-            meleeHitRange = tower.GetCurrentMeleeHitRange();
-            unitHitCooldown = tower.GetCurrentMeleeUnitHitCooldown();
+        //Tower tower = GetComponent<Tower>();
+        //if (tower != null)
+        //{
+        //    unitRespawnCooldown = tower.GetCurrentCooldown();
+        //    towerRange = tower.GetCurrentRange();
+        //    unitSpeed = tower.GetCurrentMeleeUnitSpeed();
+        //    unitHealth = tower.GetCurrentMeleeUnitHealth();
+        //    unitDamage = tower.GetCurrentMeleeUnitDamage();
+        //    unitDefense = tower.GetCurrentMeleeUnitDefense();
+        //    meleeHitRange = tower.GetCurrentMeleeHitRange();
+        //    unitHitCooldown = tower.GetCurrentMeleeUnitHitCooldown();
 
-            // update the stats of each of this tower's melee units
-            if (units != null)
+        //    // update the stats of each of this tower's melee units
+        //    if (units != null)
+        //    {
+        //        foreach (MeleeUnit unit in units)
+        //        {
+        //            if (unit != null)
+        //            {
+        //                //unit.UpdateStats();
+        //                unit.SetTowerRange(towerRange);
+        //                unit.SetUnitSpeed(unitSpeed);
+        //                unit.SetHealth(unitHealth);
+        //                unit.SetDamage(unitDamage);
+        //                unit.SetDefense(unitDefense);
+        //                unit.SetHitRange(meleeHitRange);
+        //                unit.SetHitCooldown(unitHitCooldown);
+        //            }
+        //        }
+        //    }
+        //}
+
+        
+        
+        unitRespawnCooldown = GetCurrentCooldown();
+        towerRange = GetCurrentRange();
+        unitSpeed = GetCurrentMeleeUnitSpeed();
+        unitHealth = GetCurrentMeleeUnitHealth();
+        unitDamage = GetCurrentMeleeUnitDamage();
+        unitDefense = GetCurrentMeleeUnitDefense();
+        meleeHitRange = GetCurrentMeleeHitRange();
+        unitHitCooldown = GetCurrentMeleeUnitHitCooldown();
+
+        // update the stats of each of this tower's melee units
+        if (units != null)
+        {
+            foreach (MeleeUnit unit in units)
             {
-                foreach (MeleeUnit unit in units)
+                if (unit != null)
                 {
-                    if (unit != null)
-                    {
-                        //unit.UpdateStats();
-                        unit.SetTowerRange(towerRange);
-                        unit.SetUnitSpeed(unitSpeed);
-                        unit.SetHealth(unitHealth);
-                        unit.SetDamage(unitDamage);
-                        unit.SetDefense(unitDefense);
-                        unit.SetHitRange(meleeHitRange);
-                        unit.SetHitCooldown(unitHitCooldown);
-                    }
+                    //unit.UpdateStats();
+                    unit.SetTowerRange(towerRange);
+                    unit.SetUnitSpeed(unitSpeed);
+                    unit.SetHealth(unitHealth);
+                    unit.SetDamage(unitDamage);
+                    unit.SetDefense(unitDefense);
+                    unit.SetHitRange(meleeHitRange);
+                    unit.SetHitCooldown(unitHitCooldown);
                 }
             }
         }
@@ -174,4 +204,52 @@ public class MeleeTower : MonoBehaviour
     {
         currentUnitCount--;
     }
+
+
+
+
+
+    internal float GetCurrentMeleeUnitHealth()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1;
+
+        return meleeTowerLevel.unitHealth;
+    }
+    internal float GetCurrentMeleeUnitDamage()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1;
+
+        return meleeTowerLevel.unitDamage;
+    }
+    internal int GetCurrentMeleeUnitDefense()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 0;
+
+        return meleeTowerLevel.unitDefense;
+    }
+    internal float GetCurrentMeleeUnitSpeed()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 0f;
+
+        return meleeTowerLevel.unitSpeed;
+    }
+    internal float GetCurrentMeleeHitRange()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1f;
+
+        return meleeTowerLevel.meleeHitRange;
+    }
+    internal float GetCurrentMeleeUnitHitCooldown()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1f;
+
+        return meleeTowerLevel.unitHitCooldown;
+    }
+
 }

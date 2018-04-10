@@ -37,21 +37,41 @@ public class Projectile : MonoBehaviour
         //GameObject effectInstance = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
         //Destroy(effectInstance, 4f);
 
-        //if (explosionRadius > 0f)
-        //{
-        //    Explode();
-        //}
-        //else
-        //{
-        //    Damage(target);
-        //}
-        Enemy targetEnemy = target.GetComponent<Enemy>();
-        if (targetEnemy != null)
+        if (explosionRadius > 0f)
         {
-            targetEnemy.TakeDamage(damage);
+            Explode();
+        }
+        else
+        {
+            Enemy targetEnemy = target.GetComponent<Enemy>();
+            if (targetEnemy != null)
+            {
+                targetEnemy.TakeDamage(damage);
+            }
         }
 
         Destroy(gameObject);
+    }
+
+    private void Explode()
+    {
+        // find all enemies around the target within explosionRadius and damage them equally
+
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
+        foreach (GameObject enemy in enemies)
+        {
+            float distanceFromExplosionToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distanceFromExplosionToEnemy <= explosionRadius)
+            {
+                Enemy enemyEnemy = enemy.GetComponent<Enemy>();
+                if (enemyEnemy != null)
+                {
+                    float currDamage = damage * (1 - (distanceFromExplosionToEnemy / explosionRadius));
+                    Debug.Log("currDamage = " + currDamage);
+                    enemyEnemy.TakeDamage(currDamage);
+                }
+            }
+        }
     }
 
     internal void SetTargetAndDamage(Transform _target, float _damage)

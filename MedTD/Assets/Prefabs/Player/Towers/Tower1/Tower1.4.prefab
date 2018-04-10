@@ -58,9 +58,9 @@ MonoBehaviour:
   level: 4
   cost: 180
   sellValue: 160
-  damage: 100
+  damage: 0
   cooldown: 8
-  range: 2
+  range: 3.5
   unitSpeed: 4
   unitHealth: 180
   unitDamage: 10

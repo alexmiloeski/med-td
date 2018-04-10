@@ -9,30 +9,30 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1921000317947102}
+  m_RootGameObject: {fileID: 1706652239771788}
   m_IsPrefabParent: 1
---- !u!1 &1921000317947102
+--- !u!1 &1706652239771788
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4241162217075398}
-  - component: {fileID: 114005406896707126}
-  m_Layer: 5
-  m_Name: Shop
+  - component: {fileID: 4915430142162560}
+  - component: {fileID: 114538706459103610}
+  m_Layer: 0
+  m_Name: Tower3.2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4241162217075398
+--- !u!4 &4915430142162560
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1921000317947102}
+  m_GameObject: {fileID: 1706652239771788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,24 +40,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114005406896707126
+--- !u!114 &114538706459103610
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1921000317947102}
+  m_GameObject: {fileID: 1706652239771788}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5350ba70da7849e46a28b335dd0e025e, type: 3}
+  m_Script: {fileID: 11500000, guid: eecdf01614c17444db32ee95660c251f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower1: {fileID: 114466514691723638, guid: 5c14bd36418844e469a2722e8fe33f0a, type: 2}
-  tower2: {fileID: 114081857485818638, guid: 069de8b49849a8649a622b7234d72b54, type: 2}
-  tower3: {fileID: 114559496392638446, guid: 39ca1a0721f45c746a7ba4bce16d6395, type: 2}
-  tower4: {fileID: 0}
-  coughCooldown: 10
-  spriteButtonRegular: {fileID: 21300000, guid: ec82a3ab20b9e274f9fbb585940cbc0f,
-    type: 3}
-  spriteCheckmark: {fileID: 21300000, guid: 906db8f00ba26234c9d18cee2f5e05cb, type: 3}
-  spriteButtonX: {fileID: 21300000, guid: c39b14da124994b4a8bd247b8e3938b6, type: 3}
-  coughStopDelay: 10
+  sprite: {fileID: 21300000, guid: e22664579ed3ec1408247d66cd5fb98a, type: 3}
+  towerLevelName: Tower32
+  description: Tower three two
+  level: 2
+  cost: 100
+  sellValue: 60
+  damage: 40
+  cooldown: 3
+  range: 3
