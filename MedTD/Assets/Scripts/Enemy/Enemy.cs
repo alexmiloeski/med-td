@@ -25,7 +25,8 @@ public class Enemy : MonoBehaviour
     private List<Transform> visitedTiles = new List<Transform>();
     private float allowedTileDistance;
 
-    private Transform meleeAttacker;
+    //private Transform meleeAttacker;
+    private List<Transform> meleeAttackers;
     private float hitCountdown = 0f;
 
     public int minReplicationTime = 10;
@@ -62,6 +63,8 @@ public class Enemy : MonoBehaviour
             BoxCollider2D tileColl = tile.GetComponent<BoxCollider2D>();
             allowedTileDistance = tileColl.bounds.size.x + (tileColl.bounds.size.x * 0.15f);
         }
+
+        meleeAttackers = new List<Transform>();
 	}
 
     private void Update()
@@ -81,7 +84,8 @@ public class Enemy : MonoBehaviour
         }
 
         // if there's a melee unit attacking, start attacking it (face it, move towards it, and if in range, hit)
-        if (meleeAttacker != null)
+        //if (meleeAttacker != null)
+        if (meleeAttackers.Count > 0)
         {
             AttackMeleeAttacker();
         }
@@ -105,45 +109,30 @@ public class Enemy : MonoBehaviour
     private void AttackMeleeAttacker()
     {
         //Debug.Log("AttackMeleeAttacker");
-        if (meleeAttacker == null || meleeAttacker.GetComponent<MeleeUnit>() == null) return;
+        //if (meleeAttacker == null || meleeAttacker.GetComponent<MeleeUnit>() == null) return;
+        Transform firstAttacker = null;
+        for (int i = 0; i < meleeAttackers.Count; i++)
+        {
+            Transform _meleeAttacker = meleeAttackers[i];
+            if (_meleeAttacker != null && _meleeAttacker.GetComponent<MeleeUnit>() != null)
+            {
+                firstAttacker = _meleeAttacker;
+                break;
+            }
+        }
+        if (firstAttacker == null) return;
 
 
         // face the attacker
-        Vector2 direction = meleeAttacker.position - transform.position;
+        //Vector2 direction = meleeAttacker.position - transform.position;
+        Vector2 direction = firstAttacker.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
         rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
 
-
-        // if attacker is out of range, move towards it; else, hit it
-        //bool readyToHit = false;
-        //if (hitCountdown <= 0f)
-        //{
-        //    float distanceToAttacker = Vector2.Distance(transform.position, meleeAttacker.transform.position);
-        //    if (distanceToAttacker < hitRange)
-        //    {
-        //        readyToHit = true;
-        //    }
-        //}
-        //else
-        //{
-        //    hitCountdown -= Time.deltaTime;
-        //}
-
-        //if (readyToHit)
-        //{
-        //    HitAttacker();
-        //}
-        //else
-        //{
-        //    float distanceThisFrame = speed * Time.deltaTime;
-        //    transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-        //}
-
-        /////////////////////
-
         // if attacker is out of range, move in closer
-        float distanceToAttacker = Vector2.Distance(transform.position, meleeAttacker.transform.position);
+        //float distanceToAttacker = Vector2.Distance(transform.position, meleeAttacker.transform.position);
+        float distanceToAttacker = Vector2.Distance(transform.position, firstAttacker.transform.position);
         if (distanceToAttacker > hitRange)
         {
             // move towards attacker
@@ -165,9 +154,22 @@ public class Enemy : MonoBehaviour
     {
         //Debug.Log("Enemy.Hitting attacker");
 
-        if (meleeAttacker == null || meleeAttacker.GetComponent<MeleeUnit>() == null) return;
+        MeleeUnit firstAttacker = null;
+        for (int i = 0; i < meleeAttackers.Count; i++)
+        {
+            Transform _meleeAttacker = meleeAttackers[i];
+            if (_meleeAttacker != null && _meleeAttacker.GetComponent<MeleeUnit>() != null)
+            {
+                firstAttacker = _meleeAttacker.GetComponent<MeleeUnit>();
+                break;
+            }
+        }
+        //if (meleeAttacker == null || meleeAttacker.GetComponent<MeleeUnit>() == null) return;
+        if (firstAttacker == null) return;
+        
 
-        meleeAttacker.GetComponent<MeleeUnit>().TakeDamage(damage);
+        //meleeAttacker.GetComponent<MeleeUnit>().TakeDamage(damage);
+        firstAttacker.TakeDamage(damage);
 
         hitCountdown = hitCooldown;
     }
@@ -259,9 +261,43 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    internal void SetAttacker(Transform _meleeAttacker)
+    internal void AddAttacker(Transform _meleeAttacker)
     {
-        meleeAttacker = _meleeAttacker;
+        meleeAttackers.Add(_meleeAttacker);
+    }
+    internal void RemoveAttacker(Transform _meleeAttacker)
+    {
+        meleeAttackers.Remove(_meleeAttacker);
+    }
+    //internal void SetAttacker(Transform _meleeAttacker)
+    //{
+    //    meleeAttacker = _meleeAttacker;
+    //}
+    //internal Transform GetAttacker()
+    //{
+    //    return meleeAttacker;
+    //}
+    //internal bool HasAttacker()
+    //{
+    //    return meleeAttacker != null;
+    //}
+    internal bool HasAnotherAttacker(Transform _unit)
+    {
+        if (meleeAttackers == null || meleeAttackers.Count < 1) return false;
+
+        return meleeAttackers.Count > 1 && meleeAttackers[0] != null && meleeAttackers[0] != _unit;
+
+
+        //foreach (Transform attacker in meleeAttackers)
+        //{
+        //    if (attacker != _unit)
+        //        return true;
+        //}
+        //return false;
+
+
+        //return meleeAttacker != null && meleeAttacker != _unit;
+        //return meleeAttackers.Count > 0 && meleeAttackers[0] != null && meleeAttackers[0] != _unit;
     }
 
     internal void SetStartTile(Transform _startTile, float delay)

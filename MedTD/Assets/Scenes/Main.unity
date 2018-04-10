@@ -8233,8 +8233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58007593505ab44991fda1e28f62a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfWaves: 4
-  timeBetweenWaves: 20
+  numberOfWaves: 9
+  timeBetweenWaves: 15
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1374388779}
   pathBoard: {fileID: 499958959}

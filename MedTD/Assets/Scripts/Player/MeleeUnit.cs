@@ -44,40 +44,7 @@ public class MeleeUnit : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
         rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
-
-        // if hit countdown is over and target is in range, hit
-        // otherwise, just move in closer while waiting for the cooldown
-        //bool readyToHit = false;
-        //if (hitCountdown <= 0f)
-        //{
-        //    float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
-        //    if (distanceToTarget < hitRange)
-        //    {
-        //        readyToHit = true;
-        //        //HitEnemy();
-        //    }
-        //    else
-        //    {
-        //        //Debug.Log("enemy out of reach..");
-        //    }
-        //}
-        //else
-        //{
-        //    hitCountdown -= Time.deltaTime;
-        //}
-
-        //if (readyToHit)
-        //{
-        //    HitEnemy();
-        //}
-        //else
-        //{
-        //    float distanceThisFrame = speed * Time.deltaTime;
-        //    transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-        //}
-
-        //////////////////////////////////
-
+        
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
 
         // if target is out of range, move in closer
@@ -109,16 +76,64 @@ public class MeleeUnit : MonoBehaviour
             {
                 //Debug.Log("LOST TARGET");
                 DismissTarget();
+                return;
             }
+
+            // todo: if this target has another attacker, look for nearby enemies without an attacker
+            Enemy targetEnemy = target.GetComponent<Enemy>();
+            if (targetEnemy != null && targetEnemy.HasAnotherAttacker(transform))
+            {
+                Debug.Log("target has another attacker; looking for others");
+
+                // this target has another attacker; look for other targets without an attacker
+                GameObject[] enemies2 = GameObject.FindGameObjectsWithTag(enemyTag);
+                float shortestDistance2 = Mathf.Infinity;
+                GameObject nearestEnemy2 = null;
+                foreach (GameObject enemy in enemies2)
+                {
+                    // if the enemy is beyond the tower's range, ignore target
+                    float distanceFromTowerToEnemy = Vector2.Distance(nativeTower.transform.position, enemy.transform.position);
+                    if (distanceFromTowerToEnemy <= towerRange)
+                    {
+                        Debug.Log("\tfound enemy within range");
+                        // if the enemy has another attacker, ignore it
+                        Enemy enemyEnemy = enemy.GetComponent<Enemy>();
+                        if (enemyEnemy != null)
+                        {
+                            if (!enemyEnemy.HasAnotherAttacker(transform))
+                            {
+                                float distanceFromUnitToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
+                                if (distanceFromUnitToEnemy < shortestDistance2)
+                                {
+                                    Debug.Log("\t\tfound close enemy without attacker; assigning");
+                                    shortestDistance2 = distanceFromUnitToEnemy;
+                                    nearestEnemy2 = enemy;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (nearestEnemy2 != null)
+                {
+                    AcquireTarget(nearestEnemy2.transform);
+                }
+            }
+            Debug.Log(" ");
+
             return;
         }
+
+        // todo: find the nearest enemy; prioritize those without an attacker
+
+
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         float shortestDistance = Mathf.Infinity;
         GameObject nearestEnemy = null;
         foreach (GameObject enemy in enemies)
         {
-            // if the enemy if beyond the tower's range, ignore target
+            // if the enemy is beyond the tower's range, ignore target
             float distanceFromTowerToEnemy = Vector2.Distance(nativeTower.transform.position, enemy.transform.position);
             if (distanceFromTowerToEnemy <= towerRange)
             {
@@ -134,7 +149,7 @@ public class MeleeUnit : MonoBehaviour
 
         if (nearestEnemy != null)
         {
-            //Debug.Log("FOUND TARGET");
+            Debug.Log("FOUND TARGET");
             AcquireTarget(nearestEnemy.transform);
         }
         else
@@ -151,7 +166,8 @@ public class MeleeUnit : MonoBehaviour
             Enemy targetEnemy = target.GetComponent<Enemy>();
             if (targetEnemy != null)
             {
-                targetEnemy.SetAttacker(null);
+                //targetEnemy.SetAttacker(null);
+                targetEnemy.RemoveAttacker(transform);
             }
         }
         target = null;
@@ -159,12 +175,20 @@ public class MeleeUnit : MonoBehaviour
 
     private void AcquireTarget(Transform _target)
     {
+        // dismiss any previous target
+        if (target != null && target.GetComponent<Enemy>() != null)
+        {
+            target.GetComponent<Enemy>().RemoveAttacker(transform);
+        }
+
+
         target = _target;
         // set this unit as the target's attacker
         Enemy targetEnemy = target.GetComponent<Enemy>();
         if (targetEnemy != null)
         {
-            targetEnemy.SetAttacker(transform);
+            //targetEnemy.SetAttacker(transform);
+            targetEnemy.AddAttacker(transform);
         }
     }
 
@@ -196,7 +220,7 @@ public class MeleeUnit : MonoBehaviour
 
     private void HitEnemy()
     {
-        Debug.Log("Unit.Hitting enemy");
+        //Debug.Log("Unit.Hitting enemy");
 
         if (target == null || target.GetComponent<Enemy>() == null) return;
 
@@ -224,6 +248,12 @@ public class MeleeUnit : MonoBehaviour
     {
         if (nativeTower != null)
             nativeTower.RespawnUnitAfterCooldown();
+
+        // if this unit was attacking an enemy, remove itself as one of its target's attackers
+        if (target != null && target.GetComponent<Enemy>() != null)
+        {
+            target.GetComponent<Enemy>().RemoveAttacker(transform);
+        }
 
         Destroy(gameObject);
     }

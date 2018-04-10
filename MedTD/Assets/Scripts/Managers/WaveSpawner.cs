@@ -108,25 +108,26 @@ public class WaveSpawner : MonoBehaviour
         waveNumberText.text = "Wave: " + waveIndex + "/" + numberOfWaves;
 
         // todo: this is just for testing, should be predefined
-        if (waveIndex == 1)
-        {
-            SpawnEnemy(enemyPrefab1);
-        }
-        else if (waveIndex == 2)
-        {
-            SpawnEnemy(enemyPrefab1);
-            yield return new WaitForSeconds(0.6f);
-            SpawnEnemy(enemyPrefab2);
-        }
-        else
-        {
+        //if (waveIndex == 1)
+        //{
+        //    SpawnEnemy(enemyPrefab1);
+        //}
+        //else if (waveIndex == 2)
+        //{
+        //    SpawnEnemy(enemyPrefab1);
+        //    yield return new WaitForSeconds(0.6f);
+        //    SpawnEnemy(enemyPrefab2);
+        //}
+        //else
+        //{
             // generate N enemies, where N is the number of the current wave
             for (int i = 0; i < waveIndex; i++)
             {
-                SpawnEnemy(null);
-                yield return new WaitForSeconds(0.6f);
+            //SpawnEnemy(null);
+            SpawnEnemy(enemyPrefab1);
+            yield return new WaitForSeconds(0.6f);
             }
-        }
+        //}
     }
 
     private void SpawnEnemy(Transform enemyPrefab)
