@@ -113,14 +113,13 @@ public class LymphNode : MonoBehaviour
         // get the GameObject that this Tower game component is attached to
         GameObject towerPrefab = tower.gameObject;
         Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
-        towerPosition.z = -0.3f;
+        towerPosition.z -= 0.1f;
 
         towerGameObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
         towerGameObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
-        
+
         GetTowerComponent().BuildBaseLevel();
         
-
         // deselect this lymph node (which also destroys the building menu)
         Deselect(); // redundant, called from BuildManager too
     }
