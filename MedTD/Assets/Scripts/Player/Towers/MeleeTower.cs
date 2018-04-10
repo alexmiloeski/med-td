@@ -8,8 +8,8 @@ public class MeleeTower : MonoBehaviour
     public int unitCount = 3;
 
     private float unitRespawnCooldown = 4f;
-    private int unitHealth = 10;
-    private int unitDamage = 10;
+    private float unitHealth = 10f;
+    private float unitDamage = 10f;
     private int unitDefense = 10;
     private float unitSpeed = 1f;
     private float unitHitCooldown = 1f;

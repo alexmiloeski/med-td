@@ -8,8 +8,8 @@ public class TowerLevel : MonoBehaviour
     public int level;
     public int cost;
     public int sellValue;
-    public int damage;
+    public float damage;
     //public int health;
-    public int cooldown;
+    public float cooldown;
     public float range;
 }

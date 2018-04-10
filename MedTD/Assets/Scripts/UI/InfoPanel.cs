@@ -21,7 +21,7 @@ public class InfoPanel : MonoBehaviour
     //    SetDamage(damage);
     //    SetDefense(defense);
     //}
-    internal void SetAll(string name, string description, int level, int maxLevel, int cost, int damage, int defense)
+    internal void SetAll(string name, string description, int level, int maxLevel, int cost, float damage, int defense)
     {
         SetName(name);
         SetDescription(description);
@@ -61,7 +61,7 @@ public class InfoPanel : MonoBehaviour
         else
             textItemHealth.text = "Health: " + health;
     }
-    internal void SetDamage(int damage)
+    internal void SetDamage(float damage)
     {
         if (damage < 0)
             textItemDamage.text = null;

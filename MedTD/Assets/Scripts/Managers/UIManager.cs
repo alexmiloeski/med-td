@@ -356,7 +356,7 @@ public class UIManager : MonoBehaviour
         int level = -1;
         int maxLevel = -1;
         //int health = -1;
-        int damage = -1;
+        float damage = -1;
         int defense = -1;
 
         LymphNode selectedLymphNode = null;

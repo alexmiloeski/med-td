@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MeleeUnit : MonoBehaviour
 {
-    public string enemyTag = "Enemy";
+    
     public Transform head;
 
     private Transform rotatingPart;
@@ -11,9 +11,9 @@ public class MeleeUnit : MonoBehaviour
     private MeleeTower nativeTower;
     private float towerRange;
     private float speed;
-    private int startHealth;
-    private int health;
-    private int damage;
+    private float startHealth;
+    private float health;
+    private float damage;
     private int defense;
     private float hitCooldown;
     private float hitRange;
@@ -84,7 +84,7 @@ public class MeleeUnit : MonoBehaviour
             if (targetEnemy != null && targetEnemy.HasAnotherAttacker(transform))
             {
                 // this target has another attacker; look for other targets without an attacker
-                GameObject[] enemies2 = GameObject.FindGameObjectsWithTag(enemyTag);
+                GameObject[] enemies2 = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
                 float shortestDistance2 = Mathf.Infinity;
                 GameObject nearestEnemy2 = null;
                 foreach (GameObject enemy in enemies2)
@@ -120,7 +120,7 @@ public class MeleeUnit : MonoBehaviour
         }
 
         // find the nearest enemy
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
         float shortestDistance = Mathf.Infinity;
         GameObject nearestEnemy = null;
         foreach (GameObject enemy in enemies)
@@ -224,7 +224,7 @@ public class MeleeUnit : MonoBehaviour
         hitCountdown = hitCooldown;
     }
 
-    internal void TakeDamage(int damage)
+    internal void TakeDamage(float damage)
     {
         health -= damage;
         if (health <= 0)
@@ -262,12 +262,12 @@ public class MeleeUnit : MonoBehaviour
     {
         nativeTower = tower;
     }
-    internal void SetHealth(int _health)
+    internal void SetHealth(float _health)
     {
         startHealth = _health;
         health = startHealth;
     }
-    internal void SetDamage(int _damage)
+    internal void SetDamage(float _damage)
     {
         damage = _damage;
     }

@@ -57,20 +57,20 @@ public class Tower : MonoBehaviour
     internal int GetCurrentLevel() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].level : 0; }
     internal int GetCurrentCost() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cost : -1; }
     internal int GetCurrentSellValue() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].sellValue : -1; }
-    internal int GetCurrentDamage() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].damage : -1; }
+    internal float GetCurrentDamage() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].damage : -1; }
     //internal int GetCurrentHealth() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].health : -1; }
     //internal int GetCurrentDefense() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].defense : -1; }
     internal float GetCurrentRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].range : 0; }
-    internal int GetCurrentCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cooldown : 1; }
+    internal float GetCurrentCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cooldown : 1; }
     
-    internal int GetCurrentMeleeUnitHealth()
+    internal float GetCurrentMeleeUnitHealth()
     {
         MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
         if (meleeTowerLevel == null) return 1;
 
         return meleeTowerLevel.unitHealth;
     }
-    internal int GetCurrentMeleeUnitDamage()
+    internal float GetCurrentMeleeUnitDamage()
     {
         MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
         if (meleeTowerLevel == null) return 1;
@@ -150,7 +150,7 @@ public class Tower : MonoBehaviour
         // if no success, return -1
         return -1;
     }
-    internal int GetBaseLevelDamage()
+    internal float GetBaseLevelDamage()
     {
         // return the damage of the first valid TowerLevel
         for (int i = 0; i < towerLevels.Length; i++)
@@ -261,7 +261,7 @@ public class Tower : MonoBehaviour
             return -1;
         }
     }
-    internal int GetNextLevelDamage()
+    internal float GetNextLevelDamage()
     {
         int nextTowerLevelIndex = currentTowerLevelIndex + 1;
         // if this is the last level, return -1

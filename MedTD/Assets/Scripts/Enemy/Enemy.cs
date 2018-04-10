@@ -4,9 +4,9 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private float speed = 1f;
-    public int startHealth = 10;
-    private int health = 10;
-    public int damage = 1;
+    public float startHealth = 10;
+    private float health = 10f;
+    public float damage = 1f;
     public int defense = 1;
     
     public float hitCooldown = 5f;
@@ -174,7 +174,7 @@ public class Enemy : MonoBehaviour
         hitCountdown = hitCooldown;
     }
 
-    internal void TakeDamage(int damage)
+    internal void TakeDamage(float damage)
     {
         health -= damage;
         if (health <= 0)
@@ -184,6 +184,7 @@ public class Enemy : MonoBehaviour
             HealthBar healthBar = GetComponent<HealthBar>();
             if (healthBar != null)
             {
+                if (startHealth <= 0f) startHealth = health;
                 healthBar.UpdateGreenPercentage(health, startHealth);
             }
         }
@@ -340,6 +341,17 @@ public class Enemy : MonoBehaviour
         startRegainingSpeed = true;
     }
 
+
+    internal float GetHealth()
+    {
+        return health;
+    }
+    internal float GetHealthPercentage()
+    {
+        if (startHealth <= 0f) startHealth = health;
+        float healthPerc = health / startHealth;
+        return healthPerc;
+    }
 
 
     private void OnDrawGizmosSelected()
