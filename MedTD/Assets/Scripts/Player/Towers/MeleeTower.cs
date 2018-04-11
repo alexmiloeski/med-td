@@ -24,7 +24,7 @@ public class MeleeTower : Tower
     private Vector3 rallyPoint;
 
 
-    private void Start ()
+    private void Start()
     {
         UpdateStats();
         
@@ -39,7 +39,7 @@ public class MeleeTower : Tower
         //InvokeRepeating("", 6f, 6f);
 	}
 
-    private void Update ()
+    private void Update()
     {
 		
 	}
@@ -147,8 +147,10 @@ public class MeleeTower : Tower
 
         // todo: for now, spawn them at the rally point
 
-        GameObject unit = Instantiate(unitPrefab, rallyPoint, Quaternion.identity);
-        //GameObject unit = Instantiate(unitPrefab, transform.position, Quaternion.identity);
+
+
+        //GameObject unit = Instantiate(unitPrefab, rallyPoint, Quaternion.identity);
+        GameObject unit = Instantiate(unitPrefab, transform.position, Quaternion.identity);
         unit.transform.SetParent(transform);
         //unit.transform.localPosition = Vector3.zero;
         //unit.transform.position = transform.position;
@@ -233,12 +235,24 @@ public class MeleeTower : Tower
 
     internal override void DismissTarget()
     {
-        Debug.Log("MeleeTower.DismissTarget");
+        //Debug.Log("MeleeTower.DismissTarget");
 
         // call DismissTarget on all of its child units
         foreach (MeleeUnit unit in units)
         {
             unit.DismissTarget();
         }
+    }
+
+
+
+
+
+
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(rallyPoint, 0.1f); // draw rally point
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Damageable
 {
     private float speed = 1f;
-    public float startHealth = 10;
-    private float health = 10f;
+    //public float startHealth = 10;
+    //private float health = 10f;
     public float damage = 1f;
     public int defense = 1;
     
@@ -43,11 +43,14 @@ public class Enemy : MonoBehaviour
     
 
 
-    void Start()
+    private new void Start()
     {
+        base.Start();
+
         //Debug.Log("Enemy.Start");
-        
-        health = startHealth;
+
+
+        //health = startHealth;
 
         rotatingPart = transform.Find(Constants.RotatingPart);
 
@@ -69,7 +72,7 @@ public class Enemy : MonoBehaviour
         meleeAttackers = new List<Transform>();
         towerAttackers = new List<Transform>();
 
-        InvokeRepeating("CheckAttackers", 5f, 3f);
+        //InvokeRepeating("CheckAttackers", 5f, 3f);
     }
 
     private void Update()
@@ -182,27 +185,27 @@ public class Enemy : MonoBehaviour
         hitCountdown = hitCooldown;
     }
 
-    internal void TakeDamage(float damage)
-    {
-        health -= damage;
-        if (health <= 0)
-            Die();
-        else
-        {
-            HealthBar healthBar = GetComponent<HealthBar>();
-            if (healthBar != null)
-            {
-                if (startHealth <= 0f) startHealth = health;
-                if (health > startHealth) health = startHealth;
-                healthBar.UpdateGreenPercentage(health, startHealth);
-            }
-        }
-    }
+    //internal void TakeDamage(float damage)
+    //{
+    //    health -= damage;
+    //    if (health <= 0)
+    //        Die();
+    //    else
+    //    {
+    //        HealthBar healthBar = GetComponent<HealthBar>();
+    //        if (healthBar != null)
+    //        {
+    //            if (startHealth <= 0f) startHealth = health;
+    //            if (health > startHealth) health = startHealth;
+    //            healthBar.UpdateGreenPercentage(health, startHealth);
+    //        }
+    //    }
+    //}
 
-    private void Die()
-    {
-        Destroy(gameObject);
-    }
+    //private void Die()
+    //{
+    //    Destroy(gameObject);
+    //}
 
     private void GetNextTile()
     {
@@ -300,9 +303,27 @@ public class Enemy : MonoBehaviour
 
         return true;
     }
+
+    // todo: hope we're not gonna need this method, but keeping it just in case
     private void CheckAttackers()
     {
         // see if any of the attackers have become null (e.g. if a tower was sold)
+
+        int mc = meleeAttackers.Count; // todo: debugging
+        int tc = towerAttackers.Count; // debugging
+
+
+        meleeAttackers.RemoveAll(x => x == null);
+        towerAttackers.RemoveAll(x => x == null);
+
+
+        int mc2 = mc - meleeAttackers.Count; // debugging
+        int tc2 = tc - towerAttackers.Count; // debugging
+
+        if (mc2 > 0) // debugging
+            Debug.Log("found " + mc2 + " null melees"); // debugging
+        if (tc2 > 0) // debugging
+            Debug.Log("found " + tc2 + " null towers"); // debugging
     }
 
     internal void SetStartTile(Transform _startTile, float delay)

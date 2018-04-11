@@ -11,6 +11,7 @@ TagManager:
   - Level4
   - ButtonUpgradeTower
   - Enemy
+  - Friendly
   layers:
   - Default
   - TransparentFX

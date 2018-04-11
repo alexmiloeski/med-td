@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MeleeUnit : MonoBehaviour
+public class MeleeUnit : Damageable
 {
     public SpriteRenderer headRenderer;
 
@@ -10,8 +9,8 @@ public class MeleeUnit : MonoBehaviour
     private MeleeTower nativeTower;
     private float towerRange;
     private float speed;
-    private float startHealth;
-    private float health;
+    //private float startHealth;
+    //private float health;
     private float damage;
     private int defense;
     private float hitCooldown;
@@ -22,8 +21,10 @@ public class MeleeUnit : MonoBehaviour
     private float hitCountdown = 0f;
 
     
-    private void Start()
+    private new void Start()
     {
+        base.Start();
+
         rotatingPart = transform.Find(Constants.RotatingPart);
 
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
@@ -221,31 +222,29 @@ public class MeleeUnit : MonoBehaviour
         hitCountdown = hitCooldown;
     }
 
-    internal void TakeDamage(float damage)
-    {
-        health -= damage;
-        if (health <= 0)
-            Die();
-        else
-        {
-            HealthBar healthBar = GetComponent<HealthBar>();
-            if (healthBar != null)
-            {
-                healthBar.UpdateGreenPercentage(health, startHealth);
-            }
-        }
-    }
+    //internal void TakeDamage(float damage)
+    //{
+    //    health -= damage;
+    //    if (health <= 0)
+    //        Die();
+    //    else
+    //    {
+    //        HealthBar healthBar = GetComponent<HealthBar>();
+    //        if (healthBar != null)
+    //        {
+    //            healthBar.UpdateGreenPercentage(health, startHealth);
+    //        }
+    //    }
+    //}
 
-    private void Die()
+    protected override void Die()
     {
+        //Debug.Log("MeleeUnit.Die");
         if (nativeTower != null)
             nativeTower.RespawnUnitAfterCooldown();
 
         // if this unit was attacking an enemy, remove itself as one of its target's attackers
-        if (target != null && target.GetComponent<Enemy>() != null)
-        {
-            target.GetComponent<Enemy>().RemoveMeleeAttacker(transform);
-        }
+        DismissTarget();
 
         Destroy(gameObject);
     }
@@ -294,7 +293,18 @@ public class MeleeUnit : MonoBehaviour
     }
     internal void SetRallyPoint(Vector3 _rallyPoint)
     {
-        rallyPoint = _rallyPoint;
+        // use a random spot within a small radius around the actual rally point
+        
+        float randomXOffset = Random.Range(-0.3f, 0.3f);
+        float randomYOffset = Random.Range(-0.3f, 0.3f);
+
+        float x = _rallyPoint.x + randomXOffset;
+        float y = _rallyPoint.y + randomYOffset;
+        float z = _rallyPoint.z;
+
+        rallyPoint = new Vector3(x, y, z);
+
+        //rallyPoint = _rallyPoint;
     }
     internal void SetSprite(Sprite sprite)
     {
@@ -306,5 +316,8 @@ public class MeleeUnit : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, hitRange);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(rallyPoint, 0.8f);
     }
 }

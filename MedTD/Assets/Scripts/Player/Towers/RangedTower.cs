@@ -12,7 +12,7 @@ public class RangedTower : Tower
 
     protected Transform target;
 
-    protected void Start ()
+    protected void Start()
     {
         range = GetCurrentRange();
         damage = GetCurrentDamage();
@@ -22,7 +22,7 @@ public class RangedTower : Tower
         InvokeRepeating("UpdateTarget", 0f, 1.5f);
     }
 
-    protected void Update ()
+    protected void Update()
     {
         // count down from the cooldown
         if (countdown > 0f) countdown -= Time.deltaTime;
@@ -68,9 +68,14 @@ public class RangedTower : Tower
             }
         }
 
-        // if it's the same target, don't do anything
-        if (chosenEnemy == null || (target != null && chosenEnemy.transform == target))
+        // if it's the same target, just see if it's still in range
+        if (chosenEnemy != null && target != null && chosenEnemy.transform == target)
         {
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            if (distanceToTarget > range)
+            {
+                DismissTarget();
+            }
             return;
         }
 

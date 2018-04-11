@@ -33,11 +33,16 @@ public class ExplosiveTower : RangedTower
                 }
             }
         }
-        
 
-        // if it's the same target, don't do anything
-        if (chosenEnemy == null || (target != null && chosenEnemy.transform == target))
+
+        // if it's the same target, just see if it's still in range
+        if (chosenEnemy != null && target != null && chosenEnemy.transform == target)
         {
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            if (distanceToTarget > range)
+            {
+                DismissTarget();
+            }
             return;
         }
 

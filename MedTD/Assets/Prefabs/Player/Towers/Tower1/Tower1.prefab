@@ -61,7 +61,7 @@ MonoBehaviour:
   - {fileID: 114657041409566276, guid: 1851bd9b1734cdd45ad777628dd83e40, type: 2}
   unitPrefab: {fileID: 1935786120892614, guid: f5d8d07c668cff74796a2286e4a04543, type: 2}
   pathBoard: {fileID: 4925667004981864, guid: 5f9485573c8dc864dac6f2bf668d6cb1, type: 2}
-  unitCount: 2
+  unitCount: 4
 --- !u!212 &212487595534256636
 SpriteRenderer:
   m_ObjectHideFlags: 1
