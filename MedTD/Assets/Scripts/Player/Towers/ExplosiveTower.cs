@@ -2,37 +2,18 @@
 
 public class ExplosiveTower : RangedTower
 {
-    //private float range;
-    //private float damage;
-    //private float cooldown;
-    //private float countdown;
+    [Header("Between 0.0 and 1.0")]
+    /// <summary> Percentage of this tower's damage that will be dealt to the environment (player). </summary>
+    public float[] damagePortionToEnvironment;
 
-    //private Transform target;
+    private new void Start()
+    {
+        base.Start();
 
-    //void Start ()
-    //{
-    //    range = GetCurrentRange();
-    //    damage = GetCurrentDamage();
-    //    cooldown = GetCurrentCooldown();
-    //    countdown = 0f; // resets to cooldown once it reaches zero
-
-    //    InvokeRepeating("UpdateTarget", 0f, 1.5f);
-    //}
-
-    //void Update ()
-    //   {
-    //       // count down from the cooldown
-    //       if (countdown > 0f) countdown -= Time.deltaTime;
-
-    //       // if there's no target, don't do anything else this frame
-    //       if (target == null) return;
-
-    //       // if there's a target and the cooldown is done, shoot at the target
-    //       if (countdown <= 0f)
-    //       {
-    //           Shoot();
-    //       }
-    //   }
+        if (damagePortionToEnvironment.Length > 0)
+            damageToEnvironment = damage * damagePortionToEnvironment[0];
+        Debug.Log("damageToEnvironment = " + damageToEnvironment);
+    }
 
     /// <summary> Overriding <see cref="RangedTower.UpdateTarget"/>; Targets the closest enemy. </summary>
     private void UpdateTarget()
@@ -110,21 +91,14 @@ public class ExplosiveTower : RangedTower
         //}
     }
 
-    //private void Shoot()
-    //{
-    //    // if for some reason the target or its Enemy component is null, don't shoot
-    //    if (target == null || target.GetComponent<Enemy>() == null) return;
+    internal override void Upgrade()
+    {
+        base.Upgrade();
 
-    //    // instantiate a projectile game object which flies towards the target and damages it
-    //    GameObject projectileGO = (GameObject)Instantiate(projectilePrefab, transform.position, transform.rotation);
-    //    Projectile projectile = projectileGO.GetComponent<Projectile>();
-
-    //    if (projectile != null)
-    //    {
-    //        //projectile.SetTarget(target);
-    //        projectile.SetTargetAndDamage(target, damage);
-    //    }
-
-    //    countdown = cooldown;
-    //}
+        Debug.Log("ExplosiveTower.Upgrade");
+        damage = GetCurrentDamage();
+        if (damagePortionToEnvironment.Length > currentTowerLevelIndex)
+            damageToEnvironment = damage * damagePortionToEnvironment[currentTowerLevelIndex];
+        Debug.Log("damageToEnvironment = " + damageToEnvironment);
+    }
 }

@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
     public float explosionRadius = 0f;
 
     private float damage;
+    private float damageToEnvironment;
 
     private void Start ()
     {
@@ -55,12 +56,14 @@ public class Projectile : MonoBehaviour
 
     private void Explode()
     {
-        // find all enemies around the target within explosionRadius and damage them equally
+        // do damage to the environment (player)
+        //Debug.Log("dealing damageToEnvironment = " + damageToEnvironment);
+        Player.DoDamage(damageToEnvironment);
 
+        // find all enemies around the target within explosionRadius and damage them (todo: equally or by distance from center?)
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
         foreach (GameObject enemy in enemies)
         {
-            Debug.Log(" ");
             int i = 0;
             float distanceFromExplosionToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
             if (distanceFromExplosionToEnemy <= explosionRadius)
@@ -81,13 +84,20 @@ public class Projectile : MonoBehaviour
                     enemyEnemy.TakeDamage(currDamage);
                 }
             }
+            Debug.Log(" ");
         }
     }
 
-    internal void SetTargetAndDamage(Transform _target, float _damage)
+    //internal void SetTargetAndDamage(Transform _target, float _damage)
+    //{
+    //    damage = _damage;
+    //    target = _target;
+    //}
+    internal void SetTargetAndDamage(Transform _target, float _damage, float _damageToEnvironment)
     {
         damage = _damage;
         target = _target;
+        damageToEnvironment = _damageToEnvironment;
     }
     //internal void SetTarget(Transform _target)
     //{

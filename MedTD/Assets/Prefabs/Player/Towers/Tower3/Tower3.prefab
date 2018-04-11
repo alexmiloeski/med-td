@@ -60,6 +60,10 @@ MonoBehaviour:
   - {fileID: 114538706459103610, guid: 9f967ee952e45a141b684e61fd90ca94, type: 2}
   projectilePrefab: {fileID: 1409172707699670, guid: a89ee53206b72bb488ea440cc69e056d,
     type: 2}
+  damagePortionToEnvironment:
+  - 1
+  - 0.6
+  - 0.2
 --- !u!212 &212487595534256636
 SpriteRenderer:
   m_ObjectHideFlags: 1

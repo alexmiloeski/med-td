@@ -57,6 +57,6 @@ MonoBehaviour:
   level: 3
   cost: 150
   sellValue: 80
-  damage: 150
-  cooldown: 2.5
+  damage: 60
+  cooldown: 3
   range: 5

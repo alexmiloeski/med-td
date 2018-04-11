@@ -8269,7 +8269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58007593505ab44991fda1e28f62a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfWaves: 4
+  numberOfWaves: 5
   timeBetweenWaves: 30
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1374388779}
@@ -8320,7 +8320,7 @@ MonoBehaviour:
   lymphNodePrefab: {fileID: 4207219894400406, guid: 90acd459b4c74c447b3826ab7801195a,
     type: 2}
   sSContainer: {fileID: 123073212}
-  numberOfLymphNodes: 2
+  numberOfLymphNodes: 4
 --- !u!114 &1378128246
 MonoBehaviour:
   m_ObjectHideFlags: 0

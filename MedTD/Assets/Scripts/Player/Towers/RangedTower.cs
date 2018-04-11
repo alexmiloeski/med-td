@@ -2,15 +2,17 @@
 
 public class RangedTower : Tower
 {
+    public GameObject projectilePrefab;
+
     protected float range;
-    private float damage;
+    protected float damage;
+    protected float damageToEnvironment = 0f;
     private float cooldown;
     private float countdown;
 
     protected Transform target;
-    public GameObject projectilePrefab;
 
-    private void Start ()
+    protected void Start ()
     {
         range = GetCurrentRange();
         damage = GetCurrentDamage();
@@ -20,7 +22,7 @@ public class RangedTower : Tower
         InvokeRepeating("UpdateTarget", 0f, 1.5f);
     }
 
-    private void Update ()
+    protected void Update ()
     {
         // count down from the cooldown
         if (countdown > 0f) countdown -= Time.deltaTime;
@@ -96,7 +98,8 @@ public class RangedTower : Tower
         if (projectile != null)
         {
             //projectile.SetTarget(target);
-            projectile.SetTargetAndDamage(target, damage);
+            //projectile.SetTargetAndDamage(target, damage);
+            projectile.SetTargetAndDamage(target, damage, damageToEnvironment);
         }
 
         countdown = cooldown;
@@ -134,7 +137,7 @@ public class RangedTower : Tower
     {
         base.Upgrade();
 
-        Debug.Log("Tower.Upgrade");
+        Debug.Log("RangedTower.Upgrade");
         range = GetCurrentRange();
         damage = GetCurrentDamage();
         cooldown = GetCurrentCooldown();

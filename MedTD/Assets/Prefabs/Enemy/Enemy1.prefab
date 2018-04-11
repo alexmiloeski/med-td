@@ -257,16 +257,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a950107ccfad594aa1c9f89d495e367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 340
+  startHealth: 300
   damage: 10
   defense: 1
   hitCooldown: 2
   hitRange: 0.7
   movementDelay: 0.5
   cloneMovementDelay: 1.5
-  regularSpeed: 0.3
-  minReplicationTime: 8
-  maxReplicationTime: 9
+  regularSpeed: 0.9
+  minReplicationTime: 15
+  maxReplicationTime: 30
 --- !u!212 &212120641161685274
 SpriteRenderer:
   m_ObjectHideFlags: 1

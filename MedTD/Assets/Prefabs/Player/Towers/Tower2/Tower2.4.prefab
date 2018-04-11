@@ -58,9 +58,9 @@ MonoBehaviour:
   level: 4
   cost: 200
   sellValue: 150
-  damage: 60
-  cooldown: 4
-  range: 4
+  damage: 100
+  cooldown: 2.5
+  range: 4.5
 --- !u!212 &212263973332581398
 SpriteRenderer:
   m_ObjectHideFlags: 1
