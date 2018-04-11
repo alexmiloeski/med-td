@@ -6,7 +6,8 @@ public class MeleeTower : Tower
     public Transform pathBoard;
 
     public int unitCount = 3;
-
+    
+    private Sprite unitSprite;
     private float unitRespawnCooldown = 4f;
     private float unitHealth = 10f;
     private float unitDamage = 10f;
@@ -68,44 +69,9 @@ public class MeleeTower : Tower
     /// <summary> Should be called each time when upgrading the tower. </summary>
     internal void UpdateStats()
     {
-        //Debug.Log("MeleeTower.UpdateStats");
-        // get unit stats from TowerLevel component
-        //Tower tower = GetComponent<Tower>();
-        //if (tower != null)
-        //{
-        //    unitRespawnCooldown = tower.GetCurrentCooldown();
-        //    towerRange = tower.GetCurrentRange();
-        //    unitSpeed = tower.GetCurrentMeleeUnitSpeed();
-        //    unitHealth = tower.GetCurrentMeleeUnitHealth();
-        //    unitDamage = tower.GetCurrentMeleeUnitDamage();
-        //    unitDefense = tower.GetCurrentMeleeUnitDefense();
-        //    meleeHitRange = tower.GetCurrentMeleeHitRange();
-        //    unitHitCooldown = tower.GetCurrentMeleeUnitHitCooldown();
-
-        //    // update the stats of each of this tower's melee units
-        //    if (units != null)
-        //    {
-        //        foreach (MeleeUnit unit in units)
-        //        {
-        //            if (unit != null)
-        //            {
-        //                //unit.UpdateStats();
-        //                unit.SetTowerRange(towerRange);
-        //                unit.SetUnitSpeed(unitSpeed);
-        //                unit.SetHealth(unitHealth);
-        //                unit.SetDamage(unitDamage);
-        //                unit.SetDefense(unitDefense);
-        //                unit.SetHitRange(meleeHitRange);
-        //                unit.SetHitCooldown(unitHitCooldown);
-        //            }
-        //        }
-        //    }
-        //}
-
-        
-        
         unitRespawnCooldown = GetCurrentCooldown();
         towerRange = GetCurrentRange();
+        unitSprite = GetCurrentMeleeUnitSprite();
         unitSpeed = GetCurrentMeleeUnitSpeed();
         unitHealth = GetCurrentMeleeUnitHealth();
         unitDamage = GetCurrentMeleeUnitDamage();
@@ -121,6 +87,7 @@ public class MeleeTower : Tower
                 if (unit != null)
                 {
                     //unit.UpdateStats();
+                    unit.SetSprite(unitSprite);
                     unit.SetTowerRange(towerRange);
                     unit.SetUnitSpeed(unitSpeed);
                     unit.SetHealth(unitHealth);
@@ -131,6 +98,12 @@ public class MeleeTower : Tower
                 }
             }
         }
+    }
+
+    internal override void Upgrade()
+    {
+        base.Upgrade();
+        UpdateStats();
     }
 
     private void FindNearestRallyPoint()
@@ -183,6 +156,7 @@ public class MeleeTower : Tower
 
         MeleeUnit meleeUnit = unit.GetComponent<MeleeUnit>();
         meleeUnit.SetNativeTower(this);
+        meleeUnit.SetSprite(unitSprite);
         meleeUnit.SetHealth(unitHealth);
         //Debug.Log("unitHealth = " + unitHealth);
         meleeUnit.SetDamage(unitDamage);
@@ -207,7 +181,13 @@ public class MeleeTower : Tower
     
 
 
+    internal Sprite GetCurrentMeleeUnitSprite()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return null;
 
+        return meleeTowerLevel.unitSprite;
+    }
     internal float GetCurrentMeleeUnitHealth()
     {
         MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];

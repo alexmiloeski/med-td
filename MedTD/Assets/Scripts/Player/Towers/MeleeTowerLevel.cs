@@ -2,6 +2,7 @@
 
 public class MeleeTowerLevel : TowerLevel
 {
+    public Sprite unitSprite;
     public float unitSpeed = 1f;
     public float unitHealth = 10;
     public float unitDamage = 10;

@@ -52,16 +52,24 @@ public class ExplosiveTower : RangedTower
                 }
             }
         }
+        
+
+        // if it's the same target, don't do anything
+        if (chosenEnemy == null || (target != null && chosenEnemy.transform == target))
+        {
+            return;
+        }
 
         if (chosenEnemy != null && shortestDistance <= range)
         {
-            target = chosenEnemy.transform;
+            AcquireTarget(chosenEnemy.transform);
         }
         else
         {
-            target = null;
+            DismissTarget();
         }
 
+        
 
 
         //// todo: target the enemy with the least amount of health (percentage or absolute?); if all the same, get closest

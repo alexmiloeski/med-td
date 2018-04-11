@@ -40,12 +40,13 @@ public class Enemy : MonoBehaviour
     private bool startRegainingSpeed = false;
     
     private System.Random random = new System.Random();
+    
 
 
     void Start()
     {
         //Debug.Log("Enemy.Start");
-
+        
         health = startHealth;
 
         rotatingPart = transform.Find(Constants.RotatingPart);
@@ -74,15 +75,18 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         if (!started) return;
-
+        
         if (coughing)
             CoughEffect();
 
         // update the hit countdown and the replication countdown each frame
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
 
-        if (replicationCoundtown > 0f && !IsBeingAttacked()) replicationCoundtown -= Time.deltaTime;
-        if (replicationCoundtown <= 0f && !IsBeingAttacked())
+        if (replicationCoundtown > 0f && !IsBeingAttacked() && !coughing)
+        {
+            replicationCoundtown -= Time.deltaTime;
+        }
+        if (replicationCoundtown <= 0f && !IsBeingAttacked() && !coughing)
         {
             Replicate();
         }
@@ -189,6 +193,7 @@ public class Enemy : MonoBehaviour
             if (healthBar != null)
             {
                 if (startHealth <= 0f) startHealth = health;
+                if (health > startHealth) health = startHealth;
                 healthBar.UpdateGreenPercentage(health, startHealth);
             }
         }
@@ -341,7 +346,7 @@ public class Enemy : MonoBehaviour
 
         coughStopCountdown = delay;
         
-        Invoke("StartRegainingSpeed", delay/3);
+        Invoke("StartRegainingSpeed", delay/2);
         Invoke("StopCough", delay);
     }
     internal void CoughEffect()

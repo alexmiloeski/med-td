@@ -77,7 +77,7 @@ public class WaveSpawner : MonoBehaviour
         // if time to next wave is less than half, enable "start wave" button; if not, disable it
         UIManager.instance.SetEnabledButtonBottomCenterStartWave(countdown <= (timeBetweenWaves * 0.5), "Start wave early");
 
-        if (countdown <= 0f)
+        if (countdown <= 0f && !Shop.instance.IsCoughing())
         {
             //StartCoroutine(SpawnWave());
             //countdown = timeBetweenWaves;
@@ -87,8 +87,11 @@ public class WaveSpawner : MonoBehaviour
         // while there are still more waves coming, update the text showing time until next wave
         if (waveIndex < numberOfWaves)
         {
-            countdown -= Time.deltaTime;
-            waveCountdownText.text = "Next wave in " + Mathf.Floor(countdown + 1).ToString() + " seconds";
+            if (countdown > 0f)
+            {
+                countdown -= Time.deltaTime;
+                waveCountdownText.text = "Next wave in " + Mathf.Floor(countdown + 1).ToString() + " seconds";
+            }
         }
     }
 

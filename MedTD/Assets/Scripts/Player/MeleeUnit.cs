@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class MeleeUnit : MonoBehaviour
 {
-    
-    public Transform head;
+    public SpriteRenderer headRenderer;
 
     private Transform rotatingPart;
 
@@ -297,7 +296,10 @@ public class MeleeUnit : MonoBehaviour
     {
         rallyPoint = _rallyPoint;
     }
-
+    internal void SetSprite(Sprite sprite)
+    {
+        headRenderer.sprite = sprite;
+    }
 
 
     private void OnDrawGizmosSelected()

@@ -61,6 +61,7 @@ MonoBehaviour:
   damage: 0
   cooldown: 6
   range: 3
+  unitSprite: {fileID: 21300000, guid: 38d08f1cd70c17b468e31d4ea1240af8, type: 3}
   unitSpeed: 1
   unitHealth: 150
   unitDamage: 10

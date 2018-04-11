@@ -60,14 +60,24 @@ public class Projectile : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
         foreach (GameObject enemy in enemies)
         {
+            Debug.Log(" ");
+            int i = 0;
             float distanceFromExplosionToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
             if (distanceFromExplosionToEnemy <= explosionRadius)
             {
                 Enemy enemyEnemy = enemy.GetComponent<Enemy>();
                 if (enemyEnemy != null)
                 {
-                    float currDamage = damage * (1 - (distanceFromExplosionToEnemy / explosionRadius));
-                    //Debug.Log("currDamage = " + currDamage);
+                    Debug.Log(i + ".");
+                    Debug.Log("damage = " + damage);
+                    Debug.Log("distanceFromExplosionToEnemy = " + distanceFromExplosionToEnemy);
+                    Debug.Log("explosionRadius = " + explosionRadius);
+                    float distanceFactor = distanceFromExplosionToEnemy / explosionRadius;
+                    Debug.Log("distanceFactor = " + distanceFactor);
+                    float damageAbatement = damage * distanceFactor;
+                    Debug.Log("damageAbatement = " + damageAbatement);
+                    float currDamage = damage - damageAbatement;
+                    Debug.Log("currDamage = " + currDamage);
                     enemyEnemy.TakeDamage(currDamage);
                 }
             }

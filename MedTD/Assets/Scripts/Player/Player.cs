@@ -28,6 +28,9 @@ public class Player : MonoBehaviour
 
     internal static void DoDamage(float damage)
     {
+        // don't do player damage while coughing
+        if (Shop.instance.IsCoughing()) return;
+
         if (damage < 0) return;
 
         if (Health - damage < 0)

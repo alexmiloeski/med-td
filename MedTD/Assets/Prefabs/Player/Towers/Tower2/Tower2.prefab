@@ -57,6 +57,8 @@ MonoBehaviour:
   towerLevels:
   - {fileID: 114298525440082482, guid: de72ec6b2e0c11846ae911ef9e618327, type: 2}
   - {fileID: 114060708012228564, guid: e4ec98a9fdc8a3f4a93f2a73c1baef7f, type: 2}
+  - {fileID: 114748969241140086, guid: 538ad099e3997d7468f9829d91706a22, type: 2}
+  - {fileID: 114632576701669930, guid: 3ad0fba28e9517244bc102b0dc61a582, type: 2}
   projectilePrefab: {fileID: 1409172707699670, guid: 3c26890349418454882278c900fff619,
     type: 2}
 --- !u!212 &212487595534256636

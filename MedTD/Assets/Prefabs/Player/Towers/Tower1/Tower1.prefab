@@ -57,6 +57,8 @@ MonoBehaviour:
   towerLevels:
   - {fileID: 114238171581901022, guid: d1b0307bfd45c9f48b4e1b082c35e955, type: 2}
   - {fileID: 114844755604913970, guid: f4ce8160ac7b84d42a8df9133591c139, type: 2}
+  - {fileID: 114359782261602936, guid: 884e308ffa4312549b17f3363cb38014, type: 2}
+  - {fileID: 114657041409566276, guid: 1851bd9b1734cdd45ad777628dd83e40, type: 2}
   unitPrefab: {fileID: 1935786120892614, guid: f5d8d07c668cff74796a2286e4a04543, type: 2}
   pathBoard: {fileID: 4925667004981864, guid: 5f9485573c8dc864dac6f2bf668d6cb1, type: 2}
   unitCount: 2

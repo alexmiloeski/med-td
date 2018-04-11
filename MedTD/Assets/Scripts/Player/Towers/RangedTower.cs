@@ -102,12 +102,11 @@ public class RangedTower : Tower
         countdown = cooldown;
     }
 
-    private void AcquireTarget(Transform _target)
+    protected void AcquireTarget(Transform _target)
     {
         // dismiss any previous target
         DismissTarget();
-
-
+        
         target = _target;
         // set this tower as the target's rangedAttacker
         Enemy targetEnemy = target.GetComponent<Enemy>();
@@ -116,12 +115,7 @@ public class RangedTower : Tower
             targetEnemy.AddTowerAttacker(transform);
         }
     }
-
-    //private void OnDismissTarget()
-    //{
-
-    //}
-
+    
     internal override void DismissTarget()
     {
         //Debug.Log("RangedTower.DismissTarget");
@@ -134,6 +128,16 @@ public class RangedTower : Tower
             }
         }
         target = null;
+    }
+
+    internal override void Upgrade()
+    {
+        base.Upgrade();
+
+        Debug.Log("Tower.Upgrade");
+        range = GetCurrentRange();
+        damage = GetCurrentDamage();
+        cooldown = GetCurrentCooldown();
     }
 
     //private void OnDrawGizmosSelected()

@@ -22,7 +22,7 @@ public abstract class Tower : MonoBehaviour
         }
     }
 
-    internal void Upgrade()
+    internal virtual void Upgrade()
     {
         Debug.Log("Tower.Upgrade");
         int nextTowerLevelIndex = currentTowerLevelIndex + 1;
@@ -36,13 +36,13 @@ public abstract class Tower : MonoBehaviour
         }
 
         // if this is a melee tower, also update the unit stats
-        MeleeTower meleeTower = GetComponent<MeleeTower>();
-        if (meleeTower != null)
-        {
-            Debug.Log("meleeTower != null");
-            meleeTower.UpdateStats();
-        }
-        else Debug.Log("meleeTower == null");
+        //MeleeTower meleeTower = GetComponent<MeleeTower>();
+        //if (meleeTower != null)
+        //{
+        //    //Debug.Log("meleeTower != null");
+        //    meleeTower.UpdateStats();
+        //}
+        //else Debug.Log("meleeTower == null");
     }
     
     
@@ -242,7 +242,6 @@ public abstract class Tower : MonoBehaviour
     }
 
     internal abstract void DismissTarget();//{ OnDismissTarget(); }
-    protected void OnDismissTarget() { }
 
     private void OnDrawGizmosSelected()
     {
