@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Tower : MonoBehaviour
+public abstract class Tower : MonoBehaviour
 {
     public string towerName;
     public string description;
@@ -240,30 +240,9 @@ public class Tower : MonoBehaviour
             return -1;
         }
     }
-    //internal int GetNextLevelHealth()
-    //{
-    //    int nextTowerLevelIndex = currentTowerLevelIndex + 1;
-    //    // if this is the last level, return -1
-    //    if (nextTowerLevelIndex >= towerLevels.Length)
-    //    {
-    //        return -1;
-    //    }
-    //    else // if the next tower level is not null, return its Health;
-    //    {
-    //        if (towerLevels[nextTowerLevelIndex] != null) return towerLevels[nextTowerLevelIndex].health;
 
-    //        // otherwise try the other levels
-    //        for (int i = nextTowerLevelIndex + 1; i < towerLevels.Length; i++)
-    //        {
-    //            if (towerLevels[i] != null) return towerLevels[i].health;
-    //        }
-
-    //        // if no success, return -1
-    //        return -1;
-    //    }
-    //}
-
-
+    internal abstract void DismissTarget();//{ OnDismissTarget(); }
+    protected void OnDismissTarget() { }
 
     private void OnDrawGizmosSelected()
     {

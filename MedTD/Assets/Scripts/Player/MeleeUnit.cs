@@ -81,7 +81,7 @@ public class MeleeUnit : MonoBehaviour
 
             // todo: if this target has another attacker, look for nearby enemies without an attacker
             Enemy targetEnemy = target.GetComponent<Enemy>();
-            if (targetEnemy != null && targetEnemy.HasAnotherAttacker(transform))
+            if (targetEnemy != null && targetEnemy.HasAnotherMeleeAttacker(transform))
             {
                 // this target has another attacker; look for other targets without an attacker
                 GameObject[] enemies2 = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
@@ -97,7 +97,7 @@ public class MeleeUnit : MonoBehaviour
                         Enemy enemyEnemy = enemy.GetComponent<Enemy>();
                         if (enemyEnemy != null)
                         {
-                            if (!enemyEnemy.HasAnotherAttacker(transform))
+                            if (!enemyEnemy.HasAnotherMeleeAttacker(transform))
                             {
                                 float distanceFromUnitToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
                                 if (distanceFromUnitToEnemy < shortestDistance2)
@@ -150,21 +150,6 @@ public class MeleeUnit : MonoBehaviour
         }
     }
 
-    private void DismissTarget()
-    {
-        if (target != null)
-        {
-            // make sure previous target goes on
-            Enemy targetEnemy = target.GetComponent<Enemy>();
-            if (targetEnemy != null)
-            {
-                //targetEnemy.SetAttacker(null);
-                targetEnemy.RemoveAttacker(transform);
-            }
-        }
-        target = null;
-    }
-
     private void AcquireTarget(Transform _target)
     {
         // dismiss any previous target
@@ -176,15 +161,28 @@ public class MeleeUnit : MonoBehaviour
 
 
         target = _target;
-        // set this unit as the target's attacker
+        // set this unit as the target's melee attacker
         Enemy targetEnemy = target.GetComponent<Enemy>();
         if (targetEnemy != null)
         {
-            //targetEnemy.SetAttacker(transform);
-            targetEnemy.AddAttacker(transform);
+            targetEnemy.AddMeleeAttacker(transform);
         }
     }
 
+    internal void DismissTarget()
+    {
+        if (target != null)
+        {
+            // make sure previous target goes on
+            Enemy targetEnemy = target.GetComponent<Enemy>();
+            if (targetEnemy != null)
+            {
+                //targetEnemy.SetAttacker(null);
+                targetEnemy.RemoveMeleeAttacker(transform);
+            }
+        }
+        target = null;
+    }
 
     private void ReturnToRallyPoint()
     {
@@ -247,7 +245,7 @@ public class MeleeUnit : MonoBehaviour
         // if this unit was attacking an enemy, remove itself as one of its target's attackers
         if (target != null && target.GetComponent<Enemy>() != null)
         {
-            target.GetComponent<Enemy>().RemoveAttacker(transform);
+            target.GetComponent<Enemy>().RemoveMeleeAttacker(transform);
         }
 
         Destroy(gameObject);

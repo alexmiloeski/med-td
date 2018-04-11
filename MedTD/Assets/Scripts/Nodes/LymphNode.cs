@@ -125,6 +125,7 @@ public class LymphNode : MonoBehaviour
     }
     internal void DestroyTower()
     {
+        GetTowerComponent().DismissTarget();
         Destroy(towerGameObject);
         Deselect();
     }

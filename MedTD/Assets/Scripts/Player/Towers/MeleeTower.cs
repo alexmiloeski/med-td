@@ -204,8 +204,7 @@ public class MeleeTower : Tower
     {
         currentUnitCount--;
     }
-
-
+    
 
 
 
@@ -252,4 +251,14 @@ public class MeleeTower : Tower
         return meleeTowerLevel.unitHitCooldown;
     }
 
+    internal override void DismissTarget()
+    {
+        Debug.Log("MeleeTower.DismissTarget");
+
+        // call DismissTarget on all of its child units
+        foreach (MeleeUnit unit in units)
+        {
+            unit.DismissTarget();
+        }
+    }
 }

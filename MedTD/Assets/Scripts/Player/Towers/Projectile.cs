@@ -67,7 +67,7 @@ public class Projectile : MonoBehaviour
                 if (enemyEnemy != null)
                 {
                     float currDamage = damage * (1 - (distanceFromExplosionToEnemy / explosionRadius));
-                    Debug.Log("currDamage = " + currDamage);
+                    //Debug.Log("currDamage = " + currDamage);
                     enemyEnemy.TakeDamage(currDamage);
                 }
             }

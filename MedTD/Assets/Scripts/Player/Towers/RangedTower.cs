@@ -66,13 +66,21 @@ public class RangedTower : Tower
             }
         }
 
+        // if it's the same target, don't do anything
+        if (chosenEnemy == null || (target != null && chosenEnemy.transform == target))
+        {
+            return;
+        }
+
         if (chosenEnemy != null && shortestDistance <= range)
         {
-            target = chosenEnemy.transform;
+            //target = chosenEnemy.transform;
+            AcquireTarget(chosenEnemy.transform);
         }
         else
         {
-            target = null;
+            //target = null;
+            DismissTarget();
         }
     }
 
@@ -92,6 +100,40 @@ public class RangedTower : Tower
         }
 
         countdown = cooldown;
+    }
+
+    private void AcquireTarget(Transform _target)
+    {
+        // dismiss any previous target
+        DismissTarget();
+
+
+        target = _target;
+        // set this tower as the target's rangedAttacker
+        Enemy targetEnemy = target.GetComponent<Enemy>();
+        if (targetEnemy != null)
+        {
+            targetEnemy.AddTowerAttacker(transform);
+        }
+    }
+
+    //private void OnDismissTarget()
+    //{
+
+    //}
+
+    internal override void DismissTarget()
+    {
+        //Debug.Log("RangedTower.DismissTarget");
+        if (target != null)
+        {
+            Enemy targetEnemy = target.GetComponent<Enemy>();
+            if (targetEnemy != null)
+            {
+                targetEnemy.RemoveTowerAttacker(transform);
+            }
+        }
+        target = null;
     }
 
     //private void OnDrawGizmosSelected()

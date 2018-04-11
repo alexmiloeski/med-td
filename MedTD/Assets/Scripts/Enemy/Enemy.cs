@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
 
     //private Transform meleeAttacker;
     private List<Transform> meleeAttackers;
+    private List<Transform> towerAttackers;
     private float hitCountdown = 0f;
 
     public int minReplicationTime = 10;
@@ -65,7 +66,10 @@ public class Enemy : MonoBehaviour
         }
 
         meleeAttackers = new List<Transform>();
-	}
+        towerAttackers = new List<Transform>();
+
+        InvokeRepeating("CheckAttackers", 5f, 3f);
+    }
 
     private void Update()
     {
@@ -77,8 +81,8 @@ public class Enemy : MonoBehaviour
         // update the hit countdown and the replication countdown each frame
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
 
-        if (replicationCoundtown > 0f) replicationCoundtown -= Time.deltaTime;
-        if (replicationCoundtown <= 0f)
+        if (replicationCoundtown > 0f && !IsBeingAttacked()) replicationCoundtown -= Time.deltaTime;
+        if (replicationCoundtown <= 0f && !IsBeingAttacked())
         {
             Replicate();
         }
@@ -262,19 +266,38 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    internal void AddAttacker(Transform _meleeAttacker)
+    internal void AddMeleeAttacker(Transform _meleeAttacker)
     {
         meleeAttackers.Add(_meleeAttacker);
     }
-    internal void RemoveAttacker(Transform _meleeAttacker)
+    internal void RemoveMeleeAttacker(Transform _meleeAttacker)
     {
         meleeAttackers.Remove(_meleeAttacker);
     }
-    internal bool HasAnotherAttacker(Transform _unit)
+    internal bool HasAnotherMeleeAttacker(Transform _unit)
     {
         if (meleeAttackers == null || meleeAttackers.Count < 1) return false;
 
         return meleeAttackers.Count > 1 && meleeAttackers[0] != null && meleeAttackers[0] != _unit;
+    }
+
+    internal void AddTowerAttacker(Transform _towerAttacker)
+    {
+        towerAttackers.Add(_towerAttacker);
+    }
+    internal void RemoveTowerAttacker(Transform _towerAttacker)
+    {
+        towerAttackers.Remove(_towerAttacker);
+    }
+    private bool IsBeingAttacked()
+    {
+        if (meleeAttackers.Count == 0 && towerAttackers.Count == 0) return false;
+
+        return true;
+    }
+    private void CheckAttackers()
+    {
+        // see if any of the attackers have become null (e.g. if a tower was sold)
     }
 
     internal void SetStartTile(Transform _startTile, float delay)
