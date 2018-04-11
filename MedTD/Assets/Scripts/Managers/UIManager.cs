@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +17,8 @@ public class UIManager : MonoBehaviour
     public GameObject buildingMenuPrefab;
     public GameObject towerMenuPrefab;
     public GameObject menuSelectionInfoPrefab;
+    public RectTransform healthBarGreen;
+    private RectTransform healthBarContainer;
 
     private GameObject xSpriteObject;
     private bool interruptXAtTouch = false;
@@ -36,8 +37,11 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        if (healthBarGreen.transform.parent != null)
+            healthBarContainer = healthBarGreen.transform.parent.GetComponent<RectTransform>();
+
         BuildManager buildManager = BuildManager.instance;
-        textHealth.text = "Health: " + Player.GetHealthInt();
+        textHealth.text = "Health: " + Player.GetHealthInt() + " / " + Player.GetStartHealth();
         textMoney.text = "Money: " + Player.GetMoney();
         textSelectSS.text = "Pick " + buildManager.numberOfLymphNodes + " strategic sites.";
         textSelectedSSCount.text = "Number of selected sites: 0/" + buildManager.numberOfLymphNodes + ".";
@@ -51,12 +55,30 @@ public class UIManager : MonoBehaviour
 
     internal void UpdateTextHealth()
     {
-        textHealth.text = "Health: " + Player.GetHealthInt();
+        textHealth.text = "Health: " + Player.GetHealthInt() + " / " + Player.GetStartHealth();
     }
     internal void UpdateTextMoney()
     {
         textMoney.text = "Money: " + Player.GetMoney();
     }
+    internal void UpdateHealthVisual()
+    {
+        if (healthBarContainer == null) return;
+
+        float health = Player.GetHealthFloat();
+        if (health < 0) return;
+
+        float startHealth = Player.GetStartHealth();
+
+        float percentage = health / startHealth;
+        if (percentage < 0 || percentage > 1) return;
+
+        float newRight = healthBarContainer.sizeDelta.x - (percentage * healthBarContainer.sizeDelta.x);
+        if (newRight < 0 || newRight > healthBarContainer.sizeDelta.x) return;
+
+        healthBarGreen.offsetMax = new Vector2(-newRight, 0);
+    }
+
 
     private void SetEnabledTextMaxSSSelected(bool newActiveState)
     {
