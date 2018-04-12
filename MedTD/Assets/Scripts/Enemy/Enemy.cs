@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class Enemy : Damageable
 {
-    private float speed = 1f;
+    private Moveable moveable;
+
+    //private float speed = 1f;
     //public float startHealth = 10;
     //private float health = 10f;
     public float damage = 1f;
@@ -49,13 +51,21 @@ public class Enemy : Damageable
 
         //Debug.Log("Enemy.Start");
 
+        moveable = GetComponent<Moveable>();
+        if (moveable == null)
+        {
+            moveable = gameObject.AddComponent<Moveable>();
+        }
 
         //health = startHealth;
 
         rotatingPart = transform.Find(Constants.RotatingPart);
 
         if (!Shop.instance.IsCoughing())
-            speed = regularSpeed;
+        {
+            //speed = regularSpeed;
+            moveable.SetSpeed(regularSpeed);
+        }
         // todo: if coughing when this enemy is spawned, slow it down too
         //else
         //    speed = 
@@ -104,8 +114,15 @@ public class Enemy : Damageable
         {
             if (nextTile != null)
             {
-                Vector2 direction = nextTile.position - transform.position;
-                transform.Translate(direction.normalized * speed * Time.deltaTime, Space.World);
+                // face the direction
+                //moveable.FaceTowards(nextTile);
+
+                // move towards next path tile
+                //Vector2 direction = nextTile.position - transform.position;
+                //float distanceThisFrame = speed * Time.deltaTime;
+                //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+                //moveable.MoveTowards(nextTile, speed);
+                moveable.MoveTowards(nextTile);
 
                 if (Vector2.Distance(transform.position, nextTile.position) <= 0.4f)
                 {
@@ -136,10 +153,10 @@ public class Enemy : Damageable
 
         // face the attacker
         //Vector2 direction = meleeAttacker.position - transform.position;
-        Vector2 direction = firstAttacker.position - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
+        //Vector2 direction = firstAttacker.position - transform.position;
+        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        //Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+        //rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
 
         // if attacker is out of range, move in closer
         //float distanceToAttacker = Vector2.Distance(transform.position, meleeAttacker.transform.position);
@@ -147,8 +164,10 @@ public class Enemy : Damageable
         if (distanceToAttacker > hitRange)
         {
             // move towards attacker
-            float distanceThisFrame = speed * Time.deltaTime;
-            transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+            //float distanceThisFrame = speed * Time.deltaTime;
+            //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+            //moveable.MoveTowards(firstAttacker, speed);
+            moveable.MoveTowards(firstAttacker);
         }
         else
         {
@@ -361,7 +380,8 @@ public class Enemy : Damageable
     internal void StartCough(float delay)
     {
         coughing = true;
-        speed = 0f;
+        //speed = 0f;
+        moveable.SetSpeed(0f);
         
         coughSpeedIncrement = regularSpeed / delay;
 
@@ -375,14 +395,19 @@ public class Enemy : Damageable
         if (!startRegainingSpeed) return;
 
         coughStopCountdown -= Time.deltaTime;
-        float newSpeed = speed + (coughSpeedIncrement * Time.deltaTime);
+        //float newSpeed = speed + (coughSpeedIncrement * Time.deltaTime);
+        float newSpeed = moveable.GetSpeed() + (coughSpeedIncrement * Time.deltaTime);
         if (newSpeed <= regularSpeed)
-            speed = newSpeed;
+        {
+            //speed = newSpeed;
+            moveable.SetSpeed(newSpeed);
+        }
     }
     internal void StopCough()
     {
         coughing = false;
-        speed = regularSpeed;
+        //speed = regularSpeed;
+        moveable.SetSpeed(regularSpeed);
         startRegainingSpeed = false;
     }
     private void StartRegainingSpeed()

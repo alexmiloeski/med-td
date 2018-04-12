@@ -118,6 +118,8 @@ public class Shop : MonoBehaviour
     {
         //Debug.Log("ButtonSpecial1Action");
 
+        BuildManager.instance.DeselectLymphNode();
+
         UIManager.instance.SetInteractableButtonSpecial1(false, coughCooldown);
         coughCountdown = coughCooldown;
         coughing = true;
@@ -140,9 +142,7 @@ public class Shop : MonoBehaviour
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             if (enemy != null) enemy.StartCough(coughStopDelay);
         }
-
-        // todo: what the hell was i doing here?
-        //Invoke("StopCough", delay2+delay3+delay4+lastDuration);
+        
         Invoke("StopCough", coughStopDelay);
     }
     private IEnumerator ShakeCamera(float delay, float duration, float intensity)

@@ -4,11 +4,12 @@ public class MeleeUnit : Damageable
 {
     public SpriteRenderer headRenderer;
 
+    private Moveable moveable;
     private Transform rotatingPart;
 
     private MeleeTower nativeTower;
     private float towerRange;
-    private float speed;
+    //private float speed;
     //private float startHealth;
     //private float health;
     private float damage;
@@ -25,6 +26,13 @@ public class MeleeUnit : Damageable
     {
         base.Start();
 
+        moveable = GetComponent<Moveable>();
+        if (moveable == null)
+        {
+            moveable = gameObject.AddComponent<Moveable>();
+        }
+
+
         rotatingPart = transform.Find(Constants.RotatingPart);
 
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
@@ -40,20 +48,25 @@ public class MeleeUnit : Damageable
         }
 
         // face the target
-        Vector2 direction = target.position - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
+        //Vector2 direction = target.position - transform.position;
+        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        //Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+        //rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
+        //moveable.FaceTowards(target);
         
+
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
+
 
         // if target is out of range, move in closer
         float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
         if (distanceToTarget > hitRange)
         {
             // move towards target
-            float distanceThisFrame = speed * Time.deltaTime;
-            transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+            //float distanceThisFrame = speed * Time.deltaTime;
+            //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+            //moveable.MoveTowards(target, speed);
+            moveable.MoveTowards(target);
         }
         else
         {
@@ -199,16 +212,16 @@ public class MeleeUnit : Damageable
 
         //Debug.Log("going back to rally point...");
         // go back to rally point, ignoring environment
-        Vector2 direction = rallyPoint - transform.position;
-        float distanceThisFrame = speed * Time.deltaTime;
+        //Vector2 direction = rallyPoint - transform.position;
+        //float distanceThisFrame = speed * Time.deltaTime;
 
-        Vector2 vectorToTarget = rallyPoint - transform.position;
-        float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg;
-        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
-        
+        //Vector2 vectorToTarget = rallyPoint - transform.position;
+        //float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg;
+        //Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+        //rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
 
-        transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+        //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
+        moveable.MoveTowards(rallyPoint);
     }
 
     private void HitEnemy()
@@ -273,7 +286,10 @@ public class MeleeUnit : Damageable
     }
     internal void SetUnitSpeed(float unitSpeed)
     {
-        speed = unitSpeed;
+        //speed = unitSpeed;
+        if (moveable == null) moveable = GetComponent<Moveable>();
+        if (moveable == null) moveable = gameObject.AddComponent<Moveable>();
+        moveable.SetSpeed(unitSpeed);
     }
     internal void SetHitCooldown(float _hitCooldown)
     {

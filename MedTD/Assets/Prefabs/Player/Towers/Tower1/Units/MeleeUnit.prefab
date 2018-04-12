@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 58217819983350572}
   - component: {fileID: 114231372007547858}
   - component: {fileID: 114009429927037350}
+  - component: {fileID: 114502253611944870}
   m_Layer: 0
   m_Name: MeleeUnit
   m_TagString: Friendly
@@ -259,6 +260,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHealth: 0
   headRenderer: {fileID: 212846878994581352}
+--- !u!114 &114502253611944870
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1935786120892614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd762d879cc5064f90bbee32eb9f571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212249231807325478
 SpriteRenderer:
   m_ObjectHideFlags: 1
