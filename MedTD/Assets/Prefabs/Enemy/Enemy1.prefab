@@ -265,7 +265,7 @@ MonoBehaviour:
   hitRange: 0.7
   movementDelay: 0.5
   cloneMovementDelay: 1.5
-  regularSpeed: 0.9
+  regularSpeed: 1
   minReplicationTime: 15
   maxReplicationTime: 30
 --- !u!114 &114406653395224162

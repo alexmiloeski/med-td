@@ -1,33 +1,31 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class LinkedNode : MonoBehaviour
 {
+    [SerializeField]
     private LinkedNode above;
+
+    [SerializeField]
     private LinkedNode right;
+
+    [SerializeField]
     private LinkedNode below;
+
+    [SerializeField]
     private LinkedNode left;
     
-    void Start ()
-    {
-		
-	}
-	
-	void Update ()
-    {
-		
-	}
-
-    private void OnMouseUpAsButton()
-    {
-        if (above != null)
-            Debug.Log("has above");
-        if (right != null)
-            Debug.Log("has right");
-        if (below != null)
-            Debug.Log("has below");
-        if (left != null)
-            Debug.Log("has left");
-    }
+    //private void OnMouseUpAsButton()
+    //{
+    //    if (above != null)
+    //        Debug.Log("has above");
+    //    if (right != null)
+    //        Debug.Log("has right");
+    //    if (below != null)
+    //        Debug.Log("has below");
+    //    if (left != null)
+    //        Debug.Log("has left");
+    //}
 
     private void OnDrawGizmosSelected()
     {
@@ -53,6 +51,17 @@ public class LinkedNode : MonoBehaviour
         }
     }
 
+    public List<LinkedNode> GetNeighbors()
+    {
+        List<LinkedNode> neighbors = new List<LinkedNode>();
+
+        if (above != null) neighbors.Add(above);
+        if (right != null) neighbors.Add(right);
+        if (below != null) neighbors.Add(below);
+        if (left != null) neighbors.Add(left);
+
+        return neighbors;
+    }
     public LinkedNode GetAbove()
     {
         return above;

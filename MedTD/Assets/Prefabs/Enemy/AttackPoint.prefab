@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4924305283012562}
   - component: {fileID: 61019822891734442}
   - component: {fileID: 114055343394122664}
+  - component: {fileID: 114733732740214930}
   m_Layer: 0
   m_Name: AttackPoint
   m_TagString: Untagged
@@ -77,3 +78,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e71c114fcbdc94ca21ffa33bb8aad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114733732740214930
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1457062764523970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1530d09ad134ba045b53057b1645f5c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  above: {fileID: 0}
+  right: {fileID: 0}
+  below: {fileID: 0}
+  left: {fileID: 0}

@@ -25,9 +25,7 @@ public class Enemy : Damageable
     private Transform currTile;
     private Transform nextTile;
     private List<Transform> visitedTiles = new List<Transform>();
-    private float allowedTileDistance;
 
-    //private Transform meleeAttacker;
     private List<Transform> meleeAttackers;
     private List<Transform> towerAttackers;
     private float hitCountdown = 0f;
@@ -56,14 +54,11 @@ public class Enemy : Damageable
         {
             moveable = gameObject.AddComponent<Moveable>();
         }
-
-        //health = startHealth;
-
+        
         rotatingPart = transform.Find(Constants.RotatingPart);
 
         if (!Shop.instance.IsCoughing())
         {
-            //speed = regularSpeed;
             moveable.SetSpeed(regularSpeed);
         }
         // todo: if coughing when this enemy is spawned, slow it down too
@@ -71,18 +66,9 @@ public class Enemy : Damageable
         //    speed = 
         
         replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
-
-        if (PathBoard.container != null && PathBoard.container.childCount > 0)
-        {
-            Transform tile = PathBoard.container.GetChild(0);
-            BoxCollider2D tileColl = tile.GetComponent<BoxCollider2D>();
-            allowedTileDistance = tileColl.bounds.size.x + (tileColl.bounds.size.x * 0.15f);
-        }
-
+        
         meleeAttackers = new List<Transform>();
         towerAttackers = new List<Transform>();
-
-        //InvokeRepeating("CheckAttackers", 5f, 3f);
     }
 
     private void Update()
@@ -105,26 +91,17 @@ public class Enemy : Damageable
         }
 
         // if there's a melee unit attacking, start attacking it (face it, move towards it, and if in range, hit)
-        //if (meleeAttacker != null)
         if (meleeAttackers.Count > 0)
         {
             AttackMeleeAttacker();
         }
-        else
+        else // if there's no melee attacker, continue towards the next tile
         {
             if (nextTile != null)
             {
-                // face the direction
-                //moveable.FaceTowards(nextTile);
-
-                // move towards next path tile
-                //Vector2 direction = nextTile.position - transform.position;
-                //float distanceThisFrame = speed * Time.deltaTime;
-                //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-                //moveable.MoveTowards(nextTile, speed);
                 moveable.MoveTowards(nextTile);
 
-                if (Vector2.Distance(transform.position, nextTile.position) <= 0.4f)
+                if (Vector2.Distance(transform.position, nextTile.position) <= 0.3f)
                 {
                     // it's reached the tile; go to the next tile
                     VisitTile(nextTile);
@@ -137,7 +114,6 @@ public class Enemy : Damageable
     private void AttackMeleeAttacker()
     {
         //Debug.Log("AttackMeleeAttacker");
-        //if (meleeAttacker == null || meleeAttacker.GetComponent<MeleeUnit>() == null) return;
         Transform firstAttacker = null;
         for (int i = 0; i < meleeAttackers.Count; i++)
         {
@@ -149,24 +125,12 @@ public class Enemy : Damageable
             }
         }
         if (firstAttacker == null) return;
-
-
-        // face the attacker
-        //Vector2 direction = meleeAttacker.position - transform.position;
-        //Vector2 direction = firstAttacker.position - transform.position;
-        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        //Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        //rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
-
+        
         // if attacker is out of range, move in closer
-        //float distanceToAttacker = Vector2.Distance(transform.position, meleeAttacker.transform.position);
         float distanceToAttacker = Vector2.Distance(transform.position, firstAttacker.transform.position);
         if (distanceToAttacker > hitRange)
         {
             // move towards attacker
-            //float distanceThisFrame = speed * Time.deltaTime;
-            //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-            //moveable.MoveTowards(firstAttacker, speed);
             moveable.MoveTowards(firstAttacker);
         }
         else
@@ -184,21 +148,18 @@ public class Enemy : Damageable
     {
         //Debug.Log("Enemy.Hitting attacker");
 
-        MeleeUnit firstAttacker = null;
+        Damageable firstAttacker = null;
         for (int i = 0; i < meleeAttackers.Count; i++)
         {
             Transform _meleeAttacker = meleeAttackers[i];
-            if (_meleeAttacker != null && _meleeAttacker.GetComponent<MeleeUnit>() != null)
+            if (_meleeAttacker != null && _meleeAttacker.GetComponent<Damageable>() != null)
             {
-                firstAttacker = _meleeAttacker.GetComponent<MeleeUnit>();
+                firstAttacker = _meleeAttacker.GetComponent<Damageable>();
                 break;
             }
         }
-        //if (meleeAttacker == null || meleeAttacker.GetComponent<MeleeUnit>() == null) return;
         if (firstAttacker == null) return;
         
-
-        //meleeAttacker.GetComponent<MeleeUnit>().TakeDamage(damage);
         firstAttacker.TakeDamage(damage);
 
         hitCountdown = hitCooldown;
@@ -231,7 +192,7 @@ public class Enemy : Damageable
         //Debug.Log("GetNextTile");
         System.Random random = new System.Random();
 
-        // get a random tile from those that are within allowedTileDistance
+        // get a random tile from the neighboring tiles
         Transform chosenTile = null;
 
         // first look for vacant attack points next to the current tile
@@ -240,7 +201,7 @@ public class Enemy : Damageable
             if (attackPoint.GetComponent<AttackPoint>().IsVacant(this))
             {
                 float distanceToAttackPoint = Vector2.Distance(currTile.position, attackPoint.position);
-                if (distanceToAttackPoint < allowedTileDistance)
+                if (distanceToAttackPoint < 0.6) // todo: attack points could be neighbors of Path Tiles (LinkedNodes), but we would have to set them manually
                 {
                     // if this is the first attack point to be examined, pick it
                     // else, pick it with a 50% chance
@@ -263,24 +224,19 @@ public class Enemy : Damageable
         }
         else // if there weren't any attack points, find the next unvisited tile
         {
-            foreach (Transform tile in PathBoard.container)
+            if (currTile.GetComponent<LinkedNode>() != null)
             {
-                if (!visitedTiles.Contains(tile))
+                List<LinkedNode> neighbors = currTile.GetComponent<LinkedNode>().GetNeighbors();
+                neighbors.RemoveAll(x => visitedTiles.Contains(x.transform));
+                
+                int nc = neighbors.Count;
+                if (nc > 0)
                 {
-                    float distanceToTile = Vector2.Distance(currTile.position, tile.position);
-                    if (distanceToTile < allowedTileDistance)
-                    {
-                        // if this is the first tile to be examined, pick it
-                        // else, pick it with a 50% chance
-                        int randomInt = random.Next(0, 2);
-                        if (chosenTile == null || randomInt > 0)
-                        {
-                            chosenTile = tile;
-                        }
-                    }
+                    int rint = random.Next(0, nc);
+                    
+                    chosenTile = neighbors[rint].transform;
                 }
             }
-
         }
 
         if (chosenTile != null)
@@ -430,40 +386,44 @@ public class Enemy : Damageable
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, hitRange);
-        //    if (currTile != null)
-        //    {
-        //        Gizmos.color = Color.blue;
-        //        Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
-        //    }
-        //    if (nextTile != null)
-        //    {
-        //        Gizmos.color = Color.yellow;
-        //        Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
-        //    }
-        //    Gizmos.color = Color.red;
-        //    foreach (Transform tile in visitedTiles)
-        //    {
-        //        Gizmos.DrawWireCube(tile.position, new Vector3(0.5f, 0.5f, 5f));
-        //    }
-        //    if (currTile != null)
-        //    {
-        //        Gizmos.color = Color.green;
-        //        foreach (Transform tile in PathBoard.container)
-        //        {
-        //            //bool notVisited = !visitedPositions.Exists(x => x.Equals(tile.position));
-        //            bool notVisited = !visitedTiles.Contains(tile);
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawWireSphere(transform.position, hitRange);
 
-        //            if (notVisited)
+        if (currTile != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
+        }
+
+        if (nextTile != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
+        }
+
+        Gizmos.color = Color.red;
+        foreach (Transform tile in visitedTiles)
+        {
+            Gizmos.DrawWireCube(tile.position, new Vector3(0.5f, 0.5f, 5f));
+        }
+
+        //if (currTile != null)
+        //{
+        //    Gizmos.color = Color.green;
+        //    foreach (Transform tile in PathBoard.container)
+        //    {
+        //        //bool notVisited = !visitedPositions.Exists(x => x.Equals(tile.position));
+        //        bool notVisited = !visitedTiles.Contains(tile);
+
+        //        if (notVisited)
+        //        {
+        //            float distanceToTile = Vector2.Distance(currTile.position, tile.position);
+        //            if (distanceToTile < allowedTileDistance)
         //            {
-        //                float distanceToTile = Vector2.Distance(currTile.position, tile.position);
-        //                if (distanceToTile < allowedTileDistance)
-        //                {
-        //                    Gizmos.DrawWireSphere(tile.position, 0.7f);
-        //                }
+        //                Gizmos.DrawWireSphere(tile.position, 0.7f);
         //            }
         //        }
         //    }
+        //}
     }
 }

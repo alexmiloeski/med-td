@@ -13,6 +13,15 @@ public class GenerateTiles : MonoBehaviour
     private bool[,] boardMap;
     private Transform[,] board;
 
+    public Vector2 startTile = new Vector2(9, 10);
+    public int[] directions;
+    private const int backToFork = -1;
+    private const int fork = 0;
+    private const int up = 1;
+    private const int right = 2;
+    private const int down = 3;
+    private const int left = 4;
+
     private void Start()
     {
         // initialize the map to all false
@@ -35,26 +44,108 @@ public class GenerateTiles : MonoBehaviour
         }
 
         // set the coordinates manually
-        boardMap[9, 10] = true;
-        boardMap[9, 9] = true;
-        boardMap[9, 8] = true;
-        boardMap[9, 7] = true;
+        //boardMap[9, 10] = true;
+        //boardMap[9, 9] = true;
+        //boardMap[9, 8] = true;
+        //boardMap[9, 7] = true;
 
-        boardMap[8, 7] = true;
-        boardMap[7, 7] = true;
-        boardMap[6, 7] = true;
+        //boardMap[8, 7] = true;
+        //boardMap[7, 7] = true;
+        //boardMap[6, 7] = true;
 
-        boardMap[6, 6] = true;
-        boardMap[6, 5] = true;
-        boardMap[6, 4] = true;
+        //boardMap[6, 6] = true;
+        //boardMap[6, 5] = true;
+        //boardMap[6, 4] = true;
 
-        boardMap[5, 4] = true;
-        boardMap[4, 4] = true;
-        boardMap[3, 4] = true;
-        
-        boardMap[3, 3] = true;
-        boardMap[3, 2] = true;
-        boardMap[3, 1] = true;
+        //boardMap[5, 4] = true;
+        //boardMap[4, 4] = true;
+        //boardMap[3, 4] = true;
+
+        //boardMap[3, 3] = true;
+        //boardMap[3, 2] = true;
+        //boardMap[3, 1] = true;
+
+        // set the directions manually
+        if (directions.Length == 0)
+        {
+            directions = new int[] { down, down, down, left, left, left, down, down, down, left,
+                left, left, down, down, down, right, right, right, right, right, up, up, up, up, right,
+                right, right, down, down, down, down, right, right, right, right, right, up, up, up,
+                left, left, left, up, up, up, left, left, left };
+        }
+
+        boardMap[(int)startTile.x, (int)startTile.y] = true;
+        Vector2 prevTile = startTile;
+        Vector2 forkTile = new Vector2();
+        for (int i = 0; i < directions.Length; i++)
+        {
+            int dir = directions[i];
+
+            float x, y;
+            switch (dir)
+            {
+                case fork:
+                default:
+                    forkTile.x = prevTile.x;
+                    forkTile.y = prevTile.y;
+                    x = prevTile.x;
+                    y = prevTile.y;
+                    break;
+                
+                case backToFork:
+                    x = forkTile.x;
+                    y = forkTile.y;
+                    break;
+
+                case up:
+                    x = prevTile.x;
+                    y = prevTile.y + 1;
+                    break;
+                
+                case right:
+                    x = prevTile.x + 1;
+                    y = prevTile.y;
+                    break;
+                
+                case down:
+                    x = prevTile.x;
+                    y = prevTile.y - 1;
+                    break;
+                
+                case left:
+                    x = prevTile.x - 1;
+                    y = prevTile.y;
+                    break;
+            }
+            
+            if (dir == backToFork)
+            {
+                prevTile = new Vector3(x, y);
+            }
+            else if (dir != fork)
+            {
+                //Vector3 nextTile = new Vector3(x, y);
+
+                boardMap[(int)x, (int)y] = true;
+
+                //if (i > directions.Length - 2 || directions[i + 1] != fork)
+                //{
+                //    prevTile = nextTile;
+                //}
+                prevTile = new Vector3(x, y);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         ///////////////////////////////////////
 
@@ -84,7 +175,10 @@ public class GenerateTiles : MonoBehaviour
                     float x = i + 0.5f - (boardSizeX / 2f);
                     float y = j + 0.5f - ((boardSizeY - 1f) / 2f);
                     Transform tile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
-                    tile.name = "Tile_" + i + " _ " + j;
+                    if (i == (int)startTile.x && j == (int)startTile.y)
+                        tile.name = "StartTile";
+                    else
+                        tile.name = "Tile_" + i + "_" + j;
                     tile.parent = boardContainer.transform;
                     board[i, j] = tile;
 
