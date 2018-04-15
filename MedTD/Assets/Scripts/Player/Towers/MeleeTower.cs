@@ -14,8 +14,9 @@ public class MeleeTower : Tower
     private int unitDefense = 10;
     private float unitSpeed = 1f;
     private float unitHitCooldown = 1f;
-    private float meleeHitRange = 10;
-    private float towerRange = 10;
+    private float meleeHitRange = 1f;
+    private float meleeSpotRange = 1.5f;
+    private float meleeRallyPointRange = 2f;
 
     private MeleeUnit[] units;
     //private float unitRespawnCountdown;
@@ -70,7 +71,8 @@ public class MeleeTower : Tower
     internal void UpdateStats()
     {
         unitRespawnCooldown = GetCurrentCooldown();
-        towerRange = GetCurrentRange();
+        meleeSpotRange = GetCurrentMeleeSpotRange();
+        meleeRallyPointRange = GetCurrentMeleeRallyPointRange();
         unitSprite = GetCurrentMeleeUnitSprite();
         unitSpeed = GetCurrentMeleeUnitSpeed();
         unitHealth = GetCurrentMeleeUnitHealth();
@@ -88,7 +90,8 @@ public class MeleeTower : Tower
                 {
                     //unit.UpdateStats();
                     unit.SetSprite(unitSprite);
-                    unit.SetTowerRange(towerRange);
+                    unit.SetMeleeSpotRange(meleeSpotRange);
+                    unit.SetMeleeRallyPointRange(meleeRallyPointRange);
                     unit.SetUnitSpeed(unitSpeed);
                     unit.SetHealth(unitHealth);
                     unit.SetDamage(unitDamage);
@@ -164,7 +167,8 @@ public class MeleeTower : Tower
         meleeUnit.SetDamage(unitDamage);
         //Debug.Log("unitDamage = " + unitDamage);
         meleeUnit.SetDefense(unitDefense);
-        meleeUnit.SetTowerRange(towerRange);
+        meleeUnit.SetMeleeSpotRange(meleeSpotRange);
+        meleeUnit.SetMeleeRallyPointRange(meleeRallyPointRange);
         meleeUnit.SetHitRange(meleeHitRange);
         meleeUnit.SetUnitSpeed(unitSpeed);
         //Debug.Log("unitSpeed = " + unitSpeed);
@@ -224,6 +228,20 @@ public class MeleeTower : Tower
         if (meleeTowerLevel == null) return 1f;
 
         return meleeTowerLevel.meleeHitRange;
+    }
+    internal float GetCurrentMeleeSpotRange()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 1.5f;
+
+        return meleeTowerLevel.meleeSpotRange;
+    }
+    internal float GetCurrentMeleeRallyPointRange()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return 2f;
+
+        return meleeTowerLevel.meleeRallyPointRange;
     }
     internal float GetCurrentMeleeUnitHitCooldown()
     {

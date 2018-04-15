@@ -3051,6 +3051,15 @@ Prefab:
       propertyPath: below
       value: 
       objectReference: {fileID: 490296707}
+    - target: {fileID: 1457062764523970, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114055343394122664, guid: b0cfb673bc1d70f4180dfc77315dcccf,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
   m_IsPrefabParent: 0
@@ -4547,7 +4556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfWaves: 5
-  timeBetweenWaves: 30
+  timeBetweenWaves: 20
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1008457875}
   pathBoard: {fileID: 1142404544}
@@ -4597,7 +4606,7 @@ MonoBehaviour:
   lymphNodePrefab: {fileID: 4207219894400406, guid: 90acd459b4c74c447b3826ab7801195a,
     type: 2}
   sSContainer: {fileID: 123073212}
-  numberOfLymphNodes: 3
+  numberOfLymphNodes: 4
 --- !u!114 &1378128246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5065,6 +5074,11 @@ Prefab:
         type: 2}
       propertyPath: right
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114055343394122664, guid: b0cfb673bc1d70f4180dfc77315dcccf,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
@@ -5615,6 +5629,11 @@ Prefab:
         type: 2}
       propertyPath: below
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114055343394122664, guid: b0cfb673bc1d70f4180dfc77315dcccf,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}

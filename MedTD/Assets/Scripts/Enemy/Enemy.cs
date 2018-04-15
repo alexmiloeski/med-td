@@ -22,9 +22,9 @@ public class Enemy : Damageable
 
     private Transform rotatingPart;
 
-    private Transform currTile;
-    private Transform nextTile;
-    private List<Transform> visitedTiles = new List<Transform>();
+    private LinkedNode currTile;
+    private LinkedNode nextTile;
+    private List<LinkedNode> visitedTiles = new List<LinkedNode>();
 
     private List<Transform> meleeAttackers;
     private List<Transform> towerAttackers;
@@ -70,9 +70,15 @@ public class Enemy : Damageable
         meleeAttackers = new List<Transform>();
         towerAttackers = new List<Transform>();
     }
+    void Blah()
+    {
+        moveable.UpdateTarget(new Vector3(-1.5f, 4.5f, transform.position.z));
+        moveable.MoveViaTilesTowardsTarget();
+    }
 
     private void Update()
     {
+        //Blah(); return;
         if (!started) return;
         
         if (coughing)
@@ -99,14 +105,20 @@ public class Enemy : Damageable
         {
             if (nextTile != null)
             {
-                moveable.MoveTowards(nextTile);
+                //moveable.MoveTowardsTile(nextTile);
+                //moveable.MoveDirectlyTowards(nextTile);
+                moveable.MoveDirectlyTowardsPosition(nextTile.transform.position);
 
-                if (Vector2.Distance(transform.position, nextTile.position) <= 0.3f)
+                if (Vector2.Distance(transform.position, nextTile.transform.position) <= 0.3f)
                 {
                     // it's reached the tile; go to the next tile
                     VisitTile(nextTile);
                     GetNextTile();
                 }
+            }
+            else
+            {
+                GetNextTile();
             }
         }
     }
@@ -127,14 +139,66 @@ public class Enemy : Damageable
         if (firstAttacker == null) return;
         
         // if attacker is out of range, move in closer
-        float distanceToAttacker = Vector2.Distance(transform.position, firstAttacker.transform.position);
+        float distanceToAttacker = Vector2.Distance(transform.position, firstAttacker.position);
         if (distanceToAttacker > hitRange)
         {
-            // move towards attacker
-            moveable.MoveTowards(firstAttacker);
+            if (distanceToAttacker < 1)
+            {
+                //moveable.MoveTowards(firstAttacker);
+                //moveable.MoveDirectlyTowardsPosition(firstAttacker.position);
+                moveable.MoveDirectlyTowardsPositionWithinTiles(firstAttacker.position);
+            }
+            else
+            {
+                moveable.UpdateTarget(firstAttacker.position);
+                moveable.MoveViaTilesTowardsTarget();
+                //if (!moveable.HasReachedTarget())
+                //{
+                //    moveable.UpdateTarget(firstAttacker);
+                //}
+                //else
+                //{
+                //    moveable.StartMoving();
+                //}
+
+                //// move towards attacker
+                ////moveable.MoveTowards(firstAttacker);
+
+                //// todo: move to the next tile that's closest to the attacker or stay if this tile is closer
+                //LinkedNode closestNode = currTile;
+                //float minDistance = Vector2.Distance(currTile.transform.position, firstAttacker.transform.position);
+                //List<LinkedNode> neighbors = currTile.GetNeighbors();
+                //foreach (LinkedNode neighbor in neighbors)
+                //{
+                //    float distanceFromNeighborToAttacker = Vector2.Distance(neighbor.transform.position, firstAttacker.transform.position);
+                //    if (distanceFromNeighborToAttacker < minDistance)
+                //    {
+                //        minDistance = distanceFromNeighborToAttacker;
+                //        closestNode = neighbor;
+                //    }
+                //}
+                //// as a failsafe, if no node was chosen, choose one at random
+                //if (closestNode == null)
+                //{
+                //    int nc = neighbors.Count;
+                //    if (nc > 0)
+                //    {
+                //        closestNode = neighbors[random.Next(0, nc)];
+                //    }
+                //}
+                //if (closestNode != null)
+                //{
+                //    //Debug.Log("moving towards closest node: " + closestNode.name);
+                //    //moveable.MoveTowards(closestNode);
+                //}
+            }
         }
         else
         {
+            //Debug.Log("within hit range");
+
+            //moveable.StopMoving();
+
             // hit or wait for cooldown
             if (hitCountdown <= 0f)
             {
@@ -164,43 +228,21 @@ public class Enemy : Damageable
 
         hitCountdown = hitCooldown;
     }
-
-    //internal void TakeDamage(float damage)
-    //{
-    //    health -= damage;
-    //    if (health <= 0)
-    //        Die();
-    //    else
-    //    {
-    //        HealthBar healthBar = GetComponent<HealthBar>();
-    //        if (healthBar != null)
-    //        {
-    //            if (startHealth <= 0f) startHealth = health;
-    //            if (health > startHealth) health = startHealth;
-    //            healthBar.UpdateGreenPercentage(health, startHealth);
-    //        }
-    //    }
-    //}
-
-    //private void Die()
-    //{
-    //    Destroy(gameObject);
-    //}
-
+    
     private void GetNextTile()
     {
         //Debug.Log("GetNextTile");
         System.Random random = new System.Random();
 
         // get a random tile from the neighboring tiles
-        Transform chosenTile = null;
+        LinkedNode chosenTile = null;
 
         // first look for vacant attack points next to the current tile
         foreach (Transform attackPoint in PathBoard.attackPoints)
         {
             if (attackPoint.GetComponent<AttackPoint>().IsVacant(this))
             {
-                float distanceToAttackPoint = Vector2.Distance(currTile.position, attackPoint.position);
+                float distanceToAttackPoint = Vector2.Distance(currTile.transform.position, attackPoint.position);
                 if (distanceToAttackPoint < 0.6) // todo: attack points could be neighbors of Path Tiles (LinkedNodes), but we would have to set them manually
                 {
                     // if this is the first attack point to be examined, pick it
@@ -208,7 +250,7 @@ public class Enemy : Damageable
                     int randomInt = random.Next(0, 2);
                     if (chosenTile == null || randomInt > 0)
                     {
-                        chosenTile = attackPoint;
+                        chosenTile = attackPoint.GetComponent<LinkedNode>();
                     }
                 }
             }
@@ -227,14 +269,12 @@ public class Enemy : Damageable
             if (currTile.GetComponent<LinkedNode>() != null)
             {
                 List<LinkedNode> neighbors = currTile.GetComponent<LinkedNode>().GetNeighbors();
-                neighbors.RemoveAll(x => visitedTiles.Contains(x.transform));
+                neighbors.RemoveAll(x => visitedTiles.Contains(x));
                 
                 int nc = neighbors.Count;
                 if (nc > 0)
                 {
-                    int rint = random.Next(0, nc);
-                    
-                    chosenTile = neighbors[rint].transform;
+                    chosenTile = neighbors[random.Next(0, nc)];
                 }
             }
         }
@@ -303,10 +343,10 @@ public class Enemy : Damageable
 
     internal void SetStartTile(Transform _startTile, float delay)
     {
-        nextTile = _startTile;
+        nextTile = _startTile.GetComponent<LinkedNode>();
         Invoke("StartMovement", delay);
     }
-    private void VisitTile(Transform tile)
+    private void VisitTile(LinkedNode tile)
     {
         //Debug.Log("VisitTile");
         
@@ -327,8 +367,8 @@ public class Enemy : Damageable
         Invoke("StartMovement", movementDelay);
         // spawn another of the same gameobject
         GameObject clone = Instantiate(gameObject, transform.parent);
-        if (nextTile != null) clone.GetComponent<Enemy>().SetStartTile(nextTile, cloneMovementDelay);
-        else clone.GetComponent<Enemy>().SetStartTile(currTile, cloneMovementDelay);
+        if (nextTile != null) clone.GetComponent<Enemy>().SetStartTile(nextTile.transform, cloneMovementDelay);
+        else clone.GetComponent<Enemy>().SetStartTile(currTile.transform, cloneMovementDelay);
 
         replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
     }
@@ -392,19 +432,19 @@ public class Enemy : Damageable
         if (currTile != null)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireCube(currTile.position, new Vector3(0.6f, 0.6f, 6f));
+            Gizmos.DrawWireCube(currTile.transform.position, new Vector3(0.6f, 0.6f, 6f));
         }
 
         if (nextTile != null)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(nextTile.position, new Vector3(1f, 1f, 3f));
+            Gizmos.DrawWireCube(nextTile.transform.position, new Vector3(1f, 1f, 3f));
         }
 
         Gizmos.color = Color.red;
-        foreach (Transform tile in visitedTiles)
+        foreach (LinkedNode tile in visitedTiles)
         {
-            Gizmos.DrawWireCube(tile.position, new Vector3(0.5f, 0.5f, 5f));
+            Gizmos.DrawWireCube(tile.transform.position, new Vector3(0.5f, 0.5f, 5f));
         }
 
         //if (currTile != null)

@@ -1,27 +1,32 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class MeleeUnit : Damageable
 {
     public SpriteRenderer headRenderer;
 
     private Moveable moveable;
-    private Transform rotatingPart;
+    //private Transform rotatingPart;
 
     private MeleeTower nativeTower;
-    private float towerRange;
-    //private float speed;
-    //private float startHealth;
-    //private float health;
     private float damage;
     private int defense;
     private float hitCooldown;
     private float hitRange;
+    private float spotRange;
+    private float rallyPointRange;
     private Vector3 rallyPoint;
+    private LinkedNode rallyPointNode;
+    private LinkedNode currNode;
 
     private Transform target;
     private float hitCountdown = 0f;
 
-    
+    //private void Awake()
+    //{
+    //    rotatingPart = transform.Find(Constants.RotatingPart);
+    //}
+
     private new void Start()
     {
         base.Start();
@@ -31,45 +36,47 @@ public class MeleeUnit : Damageable
         {
             moveable = gameObject.AddComponent<Moveable>();
         }
+        moveable.SetRotatingPart(transform.Find(Constants.RotatingPart));
+        
+        //rotatingPart = transform.Find(Constants.RotatingPart);
 
-
-        rotatingPart = transform.Find(Constants.RotatingPart);
+        ReturnToRallyPoint();
 
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
-    }
 
+
+        //moveable.FindAllPaths(PathBoard.container.Find("Tile_9_7").GetComponent<LinkedNode>(), PathBoard.container.Find("StartTile").GetComponent<LinkedNode>());
+        //moveable.FindAllPaths(PathBoard.container.Find("Tile_3_1").GetComponent<LinkedNode>(), PathBoard.container.Find("Tile_3_4").GetComponent<LinkedNode>());
+    }
+    
     private void Update()
     {
+        if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
+
         // if there's no target, go back to rally point
         if (target == null)
         {
             ReturnToRallyPoint();
             return;
         }
-
-        // face the target
-        //Vector2 direction = target.position - transform.position;
-        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        //Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        //rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
-        //moveable.FaceTowards(target);
         
-
-        if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
+        // if there is a target..
 
 
         // if target is out of range, move in closer
         float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
         if (distanceToTarget > hitRange)
         {
-            // move towards target
-            //float distanceThisFrame = speed * Time.deltaTime;
-            //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-            //moveable.MoveTowards(target, speed);
-            moveable.MoveTowards(target);
+            //Debug.Log("out of range, moving towards target");
+            //MoveTowardsTarget();
+            //moveable.StartMoving();
+            //moveable.StartMovingViaTilesTowards(target.position);
+            moveable.UpdateTarget(target.position);
+            moveable.MoveViaTilesTowardsTarget();
         }
         else
         {
+            //moveable.StopMoving();
             // hit or wait for cooldown
             if (hitCountdown <= 0f)
             {
@@ -78,14 +85,59 @@ public class MeleeUnit : Damageable
         }
     }
 
+    //private void MoveTowardsTarget()
+    //{
+    //    //moveable.MoveTowards(target);
+
+
+
+    //    // todo: move to the next tile that's closest to the attacker or stay if this tile is closer
+    //    LinkedNode closestNode = currNode;
+    //    float minDistance = Vector2.Distance(currNode.transform.position, target.transform.position);
+    //    List<LinkedNode> neighbors = currNode.GetNeighbors();
+    //    foreach (LinkedNode neighbor in neighbors)
+    //    {
+    //        float distanceFromNeighborToTarget = Vector2.Distance(neighbor.transform.position, target.transform.position);
+    //        if (distanceFromNeighborToTarget < minDistance)
+    //        {
+    //            minDistance = distanceFromNeighborToTarget;
+    //            closestNode = neighbor;
+    //        }
+    //    }
+    //    // as a failsafe, if no node was chosen, choose one at random
+    //    if (closestNode == null)
+    //    {
+    //        int nc = neighbors.Count;
+    //        if (nc > 0)
+    //        {
+    //            closestNode = neighbors[new System.Random().Next(0, nc)];
+    //        }
+    //    }
+
+        
+    //    if (closestNode != null)
+    //    {
+    //        if (Vector2.Distance(transform.position, closestNode.transform.position) <= 0.2f)
+    //        {
+    //            // it's reached the tile; go to the next tile
+    //            currNode = closestNode;
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("moving towards closest node: " + closestNode.name);
+    //            moveable.MoveTowards(closestNode);
+    //        }
+    //    }
+    //}
+
     /// <summary> Called with Invoke(). </summary>
     private void UpdateTarget()
     {
         // if it already has a target, see if it's dead or too far away, or if there's another one without an attacker
         if (target != null)
         {
-            float distanceFromTowerToTarget = Vector2.Distance(nativeTower.transform.position, target.transform.position);
-            if (distanceFromTowerToTarget > towerRange)
+            float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
+            if (distanceToTarget > spotRange)
             {
                 //Debug.Log("LOST TARGET");
                 DismissTarget();
@@ -102,9 +154,9 @@ public class MeleeUnit : Damageable
                 GameObject nearestEnemy2 = null;
                 foreach (GameObject enemy in enemies2)
                 {
-                    // if the enemy is beyond the tower's range, ignore target
-                    float distanceFromTowerToEnemy = Vector2.Distance(nativeTower.transform.position, enemy.transform.position);
-                    if (distanceFromTowerToEnemy <= towerRange)
+                    // if the enemy is beyond this unit's spot range, ignore target
+                    float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
+                    if (distanceToEnemy <= spotRange)
                     {
                         // if the enemy has another attacker, ignore it
                         Enemy enemyEnemy = enemy.GetComponent<Enemy>();
@@ -138,18 +190,13 @@ public class MeleeUnit : Damageable
         GameObject nearestEnemy = null;
         foreach (GameObject enemy in enemies)
         {
-            // if the enemy is beyond the tower's range, ignore target
-            float distanceFromTowerToEnemy = Vector2.Distance(nativeTower.transform.position, enemy.transform.position);
-            if (distanceFromTowerToEnemy <= towerRange)
+            // if the enemy is beyond this unit's spot range, ignore target
+            float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
+            if (distanceToEnemy <= spotRange && distanceToEnemy < shortestDistance)
             {
-                //Debug.Log("found enemy within tower range");
-                float distanceFromUnitToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
-                if (distanceFromUnitToEnemy < shortestDistance)
-                {
-                    shortestDistance = distanceFromUnitToEnemy;
+                    shortestDistance = distanceToEnemy;
                     nearestEnemy = enemy;
                 }
-            }
         }
 
         if (nearestEnemy != null)
@@ -166,13 +213,8 @@ public class MeleeUnit : Damageable
     private void AcquireTarget(Transform _target)
     {
         // dismiss any previous target
-        //if (target != null && target.GetComponent<Enemy>() != null)
-        //{
-        //    target.GetComponent<Enemy>().RemoveAttacker(transform);
-        //}
         DismissTarget();
-
-
+        
         target = _target;
         // set this unit as the target's melee attacker
         Enemy targetEnemy = target.GetComponent<Enemy>();
@@ -180,48 +222,50 @@ public class MeleeUnit : Damageable
         {
             targetEnemy.AddMeleeAttacker(transform);
         }
+
+
+        // start moving towards the target
+        //moveable.StartMovingTowards(target);
     }
 
     internal void DismissTarget()
     {
-        if (target != null)
+        if (target == null) return;
+
+        // make sure previous target goes on
+        Enemy targetEnemy = target.GetComponent<Enemy>();
+        if (targetEnemy != null)
         {
-            // make sure previous target goes on
-            Enemy targetEnemy = target.GetComponent<Enemy>();
-            if (targetEnemy != null)
-            {
-                //targetEnemy.SetAttacker(null);
-                targetEnemy.RemoveMeleeAttacker(transform);
-            }
+            //targetEnemy.SetAttacker(null);
+            targetEnemy.RemoveMeleeAttacker(transform);
         }
         target = null;
+        
+        // return to rally point
+        ReturnToRallyPoint();
     }
 
     private void ReturnToRallyPoint()
     {
-        if (target != null) return;
-
-        // after it's done fighting/chasing a target, return to rally point
-
-        // first see if it's close enough to the rally point
+        //moveable.StartMovingTowards(rallyPoint);
         float distanceToRallyPoint = Vector2.Distance(transform.position, rallyPoint);
-        if (distanceToRallyPoint < 0.15f) // todo: arbitrary number
+        if (distanceToRallyPoint > 0.2f)
         {
-            return;
+            //moveable.StartMovingDirectlyTowards(rallyPoint);
+            moveable.MoveDirectlyTowardsPosition(rallyPoint);
         }
 
-        //Debug.Log("going back to rally point...");
-        // go back to rally point, ignoring environment
-        //Vector2 direction = rallyPoint - transform.position;
-        //float distanceThisFrame = speed * Time.deltaTime;
+        //if (target != null) return;
+        
+        //// first see if it's close enough to the rally point
+        //float distanceToRallyPoint = Vector2.Distance(transform.position, rallyPoint);
+        //if (distanceToRallyPoint < 0.15f) // todo: arbitrary number
+        //{
+        //    return;
+        //}
+        //moveable.MoveTowards(rallyPoint);
 
-        //Vector2 vectorToTarget = rallyPoint - transform.position;
-        //float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg;
-        //Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        //rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
-
-        //transform.Translate(direction.normalized * distanceThisFrame, Space.World);
-        moveable.MoveTowards(rallyPoint);
+        //currNode = rallyPointNode;
     }
 
     private void HitEnemy()
@@ -295,9 +339,13 @@ public class MeleeUnit : Damageable
     {
         hitCooldown = _hitCooldown;
     }
-    internal void SetTowerRange(float _range)
+    internal void SetMeleeSpotRange(float _meleeSpotRange)
     {
-        towerRange = _range;
+        spotRange = _meleeSpotRange;
+    }
+    internal void SetMeleeRallyPointRange(float _meleeRallyPointRange)
+    {
+        rallyPointRange = _meleeRallyPointRange;
     }
     internal float GetHitRange()
     {
@@ -311,16 +359,32 @@ public class MeleeUnit : Damageable
     {
         // use a random spot within a small radius around the actual rally point
         
-        float randomXOffset = Random.Range(-0.3f, 0.3f);
-        float randomYOffset = Random.Range(-0.3f, 0.3f);
+        float randomXOffset = UnityEngine.Random.Range(-0.3f, 0.3f);
+        float randomYOffset = UnityEngine.Random.Range(-0.3f, 0.3f);
 
         float x = _rallyPoint.x + randomXOffset;
         float y = _rallyPoint.y + randomYOffset;
         float z = _rallyPoint.z;
 
+        //rallyPoint = _rallyPoint;
         rallyPoint = new Vector3(x, y, z);
 
-        //rallyPoint = _rallyPoint;
+        // find the path tile that's closest to the rally point
+        float minDistance = Mathf.Infinity;
+        Transform closestTile = null;
+        foreach (Transform tile in PathBoard.container)
+        {
+            float distanceToTile = Vector2.Distance(transform.position, tile.position);
+            if (distanceToTile < minDistance)
+            {
+                minDistance = distanceToTile;
+                closestTile = tile;
+            }
+        }
+        if (closestTile != null && closestTile.GetComponent<LinkedNode>() != null)
+        {
+            rallyPointNode = closestTile.GetComponent<LinkedNode>();
+        }
     }
     internal void SetSprite(Sprite sprite)
     {
@@ -333,7 +397,13 @@ public class MeleeUnit : Damageable
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, hitRange);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(rallyPoint, 0.8f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(rallyPoint, 0.2f);
+
+        if (rallyPointNode != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireCube(rallyPointNode.transform.position, new Vector3(0.6f, 0.6f, 0.2f));
+        }
     }
 }
