@@ -8,10 +8,13 @@ public abstract class Tower : MonoBehaviour
     public TowerLevel[] towerLevels;
     
     protected int currentTowerLevelIndex;
+    ///<summary>A reference to the lymph node on which this tower is built</summary>
+    protected LymphNode lymphNode;
     
 
-    internal void BuildBaseLevel()
+    internal void BuildBaseLevel(LymphNode _lymphNode)
     {
+        lymphNode = _lymphNode;
         if (towerLevels.Length > 0)
         {
             if (towerLevels[0] != null)
@@ -24,7 +27,7 @@ public abstract class Tower : MonoBehaviour
 
     internal virtual void Upgrade()
     {
-        Debug.Log("Tower.Upgrade");
+        //Debug.Log("Tower.Upgrade");
         int nextTowerLevelIndex = currentTowerLevelIndex + 1;
         if (towerLevels.Length > nextTowerLevelIndex)
         {
@@ -34,15 +37,6 @@ public abstract class Tower : MonoBehaviour
                 GetComponent<SpriteRenderer>().sprite = towerLevels[nextTowerLevelIndex].sprite;
             }
         }
-
-        // if this is a melee tower, also update the unit stats
-        //MeleeTower meleeTower = GetComponent<MeleeTower>();
-        //if (meleeTower != null)
-        //{
-        //    //Debug.Log("meleeTower != null");
-        //    meleeTower.UpdateStats();
-        //}
-        //else Debug.Log("meleeTower == null");
     }
     
     

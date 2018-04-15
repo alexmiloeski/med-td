@@ -50,56 +50,7 @@ public class Moveable : MonoBehaviour
     {
         target = _target;
     }
-
-    //internal void StartMovingDirectlyTowards(Vector3 _target)
-    //{
-    //    target = _target;
-    //    currentNode = null;
-    //    nextNode = null;
-    //    movingViaTiles = false;
-    //    movingDirectly = true;
-    //}
-    //internal void StopMoving()
-    //{
-    //    currentNode = null;
-    //    nextNode = null;
-    //    movingViaTiles = false;
-    //    movingDirectly = false;
-    //}
-    //private void MoveDirectlyTowardsTarget()
-    //{
-    //    // if we've reached the target, stop and reset
-    //    float distanceToTarget = Vector2.Distance(transform.position, target);
-    //    if (distanceToTarget < 0.2f)
-    //    {
-    //        movingViaTiles = false;
-    //        movingDirectly = false;
-    //        return;
-    //    }
-
-    //    MoveDirectlyTowardsPosition(target);
-    //}
-
-    //internal void StartMovingViaTilesTowards(Vector3 _target)
-    //{
-    //    target = _target;
-    //    currentNode = null;
-    //    nextNode = null;
-    //    movingDirectly = false;
-    //    movingViaTiles = true;
-    //}
-
-
-
-
-    //internal void MoveViaTilesTowardsTarget(Vector3 _target)
-    //{
-    //    target = _target;
-    //    movingDirectly = false;
-    //    movingViaTiles = true;
-    //    MoveViaTilesTowardsTarget();
-    //}
-
+    
     internal void MoveViaTilesTowardsTarget()
     {
         //Debug.Log("MoveViaTilesTowardsTarget");
@@ -169,8 +120,6 @@ public class Moveable : MonoBehaviour
             // closest node is either on of the neighbors or the current node
 
             //Debug.Log("found next node: " + closestNode.name);
-
-            // todo: if it's the current, move directly towards the target, but probably NOT HERE
         }
         else // if we're not inside a node, find the closest node
         {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildManager : MonoBehaviour
@@ -25,6 +24,7 @@ public class BuildManager : MonoBehaviour
 
     /// <summary> Reference to the currently selected lymph node; Relevant only when <see cref="finishedWithSS"/> is true. </summary>
     private static LymphNode selectedLymphNode;
+    private static LymphNode selectedLymphNodeForRallyPoint;
 
     /// <summary> The currently selected action, set when clicking a building/tower menu button.
     /// When a button is clicked, this var is set to the appropriate action, but the action isn't carried out yet.
@@ -49,6 +49,8 @@ public class BuildManager : MonoBehaviour
         {
             selectedSSPoints[i] = null;
         }
+
+        selectedLymphNodeForRallyPoint = null;
     }
 
     /// <summary> Adds an SSPoint object to the list of selected SS.
@@ -336,5 +338,31 @@ public class BuildManager : MonoBehaviour
             DeselectLymphNode(); // the selected lymph node is deselected after upgrading the tower // todo: design decision
         }
         // this method shouldn't be able to be called if the player doesn't have enough money for the action
+    }
+
+
+    internal void StartRallyPointSelector()
+    {
+        if (selectedLymphNode == null || selectedLymphNode.IsVacant())
+        {
+            throw new Exception("Error! There's no selected lymph node or no tower on it.");
+        }
+
+        selectedLymphNodeForRallyPoint = selectedLymphNode;
+
+        if ((selectedLymphNode.GetTowerComponent() as MeleeTower) != null)
+            ((MeleeTower)selectedLymphNode.GetTowerComponent()).StartRallyPointSelector();
+    }
+    internal bool IsSettingRallyPoint()
+    {
+        if (selectedLymphNodeForRallyPoint != null && selectedLymphNodeForRallyPoint.GetTowerComponent() as MeleeTower != null)
+        {
+            return ((MeleeTower)selectedLymphNodeForRallyPoint.GetTowerComponent()).IsSettingRallyPoint();
+        }
+        return false;
+    }
+    internal void StopSelectingRallyPoint()
+    {
+        selectedLymphNodeForRallyPoint = null;
     }
 }

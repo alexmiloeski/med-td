@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class LymphNode : MonoBehaviour
@@ -11,13 +12,12 @@ public class LymphNode : MonoBehaviour
     private GameObject menu;
     
     private bool selected;
-    
-    private Vector2 startTouchPoint;
 
-    void Start()
+
+    private void Start()
     {
         selected = false;
-        
+
         rend = GetComponent<SpriteRenderer>();
         // make sure the opacity of the selectedColor isn't 0
         if (highlightedColor.a < 0.1f) highlightedColor.a = 0.1f;
@@ -26,16 +26,30 @@ public class LymphNode : MonoBehaviour
         defaultColor = rend.color;
     }
     
+
     private void OnMouseUpAsButton()
     {
+        //Debug.Log("LymphNode.OnMouseUpAsButton");
         // if there's a ui element above, don't do anything
         if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }
 
-        //if (Scroller.instance.IsDragging()) return;
+        // if (Scroller.instance.IsDragging()) return;
         if (Scroller.IsDragging()) return;
+
+        // if this node's melee tower is selecting a new rally point, stop selecting it
+        if ((GetTowerComponent() as MeleeTower) != null && ((MeleeTower)GetTowerComponent()).IsSettingRallyPoint())
+        {
+            ((MeleeTower)GetTowerComponent()).StopSettingNewRallyPoint();
+            return;
+        }
+        // if another tower is setting a rally point, don't select this lymph node
+        if (BuildManager.instance.IsSettingRallyPoint())
+        {
+            return;
+        }
 
         // if not selected, select it
         if (!selected)
@@ -118,7 +132,7 @@ public class LymphNode : MonoBehaviour
         towerGameObject = Instantiate(towerPrefab, towerPosition, transform.rotation);
         towerGameObject.transform.SetParent(transform); // put the tower object under this object in hierarchy
 
-        GetTowerComponent().BuildBaseLevel();
+        GetTowerComponent().BuildBaseLevel(this);
         
         // deselect this lymph node (which also destroys the building menu)
         Deselect(); // redundant, called from BuildManager too
@@ -161,12 +175,6 @@ public class LymphNode : MonoBehaviour
         if (GetTowerComponent() == null) return -1;
         return GetTowerComponent().GetNextLevelCost();
     }
-    //internal int GetCurrentTowerLevel()
-    //{
-    //    if (GetTowerComponent() == null) return -1;
-    //    return GetTowerComponent().GetCurrentLevel();
-    //}
-
     internal void HighlightOff()
     {
         rend.color = defaultColor;
@@ -175,4 +183,6 @@ public class LymphNode : MonoBehaviour
     {
         rend.color = highlightedColor;
     }
+
+    
 }

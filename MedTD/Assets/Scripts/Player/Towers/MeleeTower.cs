@@ -3,6 +3,7 @@
 public class MeleeTower : Tower
 {
     public GameObject unitPrefab; // prefab for the deployed friendly units
+    public GameObject rallyPointRangePrefab;
     public Transform pathBoard;
 
     public int unitCount = 3;
@@ -23,10 +24,15 @@ public class MeleeTower : Tower
 
     private int currentUnitCount = 0;
     private Vector3 rallyPoint;
+    private bool isSettingRallyPoint = false;
+    private GameObject rallyPointGO;
+    private GameObject rallyPointRangeGO;
 
 
     private void Start()
     {
+        isSettingRallyPoint = false;
+
         UpdateStats();
         
         FindNearestRallyPoint();
@@ -42,8 +48,38 @@ public class MeleeTower : Tower
 
     private void Update()
     {
-		
-	}
+        if (isSettingRallyPoint)
+        {
+            Vector3 mousePos3 = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2 = new Vector2(mousePos3.x, mousePos3.y);
+
+            // the rally point icon should follow the mouse // todo: this doesn't make sense for touch screens
+            if (rallyPointGO != null)
+            {
+                rallyPointGO.transform.position = mousePos2;
+            }
+            
+            // when mouse button is pressed, try to set the new rally point there
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log("Left mouse button pressed");
+
+                // if the click was on this tower, don't try to set the rally point
+                CircleCollider2D coll = lymphNode.GetComponent<CircleCollider2D>();
+                Vector3 mousePosFlat = new Vector3(mousePos2.x, mousePos2.y, coll.bounds.center.z);
+                if (coll != null && coll.bounds.Contains(mousePosFlat))
+                {
+                    Debug.Log("contained");
+                    //StopSettingNewRallyPoint();
+                }
+                else
+                {
+                    Debug.Log("not contained");
+                    TryToSetNewRallyPoint(Input.mousePosition);
+                }
+            }
+        }
+    }
 
     internal void RespawnUnitAfterCooldown()
     {
@@ -262,6 +298,105 @@ public class MeleeTower : Tower
         }
     }
 
+
+
+
+
+    internal bool IsSettingRallyPoint()
+    {
+        return isSettingRallyPoint;
+    }
+    internal void StartRallyPointSelector()
+    {
+        isSettingRallyPoint = true;
+
+        // show a circle showing the rally point range
+        rallyPointRangeGO = Instantiate(rallyPointRangePrefab, transform);
+        // the scale of the object should be the diameter of the circle, which is range*2 (because range is the radius)
+        rallyPointRangeGO.transform.localScale = new Vector3(meleeRallyPointRange*2, meleeRallyPointRange * 2, 1f);
+        
+        // destroy the currently showing (fixed) rally point sprite
+        //Destroy(rallyPointGO);
+
+        Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosWorld.z = -2f;
+        var rallyPointSprite = Resources.Load<Sprite>(Constants.rallyPointSpritePath);
+
+        rallyPointGO = new GameObject();
+        rallyPointGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
+        rallyPointGO.AddComponent<SpriteRenderer>().sprite = rallyPointSprite;
+    }
+    private void TryToSetNewRallyPoint(Vector3 mousePosition)
+    {
+        Vector3 mousePos3 = Camera.main.ScreenToWorldPoint(mousePosition);
+        Vector2 mousePos2 = new Vector2(mousePos3.x, mousePos3.y);
+
+        BuildManager buildManager = BuildManager.instance;
+
+        bool validPos = false;
+
+        // first check if the click is within range for rally point
+        if (Vector2.Distance(transform.position, mousePos2) <= meleeRallyPointRange)
+        {
+            // the new rally point has to be on a path tile
+            foreach (Transform tile in PathBoard.container)
+            {
+                BoxCollider2D coll = tile.GetComponent<BoxCollider2D>();
+                if (coll != null)
+                {
+                    if (coll.bounds.Contains(mousePos2))
+                    {
+                        //Debug.Log("found it!");
+                        validPos = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (validPos)
+        {
+            SetNewRallyPoint(mousePos2);
+            StopSettingNewRallyPoint();
+        }
+        else
+        {
+            // briefly change the sprite to an x and then change it back
+            UIManager.instance.FlashXAtTouch(0.4f, rallyPointGO);
+        }
+
+    }
+    internal void StopSettingNewRallyPoint()
+    {
+        //Debug.Log("Tower.StopSettingRallyPoint");
+        isSettingRallyPoint = false;
+
+        // hide any x sprites
+
+        UIManager.instance.InterruptAndHideXAtTouch();
+        // stop showing the rally point icon
+        if (rallyPointGO != null)
+        {
+            // destroy the current instance of the rally point sprite that is following the pointer
+            Destroy(rallyPointGO);
+        }
+        // stop showing the rally point range circle
+        if (rallyPointRangeGO)
+        {
+            Destroy(rallyPointRangeGO);
+        }
+
+        BuildManager.instance.StopSelectingRallyPoint();
+    }
+    private void SetNewRallyPoint(Vector3 _rallyPoint)
+    {
+        rallyPoint = _rallyPoint;
+        // relay the rally point update to all units
+        foreach (MeleeUnit unit in units)
+        {
+            unit.SetRallyPoint(rallyPoint);
+        }
+    }
 
 
 

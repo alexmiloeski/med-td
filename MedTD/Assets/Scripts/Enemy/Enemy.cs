@@ -70,15 +70,9 @@ public class Enemy : Damageable
         meleeAttackers = new List<Transform>();
         towerAttackers = new List<Transform>();
     }
-    void Blah()
-    {
-        moveable.UpdateTarget(new Vector3(-1.5f, 4.5f, transform.position.z));
-        moveable.MoveViaTilesTowardsTarget();
-    }
 
     private void Update()
     {
-        //Blah(); return;
         if (!started) return;
         
         if (coughing)
@@ -105,8 +99,6 @@ public class Enemy : Damageable
         {
             if (nextTile != null)
             {
-                //moveable.MoveTowardsTile(nextTile);
-                //moveable.MoveDirectlyTowards(nextTile);
                 moveable.MoveDirectlyTowardsPosition(nextTile.transform.position);
 
                 if (Vector2.Distance(transform.position, nextTile.transform.position) <= 0.3f)
@@ -144,61 +136,17 @@ public class Enemy : Damageable
         {
             if (distanceToAttacker < 1)
             {
-                //moveable.MoveTowards(firstAttacker);
-                //moveable.MoveDirectlyTowardsPosition(firstAttacker.position);
                 moveable.MoveDirectlyTowardsPositionWithinTiles(firstAttacker.position);
             }
             else
             {
                 moveable.UpdateTarget(firstAttacker.position);
                 moveable.MoveViaTilesTowardsTarget();
-                //if (!moveable.HasReachedTarget())
-                //{
-                //    moveable.UpdateTarget(firstAttacker);
-                //}
-                //else
-                //{
-                //    moveable.StartMoving();
-                //}
-
-                //// move towards attacker
-                ////moveable.MoveTowards(firstAttacker);
-
-                //// todo: move to the next tile that's closest to the attacker or stay if this tile is closer
-                //LinkedNode closestNode = currTile;
-                //float minDistance = Vector2.Distance(currTile.transform.position, firstAttacker.transform.position);
-                //List<LinkedNode> neighbors = currTile.GetNeighbors();
-                //foreach (LinkedNode neighbor in neighbors)
-                //{
-                //    float distanceFromNeighborToAttacker = Vector2.Distance(neighbor.transform.position, firstAttacker.transform.position);
-                //    if (distanceFromNeighborToAttacker < minDistance)
-                //    {
-                //        minDistance = distanceFromNeighborToAttacker;
-                //        closestNode = neighbor;
-                //    }
-                //}
-                //// as a failsafe, if no node was chosen, choose one at random
-                //if (closestNode == null)
-                //{
-                //    int nc = neighbors.Count;
-                //    if (nc > 0)
-                //    {
-                //        closestNode = neighbors[random.Next(0, nc)];
-                //    }
-                //}
-                //if (closestNode != null)
-                //{
-                //    //Debug.Log("moving towards closest node: " + closestNode.name);
-                //    //moveable.MoveTowards(closestNode);
-                //}
             }
         }
         else
         {
             //Debug.Log("within hit range");
-
-            //moveable.StopMoving();
-
             // hit or wait for cooldown
             if (hitCountdown <= 0f)
             {
@@ -320,26 +268,26 @@ public class Enemy : Damageable
     }
 
     // todo: hope we're not gonna need this method, but keeping it just in case
-    private void CheckAttackers()
-    {
-        // see if any of the attackers have become null (e.g. if a tower was sold)
+    //private void CheckAttackers()
+    //{
+    //    // see if any of the attackers have become null (e.g. if a tower was sold)
 
-        int mc = meleeAttackers.Count; // todo: debugging
-        int tc = towerAttackers.Count; // debugging
-
-
-        meleeAttackers.RemoveAll(x => x == null);
-        towerAttackers.RemoveAll(x => x == null);
+    //    int mc = meleeAttackers.Count; // todo: debugging
+    //    int tc = towerAttackers.Count; // debugging
 
 
-        int mc2 = mc - meleeAttackers.Count; // debugging
-        int tc2 = tc - towerAttackers.Count; // debugging
+    //    meleeAttackers.RemoveAll(x => x == null);
+    //    towerAttackers.RemoveAll(x => x == null);
 
-        if (mc2 > 0) // debugging
-            Debug.Log("found " + mc2 + " null melees"); // debugging
-        if (tc2 > 0) // debugging
-            Debug.Log("found " + tc2 + " null towers"); // debugging
-    }
+
+    //    int mc2 = mc - meleeAttackers.Count; // debugging
+    //    int tc2 = tc - towerAttackers.Count; // debugging
+
+    //    if (mc2 > 0) // debugging
+    //        Debug.Log("found " + mc2 + " null melees"); // debugging
+    //    if (tc2 > 0) // debugging
+    //        Debug.Log("found " + tc2 + " null towers"); // debugging
+    //}
 
     internal void SetStartTile(Transform _startTile, float delay)
     {
@@ -376,7 +324,6 @@ public class Enemy : Damageable
     internal void StartCough(float delay)
     {
         coughing = true;
-        //speed = 0f;
         moveable.SetSpeed(0f);
         
         coughSpeedIncrement = regularSpeed / delay;
@@ -391,18 +338,15 @@ public class Enemy : Damageable
         if (!startRegainingSpeed) return;
 
         coughStopCountdown -= Time.deltaTime;
-        //float newSpeed = speed + (coughSpeedIncrement * Time.deltaTime);
         float newSpeed = moveable.GetSpeed() + (coughSpeedIncrement * Time.deltaTime);
         if (newSpeed <= regularSpeed)
         {
-            //speed = newSpeed;
             moveable.SetSpeed(newSpeed);
         }
     }
     internal void StopCough()
     {
         coughing = false;
-        //speed = regularSpeed;
         moveable.SetSpeed(regularSpeed);
         startRegainingSpeed = false;
     }

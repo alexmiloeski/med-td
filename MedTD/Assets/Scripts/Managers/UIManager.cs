@@ -201,10 +201,19 @@ public class UIManager : MonoBehaviour
     }
 
 
-    /// <summary> Shows an X at the touch position for <paramref name="delay"/> seconds. </summary>
-    /// <param name="delay">Time in seconds that the X should stay on the screen.</param>
     internal void FlashXAtTouch(float delay)
     {
+        FlashXAtTouch(delay, null);
+    }
+    /// <summary> Shows an X at the touch position for <paramref name="delay"/> seconds. </summary>
+    /// <param name="delay">Time in seconds that the X should stay on the screen.</param>
+    internal void FlashXAtTouch(float delay, GameObject otherIcon)
+    {
+        if (otherIcon != null)
+        {
+            otherIcon.SetActive(false);
+        }
+
         if (xSpriteObject != null)
         {
             Destroy(xSpriteObject);
@@ -213,15 +222,15 @@ public class UIManager : MonoBehaviour
 
         Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosWorld.z = -2f;
-        var xSprite = Resources.Load<Sprite>("Sprites/xSprite");
+        var xSprite = Resources.Load<Sprite>(Constants.xSpritePath);
 
         xSpriteObject = new GameObject();
         xSpriteObject.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
         xSpriteObject.AddComponent<SpriteRenderer>().sprite = xSprite;
 
-        StartCoroutine(DestroyXAtTouch(delay));
+        StartCoroutine(DestroyXAtTouch(delay, otherIcon));
     }
-    private IEnumerator DestroyXAtTouch(float delay)
+    private IEnumerator DestroyXAtTouch(float delay, GameObject otherIcon)
     {
         // wait for 'delay' seconds before destroying the X object
         yield return new WaitForSeconds(delay);
@@ -230,8 +239,17 @@ public class UIManager : MonoBehaviour
         if (!interruptXAtTouch)
         {
             Destroy(xSpriteObject);
+            if (otherIcon != null)
+            {
+                otherIcon.SetActive(true);
+            }
         }
         else interruptXAtTouch = false;
+    }
+    internal void InterruptAndHideXAtTouch()
+    {
+        Destroy(xSpriteObject);
+        interruptXAtTouch = false;
     }
     internal void FlashMaxSSSelected(float delay)
     {

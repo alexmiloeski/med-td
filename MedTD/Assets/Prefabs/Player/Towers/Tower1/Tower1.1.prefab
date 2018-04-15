@@ -69,7 +69,7 @@ MonoBehaviour:
   unitHitCooldown: 0.4
   meleeHitRange: 0.7
   meleeSpotRange: 1.5
-  meleeRallyPointRange: 2
+  meleeRallyPointRange: 1.3
 --- !u!212 &212106210794766738
 SpriteRenderer:
   m_ObjectHideFlags: 1

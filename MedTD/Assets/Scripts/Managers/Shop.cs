@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public enum SelectedAction { Nothing, BuildTower1, BuildTower2, BuildTower3, BuildTower4, SellTower, UpgradeTower };
+public enum SelectedAction { Nothing, BuildTower1, BuildTower2, BuildTower3, BuildTower4, SellTower, UpgradeTower, SetRallyPoint };
 
 public class Shop : MonoBehaviour
 {
@@ -113,6 +113,8 @@ public class Shop : MonoBehaviour
     }
     public void ButtonSetRallyPointAction()
     {
+        Debug.Log("Shop.ButtonSetRallyPointAction");
+        ButtonAction(null, SelectedAction.SetRallyPoint, null);
     }
     public void ButtonSpecial1Action()
     {
@@ -169,6 +171,8 @@ public class Shop : MonoBehaviour
 
     private void SetButtonAsSelected(GameObject buttonObject, bool possible)
     {
+        if (buttonObject == null) return;
+
         Image image = buttonObject.GetComponent<Image>();
         Text text = buttonObject.transform.GetChild(0).GetComponent<Text>();
 
@@ -208,6 +212,17 @@ public class Shop : MonoBehaviour
         }
 
         BuildManager buildManager = BuildManager.instance;
+        
+        if (sa == SelectedAction.SetRallyPoint)
+        {
+            buildManager.StartRallyPointSelector();
+            // destroy the menu; deselecting the lymph node also destroys the menu, so that works fine
+            // todo: if a design decision is made to not deselect the node after starting the action,
+            // then this has to be redone, because not destroying the menu leaves the selected button
+            buildManager.DeselectLymphNode();
+            return;
+        }
+
         if (buildManager.GetSelectedAction() == sa) // if this button is already selected, do the action
         {
             tempButton = null;

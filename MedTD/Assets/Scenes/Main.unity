@@ -2743,7 +2743,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20, y: -40}
-  m_SizeDelta: {x: 280, y: 30}
+  m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &873286557
 MonoBehaviour:
@@ -3980,7 +3980,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20, y: -40}
-  m_SizeDelta: {x: 280, y: 30}
+  m_SizeDelta: {x: 200, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1203148629
 MonoBehaviour:
@@ -4555,7 +4555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58007593505ab44991fda1e28f62a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfWaves: 5
+  numberOfWaves: 8
   timeBetweenWaves: 20
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1008457875}
@@ -4606,7 +4606,7 @@ MonoBehaviour:
   lymphNodePrefab: {fileID: 4207219894400406, guid: 90acd459b4c74c447b3826ab7801195a,
     type: 2}
   sSContainer: {fileID: 123073212}
-  numberOfLymphNodes: 4
+  numberOfLymphNodes: 2
 --- !u!114 &1378128246
 MonoBehaviour:
   m_ObjectHideFlags: 0

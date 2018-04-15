@@ -11,8 +11,6 @@ public class SSPoint : MonoBehaviour
     
     private bool selected;
 
-    private Vector2 startTouchPoint;
-
     void Start ()
     {
         buildManager = BuildManager.instance;
