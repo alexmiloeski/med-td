@@ -269,14 +269,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a950107ccfad594aa1c9f89d495e367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 150
-  damage: 10
+  startHealth: 450
+  damage: 0
   defense: 1
   hitCooldown: 0.8
   hitRange: 0.6
   movementDelay: 0.5
   cloneMovementDelay: 1.5
-  regularSpeed: 4
+  regularSpeed: 0.3
   minReplicationTime: 25
   maxReplicationTime: 50
 --- !u!212 &212230255967050262

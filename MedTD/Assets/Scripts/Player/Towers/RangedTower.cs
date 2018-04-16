@@ -6,9 +6,9 @@ public class RangedTower : Tower
 
     protected float range;
     protected float damage;
-    protected float damageToEnvironment = 0f;
-    private float cooldown;
-    private float countdown;
+    //protected float damageToEnvironment = 0f;
+    protected float cooldown;
+    protected float countdown;
 
     protected Transform target;
 
@@ -91,8 +91,9 @@ public class RangedTower : Tower
         }
     }
 
-    private void Shoot()
+    protected virtual void Shoot()
     {
+        //Debug.Log("RangedTower.Shoot");
         // if for some reason the target or its Enemy component is null, don't shoot
         if (target == null || target.GetComponent<Enemy>() == null) return;
 
@@ -103,8 +104,8 @@ public class RangedTower : Tower
         if (projectile != null)
         {
             //projectile.SetTarget(target);
-            //projectile.SetTargetAndDamage(target, damage);
-            projectile.SetTargetAndDamage(target, damage, damageToEnvironment);
+            projectile.SetTargetAndDamage(target, damage);
+            //projectile.SetTargetAndDamage(target, damage, damageToEnvironment);
         }
 
         countdown = cooldown;

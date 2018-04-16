@@ -68,7 +68,7 @@ public class Projectile : MonoBehaviour
         damageables.AddRange(new List<GameObject>(GameObject.FindGameObjectsWithTag(Constants.FriendlyTag)));
         foreach (GameObject damageableObject in damageables)
         {
-            int i = 0; // todo: only for debugging
+            //int i = 0; // todo: only for debugging
             float distanceFromExplosionToDamageable = Vector3.Distance(transform.position, damageableObject.transform.position);
             if (distanceFromExplosionToDamageable <= explosionRadius)
             {
@@ -149,17 +149,20 @@ public class Projectile : MonoBehaviour
         //    Debug.Log(" ");
         //}
     }
-
-    //internal void SetTargetAndDamage(Transform _target, float _damage)
-    //{
-    //    damage = _damage;
-    //    target = _target;
-    //}
+    
+    internal void SetTargetAndDamage(Transform _target, float _damage)
+    {
+        SetTargetAndDamage(_target, _damage, 0f);
+    }
     internal void SetTargetAndDamage(Transform _target, float _damage, float _damageToEnvironment)
     {
         damage = _damage;
         target = _target;
         damageToEnvironment = _damageToEnvironment;
+    }
+    internal void SetExplosionRadius(float _explosionRadius)
+    {
+        explosionRadius = _explosionRadius;
     }
     //internal void SetTarget(Transform _target)
     //{

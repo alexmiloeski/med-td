@@ -128,7 +128,7 @@ public class WaveSpawner : MonoBehaviour
         //else
         //{
             // generate N enemies, where N is the number of the current wave
-            for (int i = 0; i < waveIndex; i++)
+            for (int i = 0; i < waveIndex*2; i++)
             //for (int i = 0; i < 1; i++)
             {
                 SpawnEnemy(null);
