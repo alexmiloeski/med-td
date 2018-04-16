@@ -343,14 +343,17 @@ public class UIManager : MonoBehaviour
         bool upgradeable = currLevel < maxLevel;
         if (!upgradeable)
         {
-            for (int i = 0; i < towerMenu.transform.childCount; i++)
-            {
-                if (towerMenu.transform.GetChild(i).CompareTag("ButtonUpgradeTower"))
-                {
-                    towerMenu.transform.GetChild(i).gameObject.SetActive(false);
-                }
-            }
+            Transform buttonUpgradeTower = towerMenu.transform.Find(Constants.ButtonUpgradeTower);
+            buttonUpgradeTower.gameObject.SetActive(false);
         }
+
+        // if this is a melee tower, show the "set rally point" button
+        if (tower as MeleeTower != null)
+        {
+            Transform buttonSetRallyPoint = towerMenu.transform.Find(Constants.ButtonSetRallyPoint);
+            buttonSetRallyPoint.gameObject.SetActive(true);
+        }
+
 
         /////////////////////////////////////
 
