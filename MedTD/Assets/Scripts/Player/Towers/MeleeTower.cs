@@ -3,6 +3,7 @@
 public class MeleeTower : Tower
 {
     public GameObject unitPrefab; // prefab for the deployed friendly units
+    public Sprite rallyPointSprite;
     public GameObject rallyPointRangePrefab;
     public Transform pathBoard;
 
@@ -62,19 +63,19 @@ public class MeleeTower : Tower
             // when mouse button is pressed, try to set the new rally point there
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("Left mouse button pressed");
+                //Debug.Log("Left mouse button pressed");
 
                 // if the click was on this tower, don't try to set the rally point
                 CircleCollider2D coll = lymphNode.GetComponent<CircleCollider2D>();
                 Vector3 mousePosFlat = new Vector3(mousePos2.x, mousePos2.y, coll.bounds.center.z);
                 if (coll != null && coll.bounds.Contains(mousePosFlat))
                 {
-                    Debug.Log("contained");
+                    //Debug.Log("contained");
                     //StopSettingNewRallyPoint();
                 }
                 else
                 {
-                    Debug.Log("not contained");
+                    //Debug.Log("not contained");
                     TryToSetNewRallyPoint(Input.mousePosition);
                 }
             }
@@ -320,7 +321,7 @@ public class MeleeTower : Tower
 
         Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosWorld.z = -2f;
-        var rallyPointSprite = Resources.Load<Sprite>(Constants.rallyPointSpritePath);
+        //var rallyPointSprite = Resources.Load<Sprite>(Constants.rallyPointSpritePath);
 
         rallyPointGO = new GameObject();
         rallyPointGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);

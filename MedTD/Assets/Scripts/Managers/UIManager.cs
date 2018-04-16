@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     public GameObject towerMenuPrefab;
     public GameObject menuSelectionInfoPrefab;
     public RectTransform healthBarGreen;
+    public Sprite xSprite;
     private RectTransform healthBarContainer;
 
     private GameObject xSpriteObject;
@@ -222,7 +223,7 @@ public class UIManager : MonoBehaviour
 
         Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosWorld.z = -2f;
-        var xSprite = Resources.Load<Sprite>(Constants.xSpritePath);
+        //var xSprite = Resources.Load<Sprite>(Constants.xSpritePath);
 
         xSpriteObject = new GameObject();
         xSpriteObject.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);

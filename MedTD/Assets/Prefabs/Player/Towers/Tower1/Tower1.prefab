@@ -60,6 +60,7 @@ MonoBehaviour:
   - {fileID: 114359782261602936, guid: 884e308ffa4312549b17f3363cb38014, type: 2}
   - {fileID: 114657041409566276, guid: 1851bd9b1734cdd45ad777628dd83e40, type: 2}
   unitPrefab: {fileID: 1935786120892614, guid: f5d8d07c668cff74796a2286e4a04543, type: 2}
+  rallyPointSprite: {fileID: 21300000, guid: 68b453cb2779ba940a54c751cbd8aeba, type: 3}
   rallyPointRangePrefab: {fileID: 1589586800262946, guid: 6777830530b2d2945b5e00add8bed38b,
     type: 2}
   pathBoard: {fileID: 4590500166358116, guid: 5f9485573c8dc864dac6f2bf668d6cb1, type: 2}

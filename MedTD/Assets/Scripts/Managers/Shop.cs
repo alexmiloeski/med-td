@@ -57,6 +57,10 @@ public class Shop : MonoBehaviour
         }
     }
 
+    public void ButtonPauseResumeAction(GameObject buttonObject)
+    {
+        GameManager.instance.TogglePauseGame(buttonObject);
+    }
     public void ButtonBottomCenterAction()
     {
         //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
@@ -113,7 +117,6 @@ public class Shop : MonoBehaviour
     }
     public void ButtonSetRallyPointAction()
     {
-        Debug.Log("Shop.ButtonSetRallyPointAction");
         ButtonAction(null, SelectedAction.SetRallyPoint, null);
     }
     public void ButtonSpecial1Action()
