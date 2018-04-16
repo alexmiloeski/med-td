@@ -17,14 +17,14 @@ public class BuildManager : MonoBehaviour
 
     /// <summary> Flag that is turned on after the player has picked all SS and pressed the done button;
     /// Used to tell whether the game is in "picking SS mode" or "play mode". </summary>
-    private static bool finishedWithSS = false;
+    private bool finishedWithSS = false;
 
     /// <summary> Holds the SS objects that the player has picked so far; Relevant only when <see cref="finishedWithSS"/> is false. </summary>
-    private static SSPoint[] selectedSSPoints;
+    private SSPoint[] selectedSSPoints;
 
     /// <summary> Reference to the currently selected lymph node; Relevant only when <see cref="finishedWithSS"/> is true. </summary>
-    private static LymphNode selectedLymphNode;
-    private static LymphNode selectedLymphNodeForRallyPoint;
+    private LymphNode selectedLymphNode;
+    private LymphNode selectedLymphNodeForRallyPoint;
 
     /// <summary> The currently selected action, set when clicking a building/tower menu button.
     /// When a button is clicked, this var is set to the appropriate action, but the action isn't carried out yet.

@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject veil;
-    public GameObject panel;
+    public GameObject pausePanel;
+    public GameObject pauseMenu;
     public Sprite spriteResume;
     public Sprite spritePause;
 
@@ -38,7 +40,8 @@ public class GameManager : MonoBehaviour
 
     void Start ()
     {
-		
+        //Application.LoadLevel(Application.loadedLevel);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 	
 	void Update ()
@@ -55,11 +58,9 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
 
         veil.SetActive(true);
-        if (panel != null)
-        {
-            Image im = panel.GetComponent<Image>();
-            if (im != null) im.enabled = true;
-        }
+        Image im = pausePanel.GetComponent<Image>();
+        if (im != null) im.enabled = true;
+        pauseMenu.SetActive(true);
 
         gamePaused = true;
         Image image = buttonPauseResume.GetComponent<Image>();
@@ -70,11 +71,9 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
 
         veil.SetActive(false);
-        if (panel != null)
-        {
-            Image im = panel.GetComponent<Image>();
-            if (im != null) im.enabled = false;
-        }
+        Image im = pausePanel.GetComponent<Image>();
+        if (im != null) im.enabled = false;
+        pauseMenu.SetActive(false);
 
         gamePaused = false;
         Image image = buttonPauseResume.GetComponent<Image>();
@@ -84,5 +83,9 @@ public class GameManager : MonoBehaviour
     {
         if (gamePaused) ResumeGame(buttonPauseResume);
         else PauseGame(buttonPauseResume);
+    }
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

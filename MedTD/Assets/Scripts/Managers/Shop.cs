@@ -50,7 +50,7 @@ public class Shop : MonoBehaviour
             coughCountdown -= Time.deltaTime;
             UIManager.instance.SetInteractableButtonSpecial1(false, coughCountdown);
         }
-        else if (WaveSpawner.IsLevelStarted())
+        else if (WaveSpawner.instance.IsLevelStarted())
         {
             // this is fine: this method doesn't update the button if it'is already interactable
             UIManager.instance.SetInteractableButtonSpecial1(true, 0f);
@@ -59,7 +59,13 @@ public class Shop : MonoBehaviour
 
     public void ButtonPauseResumeAction(GameObject buttonObject)
     {
+        Debug.Log("ButtonPauseResume pressed");
         GameManager.instance.TogglePauseGame(buttonObject);
+    }
+    public void ButtonRestartLevelAction()
+    {
+        Debug.Log("ButtonRestartLevel pressed");
+        GameManager.instance.RestartLevel();
     }
     public void ButtonBottomCenterAction()
     {
@@ -70,9 +76,9 @@ public class Shop : MonoBehaviour
 
         if (buildManager.IsFinishedWithSS())
         {
-            if (WaveSpawner.IsLevelEnded()) return;
+            if (WaveSpawner.instance.IsLevelEnded()) return;
 
-            if (WaveSpawner.IsLevelStarted())
+            if (WaveSpawner.instance.IsLevelStarted())
             {
                 WaveSpawner.instance.NextWave();
             }

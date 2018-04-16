@@ -20,8 +20,8 @@ public class WaveSpawner : MonoBehaviour
     //private Transform[] pathTiles;
     private float countdown = 0f;
     private int waveIndex = 0;
-    private static bool levelStarted = false;
-    private static bool levelEnded = false;
+    private bool levelStarted = false;
+    private bool levelEnded = false;
 
     private void Awake()
     {
@@ -53,11 +53,11 @@ public class WaveSpawner : MonoBehaviour
         levelEnded = false;
     }
 
-    internal static bool IsLevelStarted()
+    internal bool IsLevelStarted()
     {
         return levelStarted;
     }
-    internal static bool IsLevelEnded()
+    internal bool IsLevelEnded()
     {
         return levelEnded;
     }
