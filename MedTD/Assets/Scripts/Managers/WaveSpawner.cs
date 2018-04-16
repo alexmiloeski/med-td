@@ -19,9 +19,9 @@ public class WaveSpawner : MonoBehaviour
 
     //private Transform[] pathTiles;
     private float countdown = 0f;
-    private int waveIndex = 0;
+    private int waveNumber = 1;
     private bool levelStarted = false;
-    private bool levelEnded = false;
+    private bool allWavesFinishedSpawning = false;
 
     private void Awake()
     {
@@ -50,26 +50,26 @@ public class WaveSpawner : MonoBehaviour
     internal void StartLevel()
     {
         levelStarted = true;
-        levelEnded = false;
+        allWavesFinishedSpawning = false;
     }
 
     internal bool IsLevelStarted()
     {
         return levelStarted;
     }
-    internal bool IsLevelEnded()
+    internal bool IsFinishedSpawning()
     {
-        return levelEnded;
+        return allWavesFinishedSpawning;
     }
 
     private void Update()
     {
-        if (!levelStarted || levelEnded) return;
+        if (!levelStarted || allWavesFinishedSpawning) return;
 
         // if this is the last wave
-        if (waveIndex >= numberOfWaves)
+        if (waveNumber > numberOfWaves)
         {
-            levelEnded = true;
+            allWavesFinishedSpawning = true;
             //countdown = timeBetweenWaves;
             waveCountdownText.text = "No more waves.";
         }
@@ -85,7 +85,7 @@ public class WaveSpawner : MonoBehaviour
         }
         
         // while there are still more waves coming, update the text showing time until next wave
-        if (waveIndex < numberOfWaves)
+        if (waveNumber <= numberOfWaves)
         {
             if (countdown > 0f)
             {
@@ -105,10 +105,10 @@ public class WaveSpawner : MonoBehaviour
     {
         UIManager.instance.SetEnabledButtonBottomCenter(false);
 
-        waveIndex++;
+        //waveIndex++;
 
         // update UI element showing the current level number
-        waveNumberText.text = "Wave: " + waveIndex + "/" + numberOfWaves;
+        waveNumberText.text = "Wave: " + waveNumber + "/" + numberOfWaves;
 
         // todo: this is just for testing, should be predefined
         //if (waveIndex == 1)
@@ -128,7 +128,7 @@ public class WaveSpawner : MonoBehaviour
         //else
         //{
             // generate N enemies, where N is the number of the current wave
-            for (int i = 0; i < waveIndex*2; i++)
+            for (int i = 0; i < waveNumber; i++)
             //for (int i = 0; i < 1; i++)
             {
                 SpawnEnemy(null);
@@ -136,6 +136,8 @@ public class WaveSpawner : MonoBehaviour
                 yield return new WaitForSeconds(0.6f);
             }
         //}
+
+        waveNumber++;
     }
 
     private void SpawnEnemy(Transform enemyPrefab)

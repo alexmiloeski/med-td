@@ -7,14 +7,16 @@ public class GameManager : MonoBehaviour
     public GameObject veil;
     public GameObject pausePanel;
     public GameObject pauseMenu;
-    public GameObject buttonPauseResume;
-    public Text textPausedGameOver;
+    public GameObject buttonPauseOrResume;
+    public Button buttonNextOrRestartLevel;
+    public Text textPausedOrWonOrGameOver;
     public Sprite spriteResume;
     public Sprite spritePause;
 
     public static GameManager instance;
 
     private bool gamePaused = false;
+    private bool levelCleared = false;
 
     private void Awake()
     {
@@ -27,7 +29,8 @@ public class GameManager : MonoBehaviour
         instance = this;
 
         gamePaused = false;
-        
+        levelCleared = false;
+
         //if (spriteResume == null)
         //{
         //    var _spriteResume = Resources.Load<Sprite>(Constants.resumeSpritePath);
@@ -48,7 +51,15 @@ public class GameManager : MonoBehaviour
 	
 	void Update ()
     {
-		
+		// if last wave has fully spawned and all enemies are dead, win
+        if (WaveSpawner.instance.IsFinishedSpawning())
+        {
+            if (GameObject.FindGameObjectsWithTag(Constants.EnemyTag).Length == 0)
+            {
+                // all enemies dead, level finished
+                FinishLevel();
+            }
+        }
 	}
 
     public bool IsGamePaused()
@@ -65,7 +76,7 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(true);
 
         gamePaused = true;
-        Image image = buttonPauseResume.GetComponent<Image>();
+        Image image = buttonPauseOrResume.GetComponent<Image>();
         image.sprite = spriteResume;
     }
     public void ResumeGame()
@@ -78,7 +89,7 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(false);
 
         gamePaused = false;
-        Image image = buttonPauseResume.GetComponent<Image>();
+        Image image = buttonPauseOrResume.GetComponent<Image>();
         image.sprite = spritePause;
     }
     public void TogglePauseGame()
@@ -86,15 +97,40 @@ public class GameManager : MonoBehaviour
         if (gamePaused) ResumeGame();
         else PauseGame();
     }
-    public void RestartLevel()
+    public void NextOrRestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        ResumeGame();
+        if (levelCleared)
+        {
+            Debug.Log("LOADING NEXT LEVEL.............");
+            // todo: load next level
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            ResumeGame();
+        }
     }
     public void GameOver()
     {
-        buttonPauseResume.SetActive(false);
-        textPausedGameOver.text = "Game over";
+        buttonPauseOrResume.SetActive(false);
+        textPausedOrWonOrGameOver.text = "Game over";
+        PauseGame();
+    }
+    public void FinishLevel()
+    {
+        levelCleared = true;
+
+        Transform textTr = buttonNextOrRestartLevel.transform.GetChild(0);
+        if (textTr != null)
+        {
+            Text textComp = textTr.GetComponent<Text>();
+            if (textComp != null)
+            {
+                textComp.text = "Next level";
+            }
+        }
+        buttonPauseOrResume.SetActive(false);
+        textPausedOrWonOrGameOver.text = "Level cleared.";
         PauseGame();
     }
 }

@@ -57,15 +57,15 @@ public class Shop : MonoBehaviour
         }
     }
 
-    public void ButtonPauseResumeAction()
+    public void ButtonPauseOrResumeAction()
     {
-        //Debug.Log("ButtonPauseResume pressed");
+        //Debug.Log("ButtonPauseOrResume pressed");
         GameManager.instance.TogglePauseGame();
     }
-    public void ButtonRestartLevelAction()
+    public void ButtonNextOrRestartLevelAction()
     {
-        //Debug.Log("ButtonRestartLevel pressed");
-        GameManager.instance.RestartLevel();
+        //Debug.Log("ButtonNextOrRestartLevel pressed");
+        GameManager.instance.NextOrRestartLevel();
     }
     public void ButtonBottomCenterAction()
     {
@@ -76,7 +76,7 @@ public class Shop : MonoBehaviour
 
         if (buildManager.IsFinishedWithSS())
         {
-            if (WaveSpawner.instance.IsLevelEnded()) return;
+            if (WaveSpawner.instance.IsFinishedSpawning()) return;
 
             if (WaveSpawner.instance.IsLevelStarted())
             {

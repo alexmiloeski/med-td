@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 38642917}
   - component: {fileID: 38642916}
   m_Layer: 5
-  m_Name: ButtonRestartLevel
+  m_Name: ButtonNextOrRestartLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -403,7 +403,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1601650571}
-        m_MethodName: ButtonRestartLevelAction
+        m_MethodName: ButtonNextOrRestartLevelAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1038,7 +1038,7 @@ GameObject:
   - component: {fileID: 243714403}
   - component: {fileID: 243714402}
   m_Layer: 5
-  m_Name: TextPausedGameOver
+  m_Name: TextPausedOrWonOrGameOver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4607,7 +4607,7 @@ GameObject:
   - component: {fileID: 1282633657}
   - component: {fileID: 1282633656}
   m_Layer: 5
-  m_Name: ButtonPauseResume
+  m_Name: ButtonPauseOrResume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4671,7 +4671,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1601650571}
-        m_MethodName: ButtonPauseResumeAction
+        m_MethodName: ButtonPauseOrResumeAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5138,8 +5138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58007593505ab44991fda1e28f62a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfWaves: 10
-  timeBetweenWaves: 12
+  numberOfWaves: 2
+  timeBetweenWaves: 4
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1008457875}
   pathBoard: {fileID: 1142404544}
@@ -5218,8 +5218,9 @@ MonoBehaviour:
   veil: {fileID: 943045806}
   pausePanel: {fileID: 1158930508}
   pauseMenu: {fileID: 1304295209}
-  buttonPauseResume: {fileID: 1282633654}
-  textPausedGameOver: {fileID: 243714402}
+  buttonPauseOrResume: {fileID: 1282633654}
+  buttonNextOrRestartLevel: {fileID: 38642916}
+  textPausedOrWonOrGameOver: {fileID: 243714402}
   spriteResume: {fileID: 21300000, guid: 3338d5732f6a6c640b4a3df8fe3f730a, type: 3}
   spritePause: {fileID: 21300000, guid: a6d036625fa2b2e46907c73f73d1e305, type: 3}
 --- !u!1001 &1393049533
