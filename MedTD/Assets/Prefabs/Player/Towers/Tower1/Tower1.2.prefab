@@ -67,7 +67,7 @@ MonoBehaviour:
   unitDamage: 25
   unitDefense: 10
   unitHitCooldown: 0.7
-  meleeHitRange: 0.8
+  meleeHitRange: 0.6
   meleeSpotRange: 1.5
 --- !u!212 &212167848416151190
 SpriteRenderer:

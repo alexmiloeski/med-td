@@ -40,6 +40,8 @@ public class Enemy : Damageable
     private float coughSpeedIncrement;
     private bool startRegainingSpeed = false;
     
+    private bool latched;
+    
     private System.Random random = new System.Random();
     
 
@@ -91,7 +93,8 @@ public class Enemy : Damageable
             Replicate();
         }
 
-        // if there's a melee unit attacking, start attacking it (face it, move towards it, and if in range, hit)
+        // if there's a melee unit attacking,
+        // start attacking it (face it, move towards it, and if in range, hit)
         if (meleeAttackers.Count > 0)
         {
             AttackMeleeAttacker();
@@ -104,9 +107,19 @@ public class Enemy : Damageable
 
                 if (Vector2.Distance(transform.position, nextTile.transform.position) <= 0.3f)
                 {
-                    // it's reached the tile; go to the next tile
-                    VisitTile(nextTile);
-                    GetNextTile();
+                    // it's reached the tile; go to the next tile, unless the current tile is an attack point
+                    AttackPoint ap = nextTile.GetComponent<AttackPoint>();
+                    if (ap != null && ap.IsVacant())
+                    {
+                        // if it's an attack point and it's still vacant, occupy it
+                        ap.SetOccupant(this);
+                        latched = true;
+                    }
+                    else // otherwise, continue on the path
+                    {
+                        VisitTile(nextTile);
+                        GetNextTile();
+                    }
                 }
             }
             else
@@ -131,18 +144,21 @@ public class Enemy : Damageable
         }
         if (firstAttacker == null) return;
         
-        // if attacker is out of range, move in closer
+        // if not latched and attacker is out of range, move in closer
         float distanceToAttacker = Vector2.Distance(transform.position, firstAttacker.position);
         if (distanceToAttacker > hitRange)
         {
-            if (distanceToAttacker < 1)
+            if (!latched)
             {
-                moveable.MoveDirectlyTowardsPositionWithinTiles(firstAttacker.position);
-            }
-            else
-            {
-                moveable.UpdateTarget(firstAttacker.position);
-                moveable.MoveViaTilesTowardsTarget();
+                if (distanceToAttacker < 1)
+                {
+                    moveable.MoveDirectlyTowardsPositionWithinTiles(firstAttacker.position);
+                }
+                else
+                {
+                    moveable.UpdateTarget(firstAttacker.position);
+                    moveable.MoveViaTilesTowardsTarget();
+                }
             }
         }
         else
@@ -205,15 +221,16 @@ public class Enemy : Damageable
             }
         }
 
-        if (chosenTile != null) // if found attack point, set it as occupied by this enemy object
-        {
-            AttackPoint attackPoint = chosenTile.GetComponent<AttackPoint>();
-            if (attackPoint != null)
-            {
-                attackPoint.SetOccupant(this);
-            }
-        }
-        else // if there weren't any attack points, find the next unvisited tile
+        //if (chosenTile != null) // if found attack point, set it as occupied by this enemy object
+        //{
+            //AttackPoint attackPoint = chosenTile.GetComponent<AttackPoint>();
+            //if (attackPoint != null)
+            //{
+            //    attackPoint.SetOccupant(this);
+            //    latched = true;
+            //}
+        //}
+        if (chosenTile == null) // if there weren't any attack points, find the next unvisited tile
         {
             if (currTile.GetComponent<LinkedNode>() != null)
             {

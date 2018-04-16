@@ -11,6 +11,7 @@ TagManager:
   - Level4
   - Enemy
   - Friendly
+  - AttackPoint
   layers:
   - Default
   - TransparentFX

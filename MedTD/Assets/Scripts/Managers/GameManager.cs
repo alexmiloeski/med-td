@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("GameManager.Awake");
+        //Debug.Log("GameManager.Awake");
         // initialize an instance of this singleton for use in other classes
         if (instance != null)
         {
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("GameManager.Start");
+        //Debug.Log("GameManager.Start");
         //Application.LoadLevel(Application.loadedLevel);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 

@@ -1555,7 +1555,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: aa7deaa47c6d40549bc71e3f7fb9d405, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 77ea49536667efe4696f655cfa974cdb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5140,6 +5140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfWaves: 4
   timeBetweenWaves: 10
+  moneyForEarlyStart: 20
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1008457875}
   pathBoard: {fileID: 1142404544}
@@ -5176,6 +5177,7 @@ MonoBehaviour:
     type: 2}
   healthBarGreen: {fileID: 2047057993}
   xSprite: {fileID: 21300000, guid: 14d9816fd68bbb149a3cd8b046988860, type: 3}
+  rangePrefab: {fileID: 0}
 --- !u!114 &1378128245
 MonoBehaviour:
   m_ObjectHideFlags: 0

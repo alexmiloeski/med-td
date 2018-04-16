@@ -44,18 +44,43 @@ public class ExplosiveTower : RangedTower
     {
         // todo: pick one
 
-        TargetEnemyWithMostSurroundingEnemies();
+        GameObject chosenEnemy = LookForLatchedEnemies();
 
-        ////////////////////////////////////////////////
+        if (chosenEnemy == null)
+        {
+            chosenEnemy = TargetEnemyWithMostSurroundingEnemies();
 
-        //TargetClosestEnemy();
+            ////////////////////////////////////////////////
 
-        ////////////////////////////////////////////////
-        
-        //TargetEnemyWithLowestHealth();
+            //chosenEnemy = TargetClosestEnemy();
+
+            ////////////////////////////////////////////////
+
+            //chosenEnemy = TargetEnemyWithLowestHealth();
+        }
+
+        // if it's the same target, just see if it's still in range
+        if (chosenEnemy != null && target != null && chosenEnemy.transform == target)
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+            if (distanceToTarget > range)
+            {
+                DismissTarget();
+            }
+            return;
+        }
+
+        if (chosenEnemy != null)
+        {
+            AcquireTarget(chosenEnemy.transform);
+        }
+        else
+        {
+            DismissTarget();
+        }
     }
 
-    private void TargetEnemyWithMostSurroundingEnemies()
+    private GameObject TargetEnemyWithMostSurroundingEnemies()
     {
         // find the enemy with the most enemies around it (within the explosion radius)
 
@@ -87,28 +112,9 @@ public class ExplosiveTower : RangedTower
                 }
             }
         }
-
-        // if it's the same target, just see if it's still in range
-        if (chosenEnemy != null && target != null && chosenEnemy.transform == target)
-        {
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            if (distanceToTarget > range)
-            {
-                DismissTarget();
-            }
-            return;
-        }
-
-        if (chosenEnemy != null)
-        {
-            AcquireTarget(chosenEnemy.transform);
-        }
-        else
-        {
-            DismissTarget();
-        }
+        return chosenEnemy;
     }
-    private void TargetClosestEnemy()
+    private GameObject TargetClosestEnemy()
     {
         // target the closest enemy
 
@@ -127,29 +133,9 @@ public class ExplosiveTower : RangedTower
                 }
             }
         }
-
-
-        // if it's the same target, just see if it's still in range
-        if (chosenEnemy != null && target != null && chosenEnemy.transform == target)
-        {
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            if (distanceToTarget > range)
-            {
-                DismissTarget();
-            }
-            return;
-        }
-
-        if (chosenEnemy != null && shortestDistance <= range)
-        {
-            AcquireTarget(chosenEnemy.transform);
-        }
-        else
-        {
-            DismissTarget();
-        }
+        return chosenEnemy;
     }
-    private void TargetEnemyWithLowestHealth()
+    private GameObject TargetEnemyWithLowestHealth()
     {
         // target the enemy with the least amount of health (percentage or absolute?); if all the same, get closest
 
@@ -179,14 +165,7 @@ public class ExplosiveTower : RangedTower
             }
         }
 
-        if (chosenEnemy != null && shortestDistance <= range)
-        {
-            target = chosenEnemy.transform;
-        }
-        else
-        {
-            target = null;
-        }
+        return chosenEnemy;
     }
 
     internal override void Upgrade()

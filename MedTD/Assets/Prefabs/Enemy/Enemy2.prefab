@@ -271,13 +271,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHealth: 150
   bounty: 10
-  damage: 8
+  damage: 15
   defense: 1
   hitCooldown: 0.8
   hitRange: 0.6
   movementDelay: 0.5
   cloneMovementDelay: 1.5
-  regularSpeed: 0.5
+  regularSpeed: 1.2
   minReplicationTime: 25
   maxReplicationTime: 50
 --- !u!212 &212230255967050262

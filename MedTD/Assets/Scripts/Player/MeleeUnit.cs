@@ -17,12 +17,16 @@ public class MeleeUnit : Damageable
     private Vector3 rallyPoint;
     private LinkedNode rallyPointNode;
 
+    private bool deployed = false;
+
     private Transform target;
     private float hitCountdown = 0f;
     
     private new void Start()
     {
         base.Start();
+
+        deployed = false;
 
         moveable = GetComponent<Moveable>();
         if (moveable == null)
@@ -31,9 +35,7 @@ public class MeleeUnit : Damageable
         }
         moveable.SetRotatingPart(transform.Find(Constants.RotatingPart));
         
-        ReturnToRallyPoint();
-
-        InvokeRepeating("UpdateTarget", 0f, 0.5f);
+        //InvokeRepeating("UpdateTarget", 0f, 0.5f);
     }
     
     private void Update()
@@ -120,25 +122,48 @@ public class MeleeUnit : Damageable
             return;
         }
 
-        // find the nearest enemy
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
+
+        // if there's no current target, first look for enemies latched to attack points within range
         float shortestDistance = Mathf.Infinity;
-        GameObject nearestEnemy = null;
-        foreach (GameObject enemy in enemies)
+        GameObject chosenEnemy = null;
+        GameObject[] attackPoints = GameObject.FindGameObjectsWithTag(Constants.AttackPointTag);
+        foreach (GameObject ap in attackPoints)
         {
-            // if the enemy is beyond this unit's spot range, ignore target
-            float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
-            if (distanceToEnemy <= spotRange && distanceToEnemy < shortestDistance)
+            AttackPoint attackPoint = ap.GetComponent<AttackPoint>();
+            if (attackPoint != null && !attackPoint.IsVacant())
             {
-                    shortestDistance = distanceToEnemy;
-                    nearestEnemy = enemy;
+                float distanceToAP = Vector2.Distance(transform.position, ap.transform.position);
+                if (distanceToAP <= spotRange && distanceToAP < shortestDistance)
+                {
+                    shortestDistance = distanceToAP;
+                    chosenEnemy = attackPoint.GetOccupant().gameObject;
                 }
+            }
         }
 
-        if (nearestEnemy != null)
+        // otherwise, find the nearest enemy
+        if (chosenEnemy == null)
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
+            /*float */
+            shortestDistance = Mathf.Infinity;
+            //GameObject nearestEnemy = null;
+            foreach (GameObject enemy in enemies)
+            {
+                // if the enemy is beyond this unit's spot range, ignore target
+                float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
+                if (distanceToEnemy <= spotRange && distanceToEnemy < shortestDistance)
+                {
+                    shortestDistance = distanceToEnemy;
+                    chosenEnemy = enemy;
+                }
+            }
+        }
+
+        if (chosenEnemy != null)
         {
             //Debug.Log("FOUND TARGET");
-            AcquireTarget(nearestEnemy.transform);
+            AcquireTarget(chosenEnemy.transform);
         }
         else
         {
@@ -182,6 +207,11 @@ public class MeleeUnit : Damageable
         if (distanceToRallyPoint > 0.2f)
         {
             moveable.MoveDirectlyTowardsPosition(rallyPoint);
+        }
+        else if (!deployed)
+        {
+            deployed = true;
+            InvokeRepeating("UpdateTarget", 0f, 0.5f);
         }
     }
 

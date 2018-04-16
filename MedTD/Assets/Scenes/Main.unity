@@ -3327,6 +3327,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1457062764523970, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
+      propertyPath: m_TagString
+      value: AttackPoint
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
   m_IsPrefabParent: 0
@@ -5138,9 +5142,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58007593505ab44991fda1e28f62a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfWaves: 6
+  numberOfWaves: 8
   timeBetweenWaves: 14
-  moneyForEarlyStart: 20
+  moneyForEarlyStart: 40
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1008457875}
   pathBoard: {fileID: 1142404544}
@@ -5206,7 +5210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startHealth: 1000
-  startMoney: 4000
+  startMoney: 400
 --- !u!114 &1378128247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5685,6 +5689,10 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1457062764523970, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
+      propertyPath: m_TagString
+      value: AttackPoint
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
@@ -6240,6 +6248,10 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1457062764523970, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}
+      propertyPath: m_TagString
+      value: AttackPoint
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b0cfb673bc1d70f4180dfc77315dcccf, type: 2}

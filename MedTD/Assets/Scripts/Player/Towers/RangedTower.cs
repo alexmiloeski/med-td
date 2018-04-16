@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class RangedTower : Tower
 {
@@ -40,30 +41,34 @@ public class RangedTower : Tower
     /// <summary> Targets the enemy with the lowest health percentage; if all have the same health, targets the nearest enemy. </summary>
     private void UpdateTarget()
     {
-        // target the enemy with the lowest health percentage; if all the same, get closest
+        // first look for latched enemies within range
+        GameObject chosenEnemy = LookForLatchedEnemies();
 
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
-        float leastHealth = Mathf.Infinity;
-        float shortestDistance = Mathf.Infinity;
-        GameObject chosenEnemy = null;
-        foreach (GameObject enemy in enemies)
+        // if no latched enemy was found, target the enemy with the lowest health percentage; if all the same, get closest
+        if (chosenEnemy == null)
         {
-            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distanceToEnemy <= range)
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
+            float leastHealth = Mathf.Infinity;
+            float shortestDistance = Mathf.Infinity;
+            foreach (GameObject enemy in enemies)
             {
-                Enemy enemyEnemy = enemy.GetComponent<Enemy>();
-                float enemyHealth = 0f;
-                if (enemyEnemy != null)
+                float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+                if (distanceToEnemy <= range)
                 {
-                    enemyHealth = enemyEnemy.GetHealthPercentage();
-                }
+                    Enemy enemyEnemy = enemy.GetComponent<Enemy>();
+                    float enemyHealth = 0f;
+                    if (enemyEnemy != null)
+                    {
+                        enemyHealth = enemyEnemy.GetHealthPercentage();
+                    }
 
-                if (enemyHealth < leastHealth  // if this enemy has less health OR the same amount of health, but is closer
-                    || (enemyHealth == leastHealth && distanceToEnemy < shortestDistance))
-                {
-                    leastHealth = enemyHealth;
-                    shortestDistance = distanceToEnemy;
-                    chosenEnemy = enemy;
+                    if (enemyHealth < leastHealth  // if this enemy has less health OR the same amount of health, but is closer
+                        || (enemyHealth == leastHealth && distanceToEnemy < shortestDistance))
+                    {
+                        leastHealth = enemyHealth;
+                        shortestDistance = distanceToEnemy;
+                        chosenEnemy = enemy;
+                    }
                 }
             }
         }
@@ -79,7 +84,7 @@ public class RangedTower : Tower
             return;
         }
 
-        if (chosenEnemy != null && shortestDistance <= range)
+        if (chosenEnemy != null)
         {
             //target = chosenEnemy.transform;
             AcquireTarget(chosenEnemy.transform);
@@ -89,6 +94,27 @@ public class RangedTower : Tower
             //target = null;
             DismissTarget();
         }
+    }
+
+    protected GameObject LookForLatchedEnemies()
+    {
+        GameObject chosenEnemy = null;
+        float shortestDistance = Mathf.Infinity;
+        GameObject[] attackPoints = GameObject.FindGameObjectsWithTag(Constants.AttackPointTag);
+        foreach (GameObject ap in attackPoints)
+        {
+            AttackPoint attackPoint = ap.GetComponent<AttackPoint>();
+            if (attackPoint != null && !attackPoint.IsVacant())
+            {
+                float distanceToAP = Vector2.Distance(transform.position, ap.transform.position);
+                if (distanceToAP <= range && distanceToAP < shortestDistance)
+                {
+                    shortestDistance = distanceToAP;
+                    chosenEnemy = attackPoint.GetOccupant().gameObject;
+                }
+            }
+        }
+        return chosenEnemy;
     }
 
     protected virtual void Shoot()
