@@ -41,7 +41,8 @@ public class MeleeTower : Tower
         units = new MeleeUnit[unitCount];
 		for (int i = 0; i < units.Length; i++)
         {
-            units[i] = SpawnUnit();
+            //units[i] = SpawnUnit();
+            SpawnUnit();
         }
 
         //InvokeRepeating("", 6f, 6f);
@@ -213,6 +214,16 @@ public class MeleeTower : Tower
         meleeUnit.SetRallyPoint(rallyPoint);
 
         currentUnitCount++;
+
+        // this unit should take the first empty spot in units
+        for (int i = 0; i < units.Length; i++)
+        {
+            if (units[i] == null)
+            {
+                units[i] = meleeUnit;
+                break;
+            }
+        }
 
         return meleeUnit;
     }
@@ -393,10 +404,17 @@ public class MeleeTower : Tower
     {
         rallyPoint = _rallyPoint;
         // relay the rally point update to all units
+        int i = 1;
         foreach (MeleeUnit unit in units)
         {
-            unit.SetRallyPoint(rallyPoint);
+            Debug.Log("unit " + i);
+            if (unit != null) // melee units can die while setting a new rally point
+            {
+                unit.SetRallyPoint(rallyPoint);
+            }
+            else Debug.Log("this unit is null");
         }
+        Debug.Log("------");
     }
 
 

@@ -55,8 +55,8 @@ MonoBehaviour:
   towerLevelName: Tower33
   description: Tower three three
   level: 3
-  cost: 150
+  cost: 250
   sellValue: 80
-  damage: 60
+  damage: 50
   cooldown: 3
   range: 5

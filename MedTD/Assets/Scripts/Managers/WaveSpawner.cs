@@ -8,6 +8,7 @@ public class WaveSpawner : MonoBehaviour
     
     public int numberOfWaves = 10;
     public float timeBetweenWaves = 8f; // todo: could be different for each wave
+    public float moneyForEarlyStart = 20f;
     public Transform enemyFolder;
     public Transform spawnPoint;
     public Transform pathBoard;
@@ -20,6 +21,7 @@ public class WaveSpawner : MonoBehaviour
     //private Transform[] pathTiles;
     private float countdown = 0f;
     private int waveNumber = 1;
+    private float earlyStartTime;
     private bool levelStarted = false;
     private bool allWavesFinishedSpawning = false;
 
@@ -45,6 +47,11 @@ public class WaveSpawner : MonoBehaviour
         //{
         //    pathTiles[i] = pathBoard.GetChild(i);
         //}
+    }
+
+    private void Start()
+    {
+        earlyStartTime = timeBetweenWaves / 2;
     }
 
     internal void StartLevel()
@@ -75,7 +82,7 @@ public class WaveSpawner : MonoBehaviour
         }
 
         // if time to next wave is less than half, enable "start wave" button; if not, disable it
-        UIManager.instance.SetEnabledButtonBottomCenterStartWave(countdown <= (timeBetweenWaves * 0.5), "Start wave early");
+        UIManager.instance.SetEnabledButtonBottomCenterStartWave(countdown <= (earlyStartTime), "Start wave early");
 
         if (countdown <= 0f && !Shop.instance.IsCoughing())
         {
@@ -99,6 +106,14 @@ public class WaveSpawner : MonoBehaviour
     {
         StartCoroutine(SpawnWave());
         countdown = timeBetweenWaves;
+    }
+    internal void EarlyNextWave()
+    {
+        // give the player money for starting the wave early: the earlier, the more money
+        float recMoney = moneyForEarlyStart * (countdown / earlyStartTime);
+        Player.AddMoney(recMoney);
+
+        NextWave();
     }
 
     private IEnumerator SpawnWave()

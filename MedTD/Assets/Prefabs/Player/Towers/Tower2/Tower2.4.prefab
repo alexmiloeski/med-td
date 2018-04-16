@@ -56,9 +56,9 @@ MonoBehaviour:
   towerLevelName: Tower24
   description: tower two four
   level: 4
-  cost: 200
+  cost: 250
   sellValue: 150
-  damage: 100
+  damage: 50
   cooldown: 2.5
   range: 4.5
 --- !u!212 &212263973332581398

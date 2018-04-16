@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
     public int startMoney = 500;
 
     private static float Health;
-    private static int Money;
+    private static float Money;
     private static float StartHealth;
     //private static float StartMoney;
 
@@ -43,6 +43,9 @@ public class Player : MonoBehaviour
         else
         {
             Health -= damage;
+            float recMoney = damage / 4f;
+            //Debug.Log("recMoney = " + recMoney);
+            AddMoney(recMoney); // todo: do we want to get money when receiving damage?
         }
 
         uIManager.UpdateTextHealth();
@@ -65,24 +68,25 @@ public class Player : MonoBehaviour
         uIManager.UpdateHealthVisual();
     }
 
-    internal static bool HasEnoughMoney(int money)
+    internal static bool HasEnoughMoney(float money)
     {
         return Money >= money;
     }
-    internal static void SubtractMoney(int money)
+    internal static void SubtractMoney(float money)
     {
         Money -= money;
         uIManager.UpdateTextMoney();
     }
-    internal static void AddMoney(int money)
+    internal static void AddMoney(float money)
     {
         Money += money;
         uIManager.UpdateTextMoney();
     }
 
     internal static float GetHealthFloat() { return Health; }
-    internal static int GetHealthInt() { return (int) Mathf.Floor((float) Health); }
-    internal static int GetMoney() { return Money; }
+    internal static int GetHealthInt() { return Mathf.FloorToInt(Health); }
+    internal static float GetMoney() { return Money; }
+    internal static int GetMoneyInt() { return Mathf.FloorToInt(Money); }
 
     internal static float GetStartHealth()
     {

@@ -55,8 +55,8 @@ MonoBehaviour:
   towerLevelName: Tower32
   description: Tower three two
   level: 2
-  cost: 100
+  cost: 120
   sellValue: 60
-  damage: 30
+  damage: 20
   cooldown: 2.7
   range: 3

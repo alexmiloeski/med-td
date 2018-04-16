@@ -78,11 +78,12 @@ public class Shop : MonoBehaviour
         {
             if (WaveSpawner.instance.IsFinishedSpawning()) return;
 
+            // if waves are already spawning, spawn next wave early
             if (WaveSpawner.instance.IsLevelStarted())
             {
-                WaveSpawner.instance.NextWave();
+                WaveSpawner.instance.EarlyNextWave();
             }
-            else
+            else // else, start spawning waves
             {
                 // start spawning waves of enemies
                 WaveSpawner.instance.StartLevel();

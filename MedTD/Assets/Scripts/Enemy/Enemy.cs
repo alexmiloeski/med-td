@@ -8,6 +8,7 @@ public class Enemy : Damageable
     //private float speed = 1f;
     //public float startHealth = 10;
     //private float health = 10f;
+    public int bounty = 10; // the money the player gets for killing this unit
     public float damage = 1f;
     public int defense = 1;
     
@@ -265,6 +266,13 @@ public class Enemy : Damageable
         if (meleeAttackers.Count == 0 && towerAttackers.Count == 0) return false;
 
         return true;
+    }
+
+    protected override void Die()
+    {
+        //Debug.Log("Enemy.Die");
+        Player.AddMoney(bounty);
+        Destroy(gameObject);
     }
 
     // todo: hope we're not gonna need this method, but keeping it just in case
