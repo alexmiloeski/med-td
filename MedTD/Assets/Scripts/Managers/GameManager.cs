@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("GameManager.Awake");
         // initialize an instance of this singleton for use in other classes
         if (instance != null)
         {
@@ -43,13 +44,16 @@ public class GameManager : MonoBehaviour
         //}
     }
 
-    void Start ()
+    private void Start()
     {
+        Debug.Log("GameManager.Start");
         //Application.LoadLevel(Application.loadedLevel);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-	}
-	
-	void Update ()
+
+        ResumeGame();
+    }
+
+    private void Update()
     {
 		// if last wave has fully spawned and all enemies are dead, win
         if (WaveSpawner.instance.IsFinishedSpawning())
@@ -101,14 +105,25 @@ public class GameManager : MonoBehaviour
     {
         if (levelCleared)
         {
-            Debug.Log("LOADING NEXT LEVEL.............");
-            // todo: load next level
+            NextLevel();
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            ResumeGame();
+            RestartLevel();
         }
+    }
+    private void NextLevel()
+    {
+        Debug.Log("LOADING NEXT LEVEL.............");
+        // todo: load next level
+        //SceneManager.LoadScene(SceneManager.GetSceneByName("Level2").name); // todo: not level2, but NEXT; this is just for testing
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //ResumeGame();
+    }
+    private void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        ResumeGame();
     }
     public void GameOver()
     {
