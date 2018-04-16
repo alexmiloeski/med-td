@@ -60,7 +60,7 @@ MonoBehaviour:
   sellValue: 140
   damage: 0
   cooldown: 6
-  range: 3
+  range: 2.5
   unitSprite: {fileID: 21300000, guid: 38d08f1cd70c17b468e31d4ea1240af8, type: 3}
   unitSpeed: 0.8
   unitHealth: 250
@@ -69,7 +69,6 @@ MonoBehaviour:
   unitHitCooldown: 1.7
   meleeHitRange: 1
   meleeSpotRange: 1.5
-  meleeRallyPointRange: 1.8
 --- !u!212 &212297473876515008
 SpriteRenderer:
   m_ObjectHideFlags: 1

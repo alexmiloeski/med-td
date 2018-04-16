@@ -184,5 +184,20 @@ public class LymphNode : MonoBehaviour
         rend.color = highlightedColor;
     }
 
-    
+
+    internal void ShowTowerRange()
+    {
+        if (GetTowerComponent() != null)
+        {
+            GetTowerComponent().ShowRange();
+        }
+    }
+    internal void HideTowerRange()
+    {
+        if (GetTowerComponent() != null)
+        {
+            GetTowerComponent().HideRange();
+        }
+    }
+
 }

@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     public GameObject menuSelectionInfoPrefab;
     public RectTransform healthBarGreen;
     public Sprite xSprite;
+    public GameObject rangePrefab;
     private RectTransform healthBarContainer;
 
     private GameObject xSpriteObject;

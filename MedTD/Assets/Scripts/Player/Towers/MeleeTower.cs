@@ -286,10 +286,10 @@ public class MeleeTower : Tower
     }
     internal float GetCurrentMeleeRallyPointRange()
     {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 2f;
-
-        return meleeTowerLevel.meleeRallyPointRange;
+        return GetCurrentRange();
+        //    MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        //    if (meleeTowerLevel == null) return 2f;
+        //    return meleeTowerLevel.meleeRallyPointRange;
     }
     internal float GetCurrentMeleeUnitHitCooldown()
     {
@@ -403,18 +403,15 @@ public class MeleeTower : Tower
     private void SetNewRallyPoint(Vector3 _rallyPoint)
     {
         rallyPoint = _rallyPoint;
-        // relay the rally point update to all units
-        int i = 1;
+
+        // relay the rally point update to all currently living units too (units that spawn later will inherit the new value)
         foreach (MeleeUnit unit in units)
         {
-            Debug.Log("unit " + i);
             if (unit != null) // melee units can die while setting a new rally point
             {
                 unit.SetRallyPoint(rallyPoint);
             }
-            else Debug.Log("this unit is null");
         }
-        Debug.Log("------");
     }
 
 

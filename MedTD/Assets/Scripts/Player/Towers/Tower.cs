@@ -10,7 +10,9 @@ public abstract class Tower : MonoBehaviour
     protected int currentTowerLevelIndex;
     ///<summary>A reference to the lymph node on which this tower is built</summary>
     protected LymphNode lymphNode;
-    
+
+    private GameObject rangeGO;
+
 
     internal void BuildBaseLevel(LymphNode _lymphNode)
     {
@@ -39,7 +41,22 @@ public abstract class Tower : MonoBehaviour
         }
     }
     
-    
+
+    internal void ShowRange()
+    {
+        // show a circle showing the range
+        rangeGO = Instantiate(UIManager.instance.rangePrefab, transform);
+        // the scale of the object should be the diameter of the circle, which is range*2 (because range is the radius)
+        float diameter = GetCurrentRange() * 2;
+        rangeGO.transform.localScale = new Vector3(diameter, diameter, 1f);
+    }
+    internal void HideRange()
+    {
+        // hide the circle showing the range
+        Destroy(rangeGO);
+    }
+
+
     internal int GetNumberOfLevels() { return towerLevels.Length; }
     internal bool IsAtMaxLevel()
     {
@@ -54,7 +71,7 @@ public abstract class Tower : MonoBehaviour
     internal float GetCurrentDamage() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].damage : -1; }
     //internal int GetCurrentHealth() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].health : -1; }
     //internal int GetCurrentDefense() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].defense : -1; }
-    internal float GetCurrentRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].range : 0; }
+    internal float GetCurrentRange() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].range : 1f; }
     internal float GetCurrentCooldown() { return towerLevels[currentTowerLevelIndex] != null ? towerLevels[currentTowerLevelIndex].cooldown : 1; }
     
     internal string GetBaseLevelName()

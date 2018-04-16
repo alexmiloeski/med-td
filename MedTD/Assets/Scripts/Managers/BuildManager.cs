@@ -177,6 +177,8 @@ public class BuildManager : MonoBehaviour
         //selectedLymphNode.Select(); // redundant, called from LymphNode too
 
         selectedLymphNode = lymphNode;
+
+        selectedLymphNode.ShowTowerRange();
     }
     /// <summary> Deselects any currently selected lymph node,
     /// and calls <see cref="LymphNode.Deselect"/> on the selected lymph node.
@@ -191,6 +193,8 @@ public class BuildManager : MonoBehaviour
 
         if (selectedLymphNode != null)
         {
+            selectedLymphNode.HideTowerRange();
+
             selectedLymphNode.Deselect();
             selectedLymphNode = null;
         }

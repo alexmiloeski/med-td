@@ -5140,6 +5140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfWaves: 6
   timeBetweenWaves: 14
+  moneyForEarlyStart: 20
   enemyFolder: {fileID: 624177191}
   spawnPoint: {fileID: 1008457875}
   pathBoard: {fileID: 1142404544}
@@ -5176,6 +5177,8 @@ MonoBehaviour:
     type: 2}
   healthBarGreen: {fileID: 2047057993}
   xSprite: {fileID: 21300000, guid: 14d9816fd68bbb149a3cd8b046988860, type: 3}
+  rangePrefab: {fileID: 1589586800262946, guid: 6777830530b2d2945b5e00add8bed38b,
+    type: 2}
 --- !u!114 &1378128245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5203,7 +5206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startHealth: 1000
-  startMoney: 300
+  startMoney: 4000
 --- !u!114 &1378128247
 MonoBehaviour:
   m_ObjectHideFlags: 0
