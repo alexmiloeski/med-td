@@ -93,5 +93,6 @@ public class Player : MonoBehaviour
     internal static void Lose()
     {
         Debug.Log("YOU LOSE!");
+        GameManager.instance.GameOver();
     }
 }

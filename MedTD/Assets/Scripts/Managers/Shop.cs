@@ -57,14 +57,14 @@ public class Shop : MonoBehaviour
         }
     }
 
-    public void ButtonPauseResumeAction(GameObject buttonObject)
+    public void ButtonPauseResumeAction()
     {
-        Debug.Log("ButtonPauseResume pressed");
-        GameManager.instance.TogglePauseGame(buttonObject);
+        //Debug.Log("ButtonPauseResume pressed");
+        GameManager.instance.TogglePauseGame();
     }
     public void ButtonRestartLevelAction()
     {
-        Debug.Log("ButtonRestartLevel pressed");
+        //Debug.Log("ButtonRestartLevel pressed");
         GameManager.instance.RestartLevel();
     }
     public void ButtonBottomCenterAction()

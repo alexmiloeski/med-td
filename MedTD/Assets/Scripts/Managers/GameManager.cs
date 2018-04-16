@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public GameObject veil;
     public GameObject pausePanel;
     public GameObject pauseMenu;
+    public GameObject buttonPauseResume;
+    public Text textPausedGameOver;
     public Sprite spriteResume;
     public Sprite spritePause;
 
@@ -53,7 +55,7 @@ public class GameManager : MonoBehaviour
     {
         return gamePaused;
     }
-    public void PauseGame(GameObject buttonPauseResume)
+    public void PauseGame()
     {
         Time.timeScale = 0f;
 
@@ -66,7 +68,7 @@ public class GameManager : MonoBehaviour
         Image image = buttonPauseResume.GetComponent<Image>();
         image.sprite = spriteResume;
     }
-    public void ResumeGame(GameObject buttonPauseResume)
+    public void ResumeGame()
     {
         Time.timeScale = 1f;
 
@@ -79,13 +81,20 @@ public class GameManager : MonoBehaviour
         Image image = buttonPauseResume.GetComponent<Image>();
         image.sprite = spritePause;
     }
-    public void TogglePauseGame(GameObject buttonPauseResume)
+    public void TogglePauseGame()
     {
-        if (gamePaused) ResumeGame(buttonPauseResume);
-        else PauseGame(buttonPauseResume);
+        if (gamePaused) ResumeGame();
+        else PauseGame();
     }
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        ResumeGame();
+    }
+    public void GameOver()
+    {
+        buttonPauseResume.SetActive(false);
+        textPausedGameOver.text = "Game over";
+        PauseGame();
     }
 }
