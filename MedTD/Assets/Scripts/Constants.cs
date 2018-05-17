@@ -11,4 +11,5 @@
     //public const string spritesFolderPath = "Sprites";
     //public const string xSpritePath = spritesFolderPath + "/xSprite";
     //public const string rallyPointSpritePath = spritesFolderPath + "/RallyPoint";
+    public const float UnitRotationSpeed = 7f;
 }

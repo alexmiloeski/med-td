@@ -162,7 +162,7 @@ public class Moveable : MonoBehaviour
         Vector2 direction = position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * 10000f);
+        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * Constants.UnitRotationSpeed);
 
         // move towards target
         float distanceThisFrame = speed * Time.deltaTime;
