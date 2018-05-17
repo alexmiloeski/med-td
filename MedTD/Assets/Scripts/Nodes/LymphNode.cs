@@ -124,6 +124,9 @@ public class LymphNode : MonoBehaviour
 
     internal void BuildTower(Tower tower)
     {
+        // disable the sprite renderer (remove lymph node sprite when there's a tower on it)
+        GetComponent<SpriteRenderer>().enabled = false;
+
         // get the GameObject that this Tower game component is attached to
         GameObject towerPrefab = tower.gameObject;
         Vector3 towerPosition = transform.position; // add the tower object on top of this lymph node
@@ -139,6 +142,9 @@ public class LymphNode : MonoBehaviour
     }
     internal void DestroyTower()
     {
+        // enable the sprite renderer (show lymph node sprite when selling a tower)
+        GetComponent<SpriteRenderer>().enabled = true;
+
         GetTowerComponent().DismissTarget();
         Destroy(towerGameObject);
         Deselect();
