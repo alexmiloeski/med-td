@@ -183,7 +183,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1886521707198992
 GameObject:
   m_ObjectHideFlags: 1
@@ -587,11 +587,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f4b0d6acc525814dbfe46bfdd4c45d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonTower1: {fileID: 114404378979264320}
-  buttonTower2: {fileID: 114717424211058164}
-  buttonTower3: {fileID: 114125454932902112}
-  buttonTower4: {fileID: 114623916157604166}
-  buttonUpgradeTower: {fileID: 0}
   textCostTower1: {fileID: 114906522202702112}
   textCostTower2: {fileID: 114462572871982030}
   textCostTower3: {fileID: 114663580308375008}

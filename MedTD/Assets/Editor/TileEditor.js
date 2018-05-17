@@ -79,7 +79,7 @@ class TileEditor extends EditorWindow
 
 		print("count: " + selectedFolder.transform.childCount);
 		var cnt = selectedFolder.transform.childCount;
-		for (i = 0; i < cnt; i++)
+		for (var i = 0; i < cnt; i++)
 		//for (i = 1; i < 4; i++)
 		{
 			//GameObject child = selectedFolder.transform.GetChild(i);
