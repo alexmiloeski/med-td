@@ -3,7 +3,7 @@
 
 //public enum Direction { Up, Right, Down, Left };
 
-public class GenerateTiles : MonoBehaviour
+public class GeneratePath : MonoBehaviour
 {
     public Transform tilePrefab;
 
@@ -68,10 +68,15 @@ public class GenerateTiles : MonoBehaviour
         // set the directions manually
         if (directions.Length == 0)
         {
-            directions = new int[] { down, down, down, left, left, left, down, down, down, left,
-                left, left, down, down, down, right, right, right, right, right, up, up, up, up, right,
-                right, right, down, down, down, down, right, right, right, right, right, up, up, up,
-                left, left, left, up, up, up, left, left, left };
+            //directions = new int[] { down, down, down, left, left, left, down, down, down, left,
+            //    left, left, down, down, down, right, right, right, right, right, up, up, up, up, right,
+            //    right, right, down, down, down, down, right, right, right, right, right, up, up, up,
+            //    left, left, left, up, up, up, left, left, left };
+            directions = new int[] { down, down, down, left, left, down, left, left, left, down, down, down, down,
+                left, left, down, down, right, right, right, right, right, up, up, up, fork, up, up, backToFork,
+                right, right, right, right, right, fork, down, down, down, right, right, right, right, right, up,
+                up, left, left, up, up, up, up, left, left, backToFork, up, up, up, up, left, left, up, up, up
+            };
         }
 
         boardMap[(int)startTile.x, (int)startTile.y] = true;
@@ -173,7 +178,7 @@ public class GenerateTiles : MonoBehaviour
                 if (boardMap[i, j])
                 {
                     float x = i + 0.5f - (boardSizeX / 2f);
-                    float y = j + 0.5f - ((boardSizeY - 1f) / 2f);
+                    float y = j + 0.0f - ((boardSizeY - 1f) / 2f);
                     Transform tile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
                     if (i == (int)startTile.x && j == (int)startTile.y)
                         tile.name = "StartTile";

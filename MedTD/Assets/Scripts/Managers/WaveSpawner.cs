@@ -10,8 +10,9 @@ public class WaveSpawner : MonoBehaviour
     public float timeBetweenWaves = 8f; // todo: could be different for each wave
     public float moneyForEarlyStart = 20f;
     public Transform enemyFolder;
-    public Transform spawnPoint;
-    public Transform pathBoard;
+    //public Transform spawnPoint;
+    public Transform[] spawnPoints;
+    //public Transform pathBoard;
     public Transform enemyPrefab1;
     public Transform enemyPrefab2;
     //public Transform enemyPrefab3; // todo: etc
@@ -181,14 +182,20 @@ public class WaveSpawner : MonoBehaviour
 
         // in case only enemyPrefab1 is set and the others are not
         if (enemyPrefab == null) enemyPrefab = enemyPrefab1;
-        
-        if (enemyPrefab != null && pathBoard.childCount > 0)
+
+        //if (enemyPrefab != null && pathBoard.childCount > 0)
+        if (enemyPrefab != null)
         {
-            int randomTileIndex = random.Next(0, pathBoard.childCount);
+            //int randomTileIndex = random.Next(0, pathBoard.childCount);
             //Transform spawnPoint = pathBoard.GetChild(randomTileIndex);
-            Transform enemyTr = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
-            enemyTr.SetParent(enemyFolder);
-            enemyTr.GetComponent<Enemy>().SetStartTile(spawnPoint, 0f);
+            if (spawnPoints.Length > 0)
+            {
+                int randomSpawnPointIndex = random.Next(0, spawnPoints.Length);
+                Transform spawnPoint = spawnPoints[randomSpawnPointIndex];
+                Transform enemyTr = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+                enemyTr.SetParent(enemyFolder);
+                enemyTr.GetComponent<Enemy>().SetStartTile(spawnPoint, 0f);
+            }
         }
     }
 
