@@ -191,10 +191,12 @@ public class WaveSpawner : MonoBehaviour
             if (spawnPoints.Length > 0)
             {
                 int randomSpawnPointIndex = random.Next(0, spawnPoints.Length);
-                Transform spawnPoint = spawnPoints[randomSpawnPointIndex];
+                Transform startTile = spawnPoints[randomSpawnPointIndex];
+                Transform spawnPoint = startTile.GetChild(0); // the spawn point must be a tile game object with a spawnpoint gameobject
+                //if (spawnPoint == null) spawnPoint = startTile;
                 Transform enemyTr = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
                 enemyTr.SetParent(enemyFolder);
-                enemyTr.GetComponent<Enemy>().SetStartTile(spawnPoint, 0f);
+                enemyTr.GetComponent<Enemy>().SetStartTile(startTile, 0f);
             }
         }
     }
