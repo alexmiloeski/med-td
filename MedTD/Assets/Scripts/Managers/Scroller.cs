@@ -22,7 +22,7 @@ public class Scroller : MonoBehaviour
     private static bool dragging;
 
     // total drag allowed before the scrolling starts; useful for clicking buttons
-    private const float totalDragAllowed = 5f;
+    private const float totalDragAllowed = 30f;
 
 
     private void Start()
@@ -107,7 +107,7 @@ public class Scroller : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         // if there's a ui element above, don't do anything
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject() || Utility.IsPointerOverUIObject())
         {
             return;
         }
