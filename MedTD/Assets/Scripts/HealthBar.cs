@@ -7,7 +7,10 @@ public class HealthBar : MonoBehaviour
     private void Start ()
     {
         Transform healthBar = transform.Find(Constants.HealthBar);
-        green = healthBar.transform.Find(Constants.HealthBarGreen);
+        if (healthBar != null)
+        {
+            green = healthBar.transform.Find(Constants.HealthBarGreen);
+        }
 
         //green.transform.localScale = new Vector3(0.5f, 1f, 1f);
     }
@@ -23,5 +26,14 @@ public class HealthBar : MonoBehaviour
         if (green != null)
             green.transform.localScale = new Vector3(healthPercentage, 1f, 1f);
         else Debug.Log("GREEN IS NULL!!!");
+    }
+
+    internal void DestroyHealthBar()
+    {
+        Transform healthBar = transform.Find(Constants.HealthBar);
+        if (healthBar != null)
+        {
+            Destroy(healthBar.gameObject);
+        }
     }
 }

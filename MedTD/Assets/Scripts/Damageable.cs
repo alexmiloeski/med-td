@@ -35,4 +35,17 @@ public class Damageable : MonoBehaviour
         //Debug.Log("Damageable.Die");
         Destroy(gameObject);
     }
+
+    public void RemoveHealthBar()
+    {
+        Debug.Log("Damageable.RemoveHealthBar");
+        HealthBar healthBar = GetComponent<HealthBar>();
+        if (healthBar != null)
+        {
+            Debug.Log("healthBar != null");
+            healthBar.DestroyHealthBar();
+        }
+        else
+            Debug.Log("healthBar IS null");
+    }
 }
