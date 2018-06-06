@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    public GameObject explosionPrefab;
+
     private Transform target;
     public float speed = 5f;
     [Header("0 if projectile is not explosive")]
@@ -58,6 +60,10 @@ public class Projectile : MonoBehaviour
 
     private void Explode()
     {
+        // instantiate explosion animation
+        Instantiate(explosionPrefab, transform.position, transform.rotation);
+        
+
         // do damage to the environment (player)
         //Debug.Log("dealing damageToEnvironment = " + damageToEnvironment);
         Player.DoDamage(damageToEnvironment);
