@@ -77,8 +77,17 @@ public class MeleeUnit : Damageable, IAttacker
             ReturnToRallyPoint();
             return;
         }
-        
+
         // if there is a target..
+
+        // if target is dead, update target
+        Enemy targetEnemy = target.GetComponent<Enemy>();
+        if (targetEnemy != null && targetEnemy.IsDead())
+        {
+            UpdateTarget();
+            return;
+        }
+
         // if target is out of range, move in closer
         float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
         if (distanceToTarget > hitRange)
@@ -98,15 +107,8 @@ public class MeleeUnit : Damageable, IAttacker
                 PerformHit();
             }
         }
-
-        SetAnimationState();
     }
-
-    void SetAnimationState()
-    {
-
-    }
-    
+        
     /// <summary> Called with Invoke(). </summary>
     private void UpdateTarget()
     {
@@ -119,8 +121,10 @@ public class MeleeUnit : Damageable, IAttacker
         // if it already has a target, see if it's dead or too far away, or if there's another one without an attacker
         if (target != null)
         {
+            Enemy targetEnemy = target.GetComponent<Enemy>();
+
             float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
-            if (distanceToTarget > spotRange)
+            if (targetEnemy.IsDead() || distanceToTarget > spotRange)
             {
                 //Debug.Log("LOST TARGET");
                 DismissTarget();
@@ -128,7 +132,6 @@ public class MeleeUnit : Damageable, IAttacker
             }
 
             // todo: if this target has another attacker, look for nearby enemies without an attacker
-            Enemy targetEnemy = target.GetComponent<Enemy>();
             if (targetEnemy != null && targetEnemy.HasAnotherMeleeAttacker(transform))
             {
                 // this target has another attacker; look for other targets without an attacker
@@ -168,7 +171,7 @@ public class MeleeUnit : Damageable, IAttacker
         }
 
 
-        // if there's no current target, first look for enemies latched to attack points within range
+        // if there's no current target, first look for living enemies latched to attack points within range
         float shortestDistance = Mathf.Infinity;
         GameObject chosenEnemy = null;
         GameObject[] attackPoints = GameObject.FindGameObjectsWithTag(Constants.AttackPointTag);
@@ -187,7 +190,7 @@ public class MeleeUnit : Damageable, IAttacker
         }
 
         // otherwise, find the nearest enemy
-        if (chosenEnemy == null)
+        if (chosenEnemy == null || (chosenEnemy.GetComponent<Enemy>() != null && chosenEnemy.GetComponent<Enemy>().IsDead()))
         {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
             /*float */
@@ -195,12 +198,16 @@ public class MeleeUnit : Damageable, IAttacker
             //GameObject nearestEnemy = null;
             foreach (GameObject enemy in enemies)
             {
-                // if the enemy is beyond this unit's spot range, ignore target
-                float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
-                if (distanceToEnemy <= spotRange && distanceToEnemy < shortestDistance)
+                // if this enemy is not dead
+                if (enemy.GetComponent<Enemy>() != null && !enemy.GetComponent<Enemy>().IsDead())
                 {
-                    shortestDistance = distanceToEnemy;
-                    chosenEnemy = enemy;
+                    // if the enemy is beyond this unit's spot range, ignore target
+                    float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
+                    if (distanceToEnemy <= spotRange && distanceToEnemy < shortestDistance)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        chosenEnemy = enemy;
+                    }
                 }
             }
         }

@@ -38,7 +38,9 @@ public class Enemy : Damageable, IAttacker
     public int minReplicationTime = 10;
     public int maxReplicationTime = 30;
     private float replicationCoundtown = 10f;
-    
+
+    private bool isDead = false;
+
     private bool coughing = false;
     private float coughStopCountdown = 5f;
     private float coughSpeedIncrement;
@@ -106,6 +108,8 @@ public class Enemy : Damageable, IAttacker
 
     private void Update()
     {
+        if (isDead) return;
+
         if (!started) return;
         
         if (coughing)
@@ -132,7 +136,7 @@ public class Enemy : Damageable, IAttacker
             // if it's latched, stop the latched animation
             if (latched)
             {
-                Debug.Log("stopping latched animation");
+                //Debug.Log("stopping latched animation");
                 if (anim != null)
                 {
                     anim.SetTrigger("isAttackedWhileLatched");
@@ -157,7 +161,7 @@ public class Enemy : Damageable, IAttacker
                     }
                     else
                     {
-                        Debug.Log("starting latched animation");
+                        //Debug.Log("starting latched animation");
                         if (anim != null)
                         {
                             anim.SetTrigger("isLatched");
@@ -191,7 +195,7 @@ public class Enemy : Damageable, IAttacker
             }
             else
             {
-                Debug.Log("nextTile == null; calling GetNextTile()");
+                //Debug.Log("nextTile == null; calling GetNextTile()");
                 GetNextTile();
             }
         }
@@ -199,6 +203,8 @@ public class Enemy : Damageable, IAttacker
     
     private void AttackMeleeAttacker()
     {
+        if (isDead) return;
+
         //Debug.Log("AttackMeleeAttacker");
         Transform firstAttacker = null;
         for (int i = 0; i < meleeAttackers.Count; i++)
@@ -276,6 +282,8 @@ public class Enemy : Damageable, IAttacker
     
     private void GetNextTile()
     {
+        if (isDead) return;
+
         //Debug.Log("GetNextTile");
         System.Random random = new System.Random();
 
@@ -365,10 +373,38 @@ public class Enemy : Damageable, IAttacker
         return true;
     }
 
+    public bool IsDead()
+    {
+        return isDead;
+    }
+
     protected override void Die()
     {
+        if (isDead) return;
+
+        isDead = true;
+
         //Debug.Log("Enemy.Die");
+
+        // first remove its health bar
+        RemoveHealthBar();
+
+        if (anim != null)
+        {
+            //Debug.Log("setting trigger isDead");
+            anim.SetTrigger("isDead");
+        }
+
         Player.AddMoney(bounty);
+        //Destroy(gameObject);
+
+        // call FinilizeDeath (to destroy the gameobject) after a short time
+        Invoke("FinilizeDeath", 1.8f);
+    }
+
+    private void FinilizeDeath()
+    {
+        //Debug.Log("Unit.FinilizeDeath");
         Destroy(gameObject);
     }
 
