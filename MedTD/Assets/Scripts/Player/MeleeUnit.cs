@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MeleeUnit : Damageable
+public class MeleeUnit : Damageable, IAttacker
 {
-    public SpriteRenderer headRenderer;
+    //private SpriteRenderer headRenderer;
+
+    private Animator anim;
 
     private Moveable moveable;
 
@@ -21,10 +22,36 @@ public class MeleeUnit : Damageable
 
     private Transform target;
     private float hitCountdown = 0f;
+
+    private bool isDead = false;
     
     private new void Start()
     {
         base.Start();
+
+        //headRenderer = get
+
+        Transform rotatingPart = transform.Find(Constants.RotatingPart);
+        if (rotatingPart == null)
+        {
+            Debug.Log("RotatingPart is NULL!");
+        }
+        else
+        {
+            Transform head = rotatingPart.Find("Head");
+            if (head == null)
+            {
+                Debug.Log("Head is NULL!");
+            }
+            else
+            {
+                anim = head.GetComponent<Animator>();
+                if (anim == null)
+                {
+                    Debug.Log("Animator is NULL!");
+                }
+            }
+        }
 
         deployed = false;
 
@@ -40,6 +67,8 @@ public class MeleeUnit : Damageable
     
     private void Update()
     {
+        if (isDead) return;
+
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
 
         // if there's no target, go back to rally point
@@ -63,14 +92,27 @@ public class MeleeUnit : Damageable
             // hit or wait for cooldown
             if (hitCountdown <= 0f)
             {
-                HitEnemy();
+                PerformHit();
             }
         }
+
+        SetAnimationState();
+    }
+
+    void SetAnimationState()
+    {
+
     }
     
     /// <summary> Called with Invoke(). </summary>
     private void UpdateTarget()
     {
+        if (isDead)
+        {
+            DismissTarget();
+            return;
+        }
+        
         // if it already has a target, see if it's dead or too far away, or if there's another one without an attacker
         if (target != null)
         {
@@ -215,19 +257,42 @@ public class MeleeUnit : Damageable
         }
     }
 
-    private void HitEnemy()
+    public void PerformHit()
     {
-        //Debug.Log("Unit.Hitting enemy");
+        if (isDead) return;
+
+        //Debug.Log("Unit.PerformHit");
 
         if (target == null || target.GetComponent<Enemy>() == null) return;
 
         target.GetComponent<Enemy>().TakeDamage(damage);
 
         hitCountdown = hitCooldown;
+
+        if (anim != null)
+        {
+            //Debug.Log("setting trigger isHitting");
+            anim.SetTrigger("isHitting");
+        }
     }
     
     protected override void Die()
     {
+        if (isDead) return;
+
+        isDead = true;
+
+        //Debug.Log("Unit.Die");
+
+        // first remove its health bar
+        RemoveHealthBar();
+
+        if (anim != null)
+        {
+            //Debug.Log("setting trigger isDead");
+            anim.SetTrigger("isDead");
+        }
+
         //Debug.Log("MeleeUnit.Die");
         if (nativeTower != null)
             nativeTower.RespawnUnitAfterCooldown();
@@ -235,6 +300,13 @@ public class MeleeUnit : Damageable
         // if this unit was attacking an enemy, remove itself as one of its target's attackers
         DismissTarget();
 
+        // call FinilizeDeath (to destroy the gameobject) after a short time
+        Invoke("FinilizeDeath", 1.5f);
+    }
+
+    private void FinilizeDeath()
+    {
+        //Debug.Log("Unit.FinilizeDeath");
         Destroy(gameObject);
     }
     
@@ -313,7 +385,7 @@ public class MeleeUnit : Damageable
     }
     internal void SetSprite(Sprite sprite)
     {
-        headRenderer.sprite = sprite;
+        //headRenderer.sprite = sprite;
     }
 
 

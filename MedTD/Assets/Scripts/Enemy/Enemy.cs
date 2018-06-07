@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : Damageable
+public class Enemy : Damageable, IAttacker
 {
+    private Animator anim;
+
     private Moveable moveable;
 
     //private float speed = 1f;
@@ -51,6 +53,28 @@ public class Enemy : Damageable
         base.Start();
 
         //Debug.Log("Enemy.Start");
+
+        Transform rotatingPart = transform.Find(Constants.RotatingPart);
+        if (rotatingPart == null)
+        {
+            Debug.Log("RotatingPart is NULL!");
+        }
+        else
+        {
+            Transform head = rotatingPart.Find("Head");
+            if (head == null)
+            {
+                Debug.Log("Head is NULL!");
+            }
+            else
+            {
+                anim = head.GetComponent<Animator>();
+                if (anim == null)
+                {
+                    Debug.Log("Animator is NULL!");
+                }
+            }
+        }
 
         moveable = GetComponent<Moveable>();
         if (moveable == null)
@@ -167,15 +191,15 @@ public class Enemy : Damageable
             // hit or wait for cooldown
             if (hitCountdown <= 0f)
             {
-                HitAttacker();
+                PerformHit();
             }
         }
         
     }
 
-    private void HitAttacker()
+    public void PerformHit()
     {
-        //Debug.Log("Enemy.Hitting attacker");
+        //Debug.Log("Enemy.PerformHit");
 
         Damageable firstAttacker = null;
         for (int i = 0; i < meleeAttackers.Count; i++)
@@ -192,6 +216,12 @@ public class Enemy : Damageable
         firstAttacker.TakeDamage(damage);
 
         hitCountdown = hitCooldown;
+
+        if (anim != null)
+        {
+            //Debug.Log("setting trigger isHitting");
+            anim.SetTrigger("isHitting");
+        }
     }
     
     private void GetNextTile()
