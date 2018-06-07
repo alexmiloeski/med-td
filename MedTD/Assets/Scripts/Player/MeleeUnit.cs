@@ -89,6 +89,9 @@ public class MeleeUnit : Damageable, IAttacker
         }
         else
         {
+            // keep facing the target
+            moveable.FaceTarget(target.position);
+
             // hit or wait for cooldown
             if (hitCountdown <= 0f)
             {

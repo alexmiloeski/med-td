@@ -94,4 +94,20 @@ public class LinkedNode : MonoBehaviour
     {
         left = _left;
     }
+    public bool hasAbove()
+    {
+        return above != null;
+    }
+    public bool hasBelow()
+    {
+        return below != null;
+    }
+    public bool hasRight()
+    {
+        return right != null;
+    }
+    public bool hasLeft()
+    {
+        return left != null;
+    }
 }

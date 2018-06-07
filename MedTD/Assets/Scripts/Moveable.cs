@@ -226,4 +226,12 @@ public class Moveable : MonoBehaviour
         if (nextNode != null) nextNode = null;
         MoveTowardsPosition(position);
     }
+
+    internal void FaceTarget(Vector3 position)
+    {
+        Vector2 direction = position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+        rotatingPart.transform.rotation = Quaternion.Slerp(rotatingPart.transform.rotation, q, Time.deltaTime * Constants.UnitRotationSpeed);
+    }
 }

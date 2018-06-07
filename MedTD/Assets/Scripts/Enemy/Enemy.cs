@@ -29,6 +29,8 @@ public class Enemy : Damageable, IAttacker
     private LinkedNode nextTile;
     private List<LinkedNode> visitedTiles = new List<LinkedNode>();
 
+    private AttackPoint attackPoint; // reference to this Enemy unit's attackPoint, if it's latched to one; it can never lose it
+
     private List<Transform> meleeAttackers;
     private List<Transform> towerAttackers;
     private float hitCountdown = 0f;
@@ -53,6 +55,10 @@ public class Enemy : Damageable, IAttacker
         base.Start();
 
         //Debug.Log("Enemy.Start");
+
+        // reset nextTile, latched and attackPoint, for cloned (replicated) units
+        latched = false;
+        attackPoint = null;
 
         Transform rotatingPart = transform.Find(Constants.RotatingPart);
         if (rotatingPart == null)
@@ -121,33 +127,71 @@ public class Enemy : Damageable, IAttacker
         // start attacking it (face it, move towards it, and if in range, hit)
         if (meleeAttackers.Count > 0)
         {
+            //Debug.Log("attacking melee attacker");
+
+            // if it's latched, stop the latched animation
+            if (latched)
+            {
+                Debug.Log("stopping latched animation");
+                if (anim != null)
+                {
+                    anim.SetTrigger("isAttackedWhileLatched");
+                }
+            }
+
             AttackMeleeAttacker();
         }
         else // if there's no melee attacker, continue towards the next tile
         {
             if (nextTile != null)
             {
-                moveable.MoveDirectlyTowardsPosition(nextTile.transform.position);
-
-                if (Vector2.Distance(transform.position, nextTile.transform.position) <= 0.3f)
+                //Debug.Log("nextTile != null");
+                // if already latched, don't move
+                if (latched)
                 {
-                    // it's reached the tile; go to the next tile, unless the current tile is an attack point
-                    AttackPoint ap = nextTile.GetComponent<AttackPoint>();
-                    if (ap != null && ap.IsVacant())
+                    // unless it's too far away from the attack point; in that case, move towards it
+                    if (attackPoint != null && Vector2.Distance(transform.position, attackPoint.transform.position) > 0.15f)
                     {
-                        // if it's an attack point and it's still vacant, occupy it
-                        ap.SetOccupant(this);
-                        latched = true;
+                        //Debug.Log("move closer to attack point");
+                        moveable.MoveDirectlyTowardsPosition(attackPoint.transform.position);
                     }
-                    else // otherwise, continue on the path
+                    else
                     {
-                        VisitTile(nextTile);
-                        GetNextTile();
+                        Debug.Log("starting latched animation");
+                        if (anim != null)
+                        {
+                            anim.SetTrigger("isLatched");
+                        }
+                    }
+                }
+                else
+                {
+                    //Debug.Log("MoveDirectlyTowardsPosition");
+                    moveable.MoveDirectlyTowardsPosition(nextTile.transform.position);
+
+                    if (Vector2.Distance(transform.position, nextTile.transform.position) <= 0.3f)
+                    {
+                        // it's reached the tile; go to the next tile, unless the current tile is an attack point
+                        AttackPoint ap = nextTile.GetComponent<AttackPoint>();
+                        if (ap != null && ap.IsVacant())
+                        {
+                            //Debug.Log("ap != null && ap.IsVacant");
+                            // if it's an attack point and it's still vacant, occupy it
+                            ap.SetOccupant(this);
+                            attackPoint = ap;
+                            latched = true;
+                        }
+                        else // otherwise, continue on the path
+                        {
+                            VisitTile(nextTile);
+                            GetNextTile();
+                        }
                     }
                 }
             }
             else
             {
+                Debug.Log("nextTile == null; calling GetNextTile()");
                 GetNextTile();
             }
         }
@@ -172,8 +216,8 @@ public class Enemy : Damageable, IAttacker
         float distanceToAttacker = Vector2.Distance(transform.position, firstAttacker.position);
         if (distanceToAttacker > hitRange)
         {
-            if (!latched)
-            {
+            //if (!latched)
+            //{
                 if (distanceToAttacker < 1)
                 {
                     moveable.MoveDirectlyTowardsPositionWithinTiles(firstAttacker.position);
@@ -183,10 +227,16 @@ public class Enemy : Damageable, IAttacker
                     moveable.UpdateTarget(firstAttacker.position);
                     moveable.MoveViaTilesTowardsTarget();
                 }
-            }
+            //}
+            //else // if latched, don't move, don't change direction, just play fighting animation
+            //{
+            //    //Debug.Log("LATCHED, but distance > hitRange");
+            //}
         }
         else
         {
+            moveable.FaceTarget(firstAttacker.position);
+
             //Debug.Log("within hit range");
             // hit or wait for cooldown
             if (hitCountdown <= 0f)
@@ -370,9 +420,17 @@ public class Enemy : Damageable, IAttacker
         Invoke("StartMovement", movementDelay);
         // spawn another of the same gameobject
         GameObject clone = Instantiate(gameObject, transform.parent);
-        if (nextTile != null) clone.GetComponent<Enemy>().SetStartTile(nextTile.transform, cloneMovementDelay);
-        else clone.GetComponent<Enemy>().SetStartTile(currTile.transform, cloneMovementDelay);
-
+        
+        // if nextTile isn't an AP, use it as the clone's start tile
+        if (nextTile != null && nextTile.GetComponent<AttackPoint>() == null)
+        {
+            clone.GetComponent<Enemy>().SetStartTile(nextTile.transform, cloneMovementDelay);
+        }
+        else if (currTile != null) // else, use the currTile as the clone's start tile (it most probably isn't an AP)
+        {
+            clone.GetComponent<Enemy>().SetStartTile(currTile.transform, cloneMovementDelay);
+        }
+        
         replicationCoundtown = random.Next(minReplicationTime, maxReplicationTime);
     }
 
