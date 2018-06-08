@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public SpriteRenderer levelSpriteRenderer;
+    public Sprite[] levelSprites;
+
     public GameObject veil;
     public GameObject pausePanel;
     public GameObject pauseMenu;
@@ -147,5 +150,46 @@ public class GameManager : MonoBehaviour
         buttonPauseOrResume.SetActive(false);
         textPausedOrWonOrGameOver.text = "Level cleared.";
         PauseGame();
+    }
+
+    internal void ChangeLevelSprite(int threshold)
+    {
+        if (threshold > levelSprites.Length)
+        {
+            Debug.Log("threshold = " + threshold + " is greater than levelSprites.Length");
+            return;
+        }
+
+        switch (threshold)
+        {
+            default:
+            case 0:
+                {
+                    if (levelSprites[0] != null)
+                    {
+                        Debug.Log("Loading levelSprites[0]");
+                        levelSpriteRenderer.sprite = levelSprites[0];
+                    }
+                }
+                break;
+            case 1:
+                {
+                    if (levelSprites[1] != null)
+                    {
+                        Debug.Log("Loading levelSprites[1]");
+                        levelSpriteRenderer.sprite = levelSprites[1];
+                    }
+                }
+                break;
+            case 2:
+                {
+                    if (levelSprites[2] != null)
+                    {
+                        Debug.Log("Loading levelSprites[2]");
+                        levelSpriteRenderer.sprite = levelSprites[2];
+                    }
+                }
+                break;
+        }
     }
 }

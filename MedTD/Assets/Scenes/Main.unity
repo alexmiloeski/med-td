@@ -6061,8 +6061,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f5b1f39a04d64f4ea84aa6414645011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 1000
-  startMoney: 400
+  startHealth: 400
+  startMoney: 2400
 --- !u!114 &1378128247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6074,6 +6074,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cacd04ec7deb7347a01c2ed21c72e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelSpriteRenderer: {fileID: 355939889}
+  levelSprites:
+  - {fileID: 21300000, guid: c1cf916c74f442b48b7ace1b4488f777, type: 3}
+  - {fileID: 21300000, guid: 20ee636c5e321a444ad5a596a88595d9, type: 3}
+  - {fileID: 21300000, guid: d96a4422023ce6f41b2479ad9ea1bbf7, type: 3}
   veil: {fileID: 943045806}
   pausePanel: {fileID: 1158930508}
   pauseMenu: {fileID: 1304295209}

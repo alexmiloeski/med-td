@@ -398,6 +398,35 @@ public class MeleeUnit : Damageable, IAttacker
         //headRenderer.sprite = sprite;
     }
 
+    internal void SetAnimatorController(int i)
+    {
+        Transform rotatingPart = transform.Find(Constants.RotatingPart);
+        if (rotatingPart == null)
+        {
+            Debug.Log("RotatingPart is NULL!");
+        }
+        else
+        {
+            Transform head = rotatingPart.Find("Head");
+            if (head == null)
+            {
+                Debug.Log("Head is NULL!");
+            }
+            else
+            {
+                AnimatedHead animatedHead = head.GetComponent<AnimatedHead>();
+                if (animatedHead == null)
+                {
+                    Debug.Log("animatedHead is NULL!");
+                }
+                else
+                {
+                    animatedHead.SetAnimatorController(i);
+                }
+            }
+        }
+    }
+
 
     private void OnDrawGizmosSelected()
     {

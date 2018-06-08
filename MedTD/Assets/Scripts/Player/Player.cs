@@ -12,7 +12,12 @@ public class Player : MonoBehaviour
 
     private static UIManager uIManager;
 
-	private void Awake()
+    private static float Threshold1DamageLevel = 2f / 3f;
+    private static float Threshold2DamageLevel = 1f / 3f;
+    private static bool Threshold1Reached = false;
+    private static bool Threshold2Reached = false;
+
+    private void Awake()
     {
         StartHealth = startHealth;
         //StartMoney = startMoney;
@@ -50,7 +55,22 @@ public class Player : MonoBehaviour
 
         uIManager.UpdateTextHealth();
         uIManager.UpdateHealthVisual();
+        
+        // make sure the level (organ) shows damage according to damageLevel
+        if (!Threshold1Reached && Health < (StartHealth * Threshold1DamageLevel))
+        {
+            // change the sprite to threshold1
+            GameManager.instance.ChangeLevelSprite(1);
+            Threshold1Reached = true;
+        }
+        else if (!Threshold2Reached && Health < (StartHealth * Threshold2DamageLevel))
+        {
+            // change the sprite to threshold2
+            GameManager.instance.ChangeLevelSprite(2);
+            Threshold2Reached = true;
+        }
     }
+
     internal static void AddHealth(float health)
     {
         if (health < 0) return;
@@ -66,6 +86,20 @@ public class Player : MonoBehaviour
 
         uIManager.UpdateTextHealth();
         uIManager.UpdateHealthVisual();
+
+        // make sure the level (organ) shows damage according to damageLevel
+        if (Threshold1Reached && Health > (StartHealth * Threshold1DamageLevel))
+        {
+            // change the sprite to threshold0
+            GameManager.instance.ChangeLevelSprite(0);
+            Threshold1Reached = false;
+        }
+        else if (Threshold2Reached && Health > (StartHealth * Threshold2DamageLevel))
+        {
+            // change the sprite to threshold1
+            GameManager.instance.ChangeLevelSprite(1);
+            Threshold2Reached = true;
+        }
     }
 
     internal static bool HasEnoughMoney(float money)

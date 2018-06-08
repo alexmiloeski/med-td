@@ -119,6 +119,8 @@ public class MeleeTower : Tower
         meleeHitRange = GetCurrentMeleeHitRange();
         unitHitCooldown = GetCurrentMeleeUnitHitCooldown();
 
+        int currentTowerLevel = GetCurrentLevel();
+
         // update the stats of each of this tower's melee units
         if (units != null)
         {
@@ -136,6 +138,8 @@ public class MeleeTower : Tower
                     unit.SetDefense(unitDefense);
                     unit.SetHitRange(meleeHitRange);
                     unit.SetHitCooldown(unitHitCooldown);
+
+                    unit.SetAnimatorController(currentTowerLevel);
                 }
             }
         }
