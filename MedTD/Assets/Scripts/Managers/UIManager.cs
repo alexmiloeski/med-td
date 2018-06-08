@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
 
         BuildManager buildManager = BuildManager.instance;
         textHealth.text = "Health: " + Player.GetHealthInt() + " / " + Player.GetStartHealth();
-        textMoney.text = "Money: " + Player.GetMoneyInt();
+        textMoney.text = "" + Player.GetMoneyInt();
         textSelectSS.text = "Pick " + buildManager.numberOfLymphNodes + " strategic sites.";
         textSelectedSSCount.text = "Number of selected sites: 0/" + buildManager.numberOfLymphNodes + ".";
         textWarningMessage.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
@@ -61,7 +61,7 @@ public class UIManager : MonoBehaviour
     }
     internal void UpdateTextMoney()
     {
-        textMoney.text = "Money: " + Player.GetMoneyInt();
+        textMoney.text = "" + Player.GetMoneyInt();
     }
     internal void UpdateHealthVisual()
     {
