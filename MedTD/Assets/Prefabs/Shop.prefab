@@ -51,9 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5350ba70da7849e46a28b335dd0e025e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uICanvas: {fileID: 0}
-  buttonCheckmarkPrefab: {fileID: 1958229257691612, guid: 8e2db1eaa84ee0440832a97c5b0fb00e,
-    type: 2}
   tower1: {fileID: 114466514691723638, guid: 5c14bd36418844e469a2722e8fe33f0a, type: 2}
   tower2: {fileID: 114081857485818638, guid: 069de8b49849a8649a622b7234d72b54, type: 2}
   tower3: {fileID: 114559496392638446, guid: 39ca1a0721f45c746a7ba4bce16d6395, type: 2}
@@ -62,5 +59,5 @@ MonoBehaviour:
   spriteButtonRegular: {fileID: 21300000, guid: ec82a3ab20b9e274f9fbb585940cbc0f,
     type: 3}
   spriteCheckmark: {fileID: 21300000, guid: 906db8f00ba26234c9d18cee2f5e05cb, type: 3}
-  spriteButtonX: {fileID: 21300000, guid: c39b14da124994b4a8bd247b8e3938b6, type: 3}
+  spriteButtonX: {fileID: 21300000, guid: 14d9816fd68bbb149a3cd8b046988860, type: 3}
   coughStopDelay: 6
