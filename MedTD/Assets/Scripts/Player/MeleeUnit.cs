@@ -18,6 +18,8 @@ public class MeleeUnit : Damageable, IAttacker
     private Vector3 rallyPoint;
     private LinkedNode rallyPointNode;
 
+    private const float healthRegenPercentage = 0.04f; // a percentage of startHealth that gets regained each second
+
     private bool deployed = false;
 
     private Transform target;
@@ -74,7 +76,15 @@ public class MeleeUnit : Damageable, IAttacker
         // if there's no target, go back to rally point
         if (target == null)
         {
-            ReturnToRallyPoint();
+            if (ReturnToRallyPoint()) // true if this unit has already reached its rally point
+            {
+                // regain health if not at full health
+                float healthRegenPortion = startHealth * healthRegenPercentage;
+                //Debug.Log("healthRegenPortion = " + healthRegenPortion);
+                float healthThisFrame = healthRegenPortion * Time.deltaTime;
+                //Debug.Log("healthThisFrame = " + healthThisFrame);
+                RegenerateHealth(healthThisFrame);
+            }
             return;
         }
 
@@ -253,7 +263,11 @@ public class MeleeUnit : Damageable, IAttacker
         ReturnToRallyPoint();
     }
 
-    private void ReturnToRallyPoint()
+    /// <summary>
+    /// Moves this unit to its rally point. To be used in Update(). Returns true if this unit has already reached its rally point.
+    /// </summary>
+    /// <returns>True if this unit has already reached its rally point; False otherwise.</returns>
+    private bool ReturnToRallyPoint()
     {
         float distanceToRallyPoint = Vector2.Distance(transform.position, rallyPoint);
         if (distanceToRallyPoint > 0.2f)
@@ -265,6 +279,8 @@ public class MeleeUnit : Damageable, IAttacker
             deployed = true;
             InvokeRepeating("UpdateTarget", 0f, 0.5f);
         }
+
+        return distanceToRallyPoint <= 0.2f;
     }
 
     public void PerformHit()

@@ -64,7 +64,7 @@ MonoBehaviour:
   rallyPointRangePrefab: {fileID: 1589586800262946, guid: 6777830530b2d2945b5e00add8bed38b,
     type: 2}
   pathBoard: {fileID: 4661880127331292, guid: 5f9485573c8dc864dac6f2bf668d6cb1, type: 2}
-  unitCount: 3
+  unitCount: 1
 --- !u!212 &212487595534256636
 SpriteRenderer:
   m_ObjectHideFlags: 1

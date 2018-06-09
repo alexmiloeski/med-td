@@ -52,7 +52,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5c359de02d28448afe6610f2d74b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
+  explosionPrefab: {fileID: 0}
+  speed: 5
   explosionRadius: 0
 --- !u!212 &212187090289299418
 SpriteRenderer:

@@ -6166,7 +6166,7 @@ MonoBehaviour:
   lymphNodePrefab: {fileID: 4207219894400406, guid: 90acd459b4c74c447b3826ab7801195a,
     type: 2}
   sSContainer: {fileID: 123073212}
-  numberOfLymphNodes: 2
+  numberOfLymphNodes: 3
 --- !u!114 &1378128246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6179,7 +6179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startHealth: 400
-  startMoney: 400
+  startMoney: 1400
 --- !u!114 &1378128247
 MonoBehaviour:
   m_ObjectHideFlags: 0

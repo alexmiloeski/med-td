@@ -30,6 +30,24 @@ public class Damageable : MonoBehaviour
         }
     }
 
+    internal void RegenerateHealth(float addedHealth)
+    {
+        if (health >= startHealth) return;
+
+        health += addedHealth;
+        if (health > startHealth) health = startHealth;
+
+        HealthBar healthBar = GetComponent<HealthBar>();
+        if (healthBar != null)
+        {
+            //if (startHealth <= 0f) startHealth = health;
+            //if (health > startHealth) health = startHealth;
+            healthBar.UpdateGreenPercentage(health, startHealth);
+        }
+        //Debug.Log("health = " + health);
+        //Debug.Log("\n");
+    }
+
     protected virtual void Die()
     {
         //Debug.Log("Damageable.Die");
