@@ -183,32 +183,44 @@ public class Shop : MonoBehaviour
     {
         if (buttonObject == null) return;
 
-        Image image = buttonObject.GetComponent<Image>();
-        Text text = buttonObject.transform.GetChild(0).GetComponent<Text>();
-
-        // save this button's default values
-        tempButton = buttonObject;
-        if (image != null) tempButtonSprite = image.sprite;
-        if (text != null) tempButtonText = text.text;
-
-        // change this button's values so as to appear "selected"
-        if (image != null)
+        //Image image = buttonObject.GetComponent<Image>();
+        Transform iconT = buttonObject.transform.Find(Constants.ButtonIcon);
+        if (iconT != null)
         {
-            if (possible)
-                image.sprite = spriteCheckmark;
-            else
-                image.sprite = spriteButtonX;
+            Image image = iconT.GetComponent<Image>();
+            
+            //Text text = buttonObject.transform.GetChild(0).GetComponent<Text>();
+
+            // save this button's default values
+            tempButton = buttonObject;
+            if (image != null) tempButtonSprite = image.sprite;
+            //if (text != null) tempButtonText = text.text;
+
+            // change this button's values so as to appear "selected"
+            if (image != null)
+            {
+                if (possible)
+                    image.sprite = spriteCheckmark;
+                else
+                    image.sprite = spriteButtonX;
+            }
+            //if (text != null) text.text = "";
         }
-        if (text != null) text.text = "";
     }
     private void ResetPreviouslySelectedButton()
     {
         if (tempButton != null)
         {
-            if (tempButton.GetComponent<Image>() != null)
-                tempButton.GetComponent<Image>().sprite = tempButtonSprite;
-            if (tempButton.transform.GetChild(0) != null && tempButton.transform.GetChild(0).GetComponent<Text>() != null)
-                tempButton.transform.GetChild(0).GetComponent<Text>().text = tempButtonText;
+            Transform iconT = tempButton.transform.Find(Constants.ButtonIcon);
+            if (iconT != null)
+            {
+                Image image = iconT.GetComponent<Image>();
+
+                if (image != null)
+                    image.sprite = tempButtonSprite;
+                //if (tempButton.transform.GetChild(0) != null && tempButton.transform.GetChild(0).GetComponent<Text>() != null)
+                //    tempButton.transform.GetChild(0).GetComponent<Text>().text = tempButtonText;
+            }
         }
     }
     private void ButtonAction(GameObject buttonObject, SelectedAction sa, Tower tower)

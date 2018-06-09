@@ -6,6 +6,7 @@
     public const string HealthBar = "HealthBar";
     public const string HealthBarGreen = "HealthBarGreen";
     public const string RotatingPart = "RotatingPart";
+    public const string ButtonIcon = "ButtonIcon";
     public const string ButtonUpgradeTower = "ButtonUpgradeTower";
     public const string ButtonSetRallyPoint = "ButtonSetRallyPoint";
     //public const string spritesFolderPath = "Sprites";
