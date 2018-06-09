@@ -26,6 +26,8 @@ public class UIManager : MonoBehaviour
     private bool interruptXAtTouch = false;
     private bool interruptTextMaxSSSelected = false;
 
+    private const string atpPrefix = "";//"ATP: ";
+
 
     private void Awake()
     {
@@ -43,8 +45,8 @@ public class UIManager : MonoBehaviour
             healthBarContainer = healthBarGreen.transform.parent.GetComponent<RectTransform>();
 
         BuildManager buildManager = BuildManager.instance;
-        textHealth.text = "Health: " + Player.GetHealthInt() + " / " + Player.GetStartHealth();
-        textMoney.text = "" + Player.GetMoneyInt();
+        //textHealth.text = "Health: " + Player.GetHealthInt() + " / " + Player.GetStartHealth();
+        textMoney.text = atpPrefix + Player.GetMoneyInt();
         textSelectSS.text = "Pick " + buildManager.numberOfLymphNodes + " strategic sites.";
         textSelectedSSCount.text = "Number of selected sites: 0/" + buildManager.numberOfLymphNodes + ".";
         textWarningMessage.text = "Can't pick more than " + buildManager.numberOfLymphNodes + " strategic sites.";
@@ -57,11 +59,11 @@ public class UIManager : MonoBehaviour
 
     internal void UpdateTextHealth()
     {
-        textHealth.text = "Health: " + Player.GetHealthInt() + " / " + Player.GetStartHealth();
+        //textHealth.text = "Health: " + Player.GetHealthInt() + " / " + Player.GetStartHealth();
     }
     internal void UpdateTextMoney()
     {
-        textMoney.text = "" + Player.GetMoneyInt();
+        textMoney.text = atpPrefix + Player.GetMoneyInt();
     }
     internal void UpdateHealthVisual()
     {
@@ -260,7 +262,7 @@ public class UIManager : MonoBehaviour
     }
     internal void FlashNotEnoughMoney(float delay)
     {
-        textWarningMessage.text = "Not enough money.";
+        textWarningMessage.text = "Not enough ATP.";
         FlashWarningMessage(delay);
     }
     private void FlashWarningMessage(float delay)
@@ -439,7 +441,7 @@ public class UIManager : MonoBehaviour
                     {
                         name = "Sell tower";
                         cost = -currentTower.GetCurrentSellValue();
-                        description = "Sell this tower. You will receive " + (-cost) + " money, and you'll be able to build another tower on the same spot.";
+                        description = "Sell this tower. You will receive " + (-cost) + " ATP, and you'll be able to build another tower on the same spot.";
                     }
                 }
                 break;
