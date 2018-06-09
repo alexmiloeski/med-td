@@ -6,7 +6,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public Transform uICanvas;
+    public Transform activeGameUIPanel;
     public Text textHealth;
     public Text textMoney;
     public Text textSelectSS;
@@ -283,8 +283,8 @@ public class UIManager : MonoBehaviour
     /// LymphNode object when it is clicked without a tower on it. </summary>
     internal GameObject ShowBuildingMenu(Transform lymphNode)
     {
-        GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        buildingMenu.transform.SetParent(uICanvas, false);
+        GameObject buildingMenu = Instantiate(buildingMenuPrefab, new Vector3(0f, 0f, -1.2f), activeGameUIPanel.rotation);
+        buildingMenu.transform.SetParent(activeGameUIPanel, false);
 
         /////////////////////////////////////
 
@@ -320,7 +320,7 @@ public class UIManager : MonoBehaviour
         // in order to position the menu where the lymph node is (on the screen)...
         // ...we have to do some conversions between World and Viewport
         RectTransform buildingMenuRT = buildingMenu.GetComponent<RectTransform>();
-        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
+        RectTransform canvasRT = activeGameUIPanel.parent.GetComponent<RectTransform>(); // this assumes that this panel is the child of the top-level UI panel
         Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
         Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
         Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
@@ -335,8 +335,8 @@ public class UIManager : MonoBehaviour
     /// by a LymphNode object when it is clicked with a tower on it. </summary>
     internal GameObject ShowTowerMenu(Transform lymphNode, Tower tower)
     {
-        GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
-        towerMenu.transform.SetParent(uICanvas, false);
+        GameObject towerMenu = Instantiate(towerMenuPrefab, new Vector3(0f, 0f, -1.2f), activeGameUIPanel.rotation);
+        towerMenu.transform.SetParent(activeGameUIPanel, false);
 
         // if this tower is not upgradeable (i.e. the current tower...
         // ...level is the last one), don't show the "upgrade" button
@@ -378,7 +378,7 @@ public class UIManager : MonoBehaviour
         // in order to position the menu where the lymph node is (on the screen)...
         // ...we have to do some conversions between World and Viewport
         RectTransform towerMenuRT = towerMenu.GetComponent<RectTransform>();
-        RectTransform canvasRT = uICanvas.GetComponent<RectTransform>();
+        RectTransform canvasRT = activeGameUIPanel.parent.GetComponent<RectTransform>(); // this assumes that this panel is the child of the top-level UI panel
         Vector2 viewportPosition = Camera.main.WorldToViewportPoint(lymphNode.position);
         Vector2 uiOffset = new Vector2((float)canvasRT.sizeDelta.x / 2f, (float)canvasRT.sizeDelta.y / 2f); // screen offset for the canvas
         Vector2 proportionalPosition = new Vector2(viewportPosition.x * canvasRT.sizeDelta.x, viewportPosition.y * canvasRT.sizeDelta.y); // position on the canvas
@@ -390,7 +390,7 @@ public class UIManager : MonoBehaviour
     }
     internal GameObject ShowInfoPanel(Transform menu, SelectedAction sa, Tower newTower)
     {
-        GameObject infoPanel = Instantiate(menuSelectionInfoPrefab, new Vector3(0f, 0f, -1.2f), uICanvas.rotation);
+        GameObject infoPanel = Instantiate(menuSelectionInfoPrefab, new Vector3(0f, 0f, -1.2f), activeGameUIPanel.rotation);
         // set the menu as this panel's parent (so that it scrolls together with it)
         infoPanel.transform.SetParent(menu, false);
 
