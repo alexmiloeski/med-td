@@ -183,16 +183,45 @@ public class UIManager : MonoBehaviour
 
         // if the current state is different from the new state, then update
         if (buttonSpecial1.interactable != interactable)
+        {
             buttonSpecial1.interactable = interactable;
 
-        // if it's not interactable, show the cooldown timer
-        if (interactable)
-        {
-            buttonSpecial1.transform.GetChild(0).GetComponent<Text>().text = "Cough";
+            Transform iconTr = buttonSpecial1.transform.Find("Icon");
+            if (iconTr != null)
+            {
+                RawImage iconRawImage = iconTr.GetComponent<RawImage>();
+                if (iconRawImage != null)
+                {
+                    if (interactable)
+                    {
+                        iconRawImage.color = new Color(0f, 0f, 0f, 1f);
+                    }
+                    else
+                    {
+                        iconRawImage.color = new Color(0f, 0f, 0f, 0.2f);
+                    }
+                }
+                else Debug.Log("iconRawImage is null");
+            }
         }
-        else
+
+        // if it's not interactable, show the cooldown timer
+        Transform textTr = buttonSpecial1.transform.Find("Text");
+        if (textTr != null)
         {
-            buttonSpecial1.transform.GetChild(0).GetComponent<Text>().text = Mathf.Floor(cooldown + 1).ToString();
+            Text text = textTr.GetComponent<Text>();
+
+            if (text != null)
+            {
+                if (interactable)
+                {
+                    text.text = "";
+                }
+                else
+                {
+                    text.text = Mathf.Floor(cooldown + 1).ToString();
+                }
+            }
         }
     }
 
