@@ -39,6 +39,9 @@ public class Scroller : MonoBehaviour
 
     private void Update()
     {
+        // don't do anything if game is paused
+        if (GameManager.instance.IsGamePaused()) return;
+
         if (cam == null) cam = Camera.main;
 
         // if the aspect ratio changes, update the camera so that it's fitted to the screen width
