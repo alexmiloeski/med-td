@@ -26,6 +26,8 @@ public class UIManager : MonoBehaviour
     private bool interruptXAtTouch = false;
     private bool interruptTextMaxSSSelected = false;
 
+    private bool isCritical = false;
+
     private const string atpPrefix = "";//"ATP: ";
 
 
@@ -81,6 +83,29 @@ public class UIManager : MonoBehaviour
         if (newRight < 0 || newRight > healthBarContainer.sizeDelta.x) return;
 
         healthBarGreen.offsetMax = new Vector2(-newRight, 0);
+
+        // if health is critical, start pulsing animation on the container object for the health bar
+        float criticalPercentage = 0.3f; // todo: arbitrary value; should be defined somewhere, e.g. Constants
+
+        bool isChanged = (percentage < criticalPercentage && !isCritical) || (percentage >= criticalPercentage && isCritical);
+
+        if (isChanged)
+        {
+            // set the flag
+            isCritical = percentage < criticalPercentage;
+
+            // start the animation
+            Transform healthBarContainer = healthBarGreen.parent;
+            if (healthBarContainer != null)
+            {
+                Animator animator = healthBarContainer.GetComponent<Animator>();
+                if (animator != null)
+                {
+                    //Debug.Log("Critical change! Animator is live! isCritical: " + isCritical);
+                    animator.SetBool("isCritical", isCritical);
+                }
+            }
+        }
     }
 
 

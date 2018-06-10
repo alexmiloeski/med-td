@@ -2520,6 +2520,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 642058429}
+  - component: {fileID: 642058430}
   m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
@@ -2547,6 +2548,23 @@ RectTransform:
   m_AnchoredPosition: {x: -70, y: -30}
   m_SizeDelta: {x: 90, y: 20}
   m_Pivot: {x: 1, y: 1}
+--- !u!95 &642058430
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 642058428}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b65fe2f1e6fba1044b1724700a588c91, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!4 &662191121 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4389681227260648, guid: 4931e9e53c474cd439411d97517a5f66,
