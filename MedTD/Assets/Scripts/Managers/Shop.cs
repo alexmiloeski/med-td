@@ -138,14 +138,19 @@ public class Shop : MonoBehaviour
 
         // cough
         // shake camera
+        float duration1 = 0.3f;
         float delay2 = 0.3f;
+        float duration2 = 0.2f;
         float delay3 = 0.8f;
+        float duration3 = 0.3f;
         float delay4 = 1f;
         float lastDuration = 0.1f;
-        StartCoroutine(ShakeCamera(0f, 0.3f, 0.08f));
-        StartCoroutine(ShakeCamera(delay2, 0.2f, 0.12f));
-        StartCoroutine(ShakeCamera(delay3, 0.3f, 0.06f));
+        StartCoroutine(ShakeCamera(0f, duration1, 0.08f));
+        StartCoroutine(ShakeCamera(delay2, duration2, 0.12f));
+        StartCoroutine(ShakeCamera(delay3, duration3, 0.06f));
         StartCoroutine(ShakeCamera(delay4, lastDuration, 0.02f));
+
+        float totalCoughDuration = delay4 + lastDuration;
 
         // slow down all enemies
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
@@ -156,6 +161,7 @@ public class Shop : MonoBehaviour
         }
         
         Invoke("StopCough", coughStopDelay);
+        Invoke("StopCameraShaker", totalCoughDuration);
     }
     private IEnumerator ShakeCamera(float delay, float duration, float intensity)
     {
@@ -164,6 +170,7 @@ public class Shop : MonoBehaviour
     }
     private void StopCough()
     {
+
         // return all enemies' speeds to their regular speed
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
         foreach (GameObject enemyObj in enemies)
@@ -173,6 +180,11 @@ public class Shop : MonoBehaviour
         }
 
         coughing = false;
+    }
+    private void StopCameraShaker()
+    {
+        // stop the camera shaker
+        CameraShaker.StopShaking();
     }
     internal bool IsCoughing()
     {

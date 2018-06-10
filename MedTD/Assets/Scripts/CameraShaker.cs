@@ -17,10 +17,13 @@ public class CameraShaker : MonoBehaviour
     private static bool shaking = false;
     private static float decrement = 0f;
 
+    private static Transform camTransform;
+
     void Start ()
     {
         //camTransform = transform;
         originalPos = transform.localPosition;
+        camTransform = transform;
     }
 	
 	void Update ()
@@ -48,17 +51,23 @@ public class CameraShaker : MonoBehaviour
             transform.localPosition = originalPos;
         }
     }
-
+    
     /// <summary> Shake the camera for <paramref name="duration"/> seconds, with
     /// <paramref name="_startShakeAmount"/> intensity. Values between 0.03f and
     /// 0.5f should be enough for <paramref name="_startShakeAmount"/>. </summary>
     internal static void StartShaking(float duration, float _startShakeAmount)
     {
+        originalPos = camTransform.localPosition;
         startShakeAmount = _startShakeAmount;
         decrement = startShakeAmount / duration;
         shakeAmount = startShakeAmount;
         shakeDuration = duration;
         decrease = 1f;
         shaking = true;
+    }
+
+    internal static void StopShaking()
+    {
+        shaking = false;
     }
 }

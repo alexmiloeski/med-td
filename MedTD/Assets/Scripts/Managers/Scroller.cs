@@ -94,13 +94,12 @@ public class Scroller : MonoBehaviour
                 cam.transform.Translate(new Vector2(0, moveDist));
             }
 
-
             // move any build menus along with the cam
             MoveMenuWithCam();
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            dragging = false;
+               dragging = false;
         }
     }
 
