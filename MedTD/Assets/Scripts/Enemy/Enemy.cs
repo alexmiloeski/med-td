@@ -46,7 +46,8 @@ public class Enemy : Damageable, IAttacker
     private float coughSpeedIncrement;
     private bool startRegainingSpeed = false;
     
-    private bool latched;
+    private bool latched = false;
+    private bool attackedWhileLatched = false;
     
     private System.Random random = new System.Random();
     
@@ -136,6 +137,12 @@ public class Enemy : Damageable, IAttacker
             // if it's latched, stop the latched animation
             if (latched)
             {
+                if (!attackedWhileLatched)
+                {
+                    attackedWhileLatched = true;
+                    attackPoint.SetOccupantActive(!attackedWhileLatched);
+                }
+
                 //Debug.Log("stopping latched animation");
                 if (anim != null)
                 {
@@ -165,6 +172,12 @@ public class Enemy : Damageable, IAttacker
                         if (anim != null)
                         {
                             anim.SetTrigger("isLatched");
+                        }
+
+                        if (attackedWhileLatched)
+                        {
+                            attackedWhileLatched = false;
+                            attackPoint.SetOccupantActive(!attackedWhileLatched);
                         }
                     }
                 }

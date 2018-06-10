@@ -4,6 +4,8 @@ using UnityEngine;
 public class AttackPoint : MonoBehaviour
 {
     private Enemy occupant;
+
+    private bool occupantIsActive = true;
     
 	void Start ()
     {
@@ -16,6 +18,10 @@ public class AttackPoint : MonoBehaviour
         {
             DoDamageToPlayer();
         }
+
+        // if this ap is vacant, but pulsing is enabled, disable it
+        if (IsVacant() && IsPulsingEnabled())
+            SetPulsingEnabled(false);
 	}
 
     private void DoDamageToPlayer()
@@ -27,6 +33,7 @@ public class AttackPoint : MonoBehaviour
     internal void SetOccupant(Enemy occ)
     {
         occupant = occ;
+        SetPulsingEnabled(occupantIsActive);
     }
 
     internal Enemy GetOccupant()
@@ -41,5 +48,32 @@ public class AttackPoint : MonoBehaviour
     internal bool IsVacant()
     {
         return occupant == null;
+    }
+
+    internal void SetOccupantActive(bool active)
+    {
+        occupantIsActive = active;
+
+        // show or hide the pulsing effect
+        SetPulsingEnabled(active);
+    }
+
+    private void SetPulsingEnabled(bool active)
+    {
+        Transform pulseEffect = transform.Find(Constants.PulseEffect);
+        if (pulseEffect != null)
+        {
+            pulseEffect.gameObject.SetActive(active);
+        }
+    }
+
+    private bool IsPulsingEnabled()
+    {
+        Transform pulseEffect = transform.Find(Constants.PulseEffect);
+        if (pulseEffect != null)
+        {
+            return pulseEffect.gameObject.activeSelf;
+        }
+        return false;
     }
 }
