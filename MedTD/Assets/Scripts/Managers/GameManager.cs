@@ -83,8 +83,10 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(true);
 
         gamePaused = true;
-        Image image = buttonPauseOrResume.GetComponent<Image>();
-        image.sprite = spriteResume;
+        ChangeButtonIcon(buttonPauseOrResume, spriteResume);
+
+        //Image image = buttonPauseOrResume.GetComponent<Image>();
+        //image.sprite = spriteResume;
     }
     public void ResumeGame()
     {
@@ -96,8 +98,7 @@ public class GameManager : MonoBehaviour
         pauseMenu.SetActive(false);
 
         gamePaused = false;
-        Image image = buttonPauseOrResume.GetComponent<Image>();
-        image.sprite = spritePause;
+        ChangeButtonIcon(buttonPauseOrResume, spritePause);
     }
     public void TogglePauseGame()
     {
@@ -190,6 +191,19 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 break;
+        }
+    }
+
+    private void ChangeButtonIcon(GameObject buttonObject, Sprite newSprite)
+    {
+        Transform iconTr = buttonObject.transform.Find("Icon");
+        if (iconTr != null)
+        {
+            Image iconImage = iconTr.GetComponent<Image>();
+            if (iconImage != null)
+            {
+                iconImage.sprite = newSprite;
+            }
         }
     }
 }
