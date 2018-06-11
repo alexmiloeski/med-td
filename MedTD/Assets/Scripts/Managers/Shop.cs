@@ -60,6 +60,9 @@ public class Shop : MonoBehaviour
     public void ButtonPauseOrResumeAction()
     {
         //Debug.Log("ButtonPauseOrResume pressed");
+
+        BuildManager.instance.DeselectLymphNode();
+
         GameManager.instance.TogglePauseGame();
     }
     public void ButtonNextOrRestartLevelAction()
@@ -73,6 +76,8 @@ public class Shop : MonoBehaviour
         if (Scroller.IsDragging()) return; // don't do button action while scrolling
 
         BuildManager buildManager = BuildManager.instance;
+
+        buildManager.DeselectLymphNode();
 
         if (buildManager.IsFinishedWithSS())
         {
