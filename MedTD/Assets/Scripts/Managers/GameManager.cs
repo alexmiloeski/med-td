@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     private bool gamePaused = false;
     private bool levelCleared = false;
 
+    private bool isSettingRallyPoint = false;
+    private MeleeTower towerSettingRallyPoint = null;
+
     private void Awake()
     {
         //Debug.Log("GameManager.Awake");
@@ -52,6 +55,9 @@ public class GameManager : MonoBehaviour
         //Debug.Log("GameManager.Start");
         //Application.LoadLevel(Application.loadedLevel);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        isSettingRallyPoint = false;
+        towerSettingRallyPoint = null;
 
         ResumeGame();
     }
@@ -204,6 +210,28 @@ public class GameManager : MonoBehaviour
             {
                 iconImage.sprite = newSprite;
             }
+        }
+    }
+
+    internal bool IsSettingRallyPoint()
+    {
+        return isSettingRallyPoint;
+    }
+    internal void SetIsSettingRallyPoint(bool newValue, MeleeTower t)
+    {
+        isSettingRallyPoint = newValue;
+
+        if (newValue)
+            towerSettingRallyPoint = t;
+        else
+            towerSettingRallyPoint = null;
+    }
+    internal void StopSettingRallyPoint()
+    {
+        if (towerSettingRallyPoint != null)
+        {
+            towerSettingRallyPoint.StopSettingNewRallyPoint();
+            //towerSettingRallyPoint. lymph node deselect ??
         }
     }
 }

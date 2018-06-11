@@ -75,6 +75,9 @@ public class Shop : MonoBehaviour
         //if (Scroller.instance.IsDragging()) return; // don't do button action while scrolling
         if (Scroller.IsDragging()) return; // don't do button action while scrolling
 
+        //if (GameManager.instance.IsSettingRallyPoint()) return; // don't do button action if setting rally point on a melee tower
+        GameManager.instance.StopSettingRallyPoint();
+
         BuildManager buildManager = BuildManager.instance;
 
         buildManager.DeselectLymphNode();
@@ -134,6 +137,9 @@ public class Shop : MonoBehaviour
     public void ButtonSpecial1Action()
     {
         //Debug.Log("ButtonSpecial1Action");
+
+        //if (GameManager.instance.IsSettingRallyPoint()) return; // don't do button action if setting rally point on a melee tower
+        GameManager.instance.StopSettingRallyPoint();
 
         BuildManager.instance.DeselectLymphNode();
 

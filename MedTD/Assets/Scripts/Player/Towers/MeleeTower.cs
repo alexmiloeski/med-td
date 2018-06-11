@@ -325,6 +325,7 @@ public class MeleeTower : Tower
     internal void StartRallyPointSelector()
     {
         isSettingRallyPoint = true;
+        GameManager.instance.SetIsSettingRallyPoint(isSettingRallyPoint, this);
 
         // show a circle showing the rally point range
         rallyPointRangeGO = Instantiate(rallyPointRangePrefab, transform);
@@ -386,6 +387,7 @@ public class MeleeTower : Tower
     {
         //Debug.Log("Tower.StopSettingRallyPoint");
         isSettingRallyPoint = false;
+        GameManager.instance.SetIsSettingRallyPoint(isSettingRallyPoint, null);
 
         // hide any x sprites
 
