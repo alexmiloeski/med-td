@@ -27,6 +27,7 @@ public class MeleeTower : Tower
     private Vector3 rallyPoint;
     private bool isSettingRallyPoint = false;
     private bool startedRallyPointClick = false;
+    private GameObject currentRallyPointGO;
     private GameObject rallyPointGO;
     private GameObject rallyPointRangeGO;
 
@@ -348,7 +349,12 @@ public class MeleeTower : Tower
         mousePosWorld.z = -2f;
         //var rallyPointSprite = Resources.Load<Sprite>(Constants.rallyPointSpritePath);
 
-        // create a gameobject for the rally point sprite or X sprite
+        // create a gameobject for the current rally point sprite
+        currentRallyPointGO = new GameObject();
+        currentRallyPointGO.transform.SetPositionAndRotation(rallyPoint, Quaternion.identity);
+        currentRallyPointGO.AddComponent<SpriteRenderer>().sprite = rallyPointSprite;
+
+        // create a gameobject for the cursor-following rally point sprite or X sprite
         rallyPointGO = new GameObject();
         rallyPointGO.AddComponent<SpriteRenderer>();
 
@@ -408,6 +414,11 @@ public class MeleeTower : Tower
         // hide any x sprites
 
         UIManager.instance.InterruptAndHideXAtTouch();
+        // stop showing the current rally point icon
+        if (currentRallyPointGO != null)
+        {
+            Destroy(currentRallyPointGO);
+        }
         // stop showing the rally point icon
         if (rallyPointGO != null)
         {
