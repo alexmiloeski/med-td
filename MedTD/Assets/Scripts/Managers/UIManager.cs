@@ -535,17 +535,22 @@ public class UIManager : MonoBehaviour
         // calculate the panel's x position so that it appears to the right of the menu
         float panelHalfWidth = panelRT.sizeDelta.x / 2;
         float menuHalfWidth = menuRT.sizeDelta.x / 2;
-        float xPos = menu.position.x + menuHalfWidth + panelHalfWidth;
-
+        float xPos = menuHalfWidth + panelHalfWidth;
+        
         // if there's not enough space on the right, show it on the left
         // i.e. if the panel's width is longer than the space between xPos and right screen boundary
-        if (panelRT.sizeDelta.x > Screen.width - xPos)
+        Canvas canvas = activeGameUIPanel.parent.GetComponent<Canvas>(); // this assumes that this panel is the child of the top-level UI panel
+        // calculate the right end of the panel as menuPosX + panelPosX + panelWidth
+        // however, the UI elements are scalable according to screen size, so their size needs to be multiplied by the scaleFactor
+        float panelRight = menuRT.localPosition.x + (canvas.scaleFactor * xPos) + (canvas.scaleFactor * panelRT.sizeDelta.x);
+
+        if (panelRight > Screen.width / 2f)
         {
-            xPos = menu.position.x - menuHalfWidth - panelHalfWidth;
+            xPos = 0 - menuHalfWidth - panelHalfWidth;
         }
-
-        panelRT.position = new Vector3(xPos, menu.position.y, menu.position.z);
-
+        
+        panelRT.localPosition = new Vector3(xPos, panelRT.localPosition.y, menu.position.z);
+        
         return infoPanel;
     }
 }
