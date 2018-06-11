@@ -15,8 +15,11 @@ public class GameManager : MonoBehaviour
     public Text textPausedOrWonOrGameOver;
     public Sprite spriteResume;
     public Sprite spritePause;
+    public Text textTest;
 
     public static GameManager instance;
+
+    public static bool isPlatformPhone;
 
     private bool gamePaused = false;
     private bool levelCleared = false;
@@ -34,6 +37,15 @@ public class GameManager : MonoBehaviour
             return;
         }
         instance = this;
+
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            isPlatformPhone = true;
+        }
+        else
+        {
+            isPlatformPhone = false;
+        }
 
         gamePaused = false;
         levelCleared = false;
@@ -60,6 +72,37 @@ public class GameManager : MonoBehaviour
         towerSettingRallyPoint = null;
 
         ResumeGame();
+
+        //if (Application.platform == RuntimePlatform.WindowsEditor)
+        //{
+        //    Debug.Log("WindowsEditor");
+        //    textTest.text = "WindowsEditor";
+        //}
+        //if (Application.platform == RuntimePlatform.Android)
+        //{
+        //    Debug.Log("Android");
+        //    textTest.text = "Android";
+        //}
+        //if (Application.platform == RuntimePlatform.WindowsPlayer)
+        //{
+        //    Debug.Log("WindowsPlayer");
+        //    textTest.text = "WindowsPlayer";
+        //}
+        //if (Application.platform == RuntimePlatform.OSXEditor)
+        //{
+        //    Debug.Log("OSXEditor");
+        //    textTest.text = "OSXEditor";
+        //}
+        //if (Application.platform == RuntimePlatform.LinuxEditor)
+        //{
+        //    Debug.Log("LinuxEditor");
+        //    textTest.text = "LinuxEditor";
+        //}
+        //if (Application.platform == RuntimePlatform.IPhonePlayer)
+        //{
+        //    Debug.Log("IPhonePlayer");
+        //    textTest.text = "IPhonePlayer";
+        //}
     }
 
     private void Update()

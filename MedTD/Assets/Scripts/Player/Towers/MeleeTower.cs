@@ -26,6 +26,7 @@ public class MeleeTower : Tower
     private int currentUnitCount = 0;
     private Vector3 rallyPoint;
     private bool isSettingRallyPoint = false;
+    private bool startedRallyPointClick = false;
     private GameObject rallyPointGO;
     private GameObject rallyPointRangeGO;
 
@@ -56,13 +57,18 @@ public class MeleeTower : Tower
             Vector2 mousePos2 = new Vector2(mousePos3.x, mousePos3.y);
 
             // the rally point icon should follow the mouse // todo: this doesn't make sense for touch screens
-            if (rallyPointGO != null)
+            if (!GameManager.isPlatformPhone && rallyPointGO != null)
             {
                 rallyPointGO.transform.position = mousePos2;
             }
-            
+
             // when mouse button is pressed, try to set the new rally point there
             if (Input.GetMouseButtonDown(0))
+            {
+                startedRallyPointClick = true;
+            }
+            else
+            if (startedRallyPointClick && Input.GetMouseButtonUp(0))
             {
                 //Debug.Log("Left mouse button pressed");
 
@@ -79,8 +85,10 @@ public class MeleeTower : Tower
                     //Debug.Log("not contained");
                     TryToSetNewRallyPoint(Input.mousePosition);
                 }
+                startedRallyPointClick = false;
             }
         }
+        else if (startedRallyPointClick) startedRallyPointClick = false;
     }
 
     internal void RespawnUnitAfterCooldown()
@@ -325,6 +333,7 @@ public class MeleeTower : Tower
     internal void StartRallyPointSelector()
     {
         isSettingRallyPoint = true;
+        startedRallyPointClick = false;
         GameManager.instance.SetIsSettingRallyPoint(isSettingRallyPoint, this);
 
         // show a circle showing the rally point range
@@ -339,9 +348,16 @@ public class MeleeTower : Tower
         mousePosWorld.z = -2f;
         //var rallyPointSprite = Resources.Load<Sprite>(Constants.rallyPointSpritePath);
 
+        // create a gameobject for the rally point sprite or X sprite
         rallyPointGO = new GameObject();
-        rallyPointGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
-        rallyPointGO.AddComponent<SpriteRenderer>().sprite = rallyPointSprite;
+        rallyPointGO.AddComponent<SpriteRenderer>();
+
+        // set the the rally point flag sprite (except on touch screens!)
+        if (!GameManager.isPlatformPhone)
+        {
+            rallyPointGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
+            rallyPointGO.GetComponent<SpriteRenderer>().sprite = rallyPointSprite;
+        }
     }
     private void TryToSetNewRallyPoint(Vector3 mousePosition)
     {
