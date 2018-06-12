@@ -56,7 +56,11 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        
+        //CanvasScaler canvasScaler = activeGameUIPanel.parent.GetComponent<CanvasScaler>();
+        //float canvasScale = Screen.width / canvasScaler.referenceResolution.x;
+        //string str = "DPI: " + Screen.dpi + "; scrn size: " + Screen.width + ", " + Screen.height + "; scale: " + canvasScale;
+        //GameManager.instance.Test(str);
+
     }
 
     internal void UpdateTextHealth()

@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class Scroller : MonoBehaviour
 {
     // TODO this could and should be relative to the vertical offset (difference between screen height and field height)
-    public float scrollSpeed = 0.018f;
+    public float scrollSpeed = 0.025f;
     public Transform uICanvas;
     private static Transform staticCanvas;
 
@@ -25,18 +25,42 @@ public class Scroller : MonoBehaviour
     private const float totalDragAllowed = 30f;
 
 
-    private void Start()
-    {
-        cam = Camera.main;
-
-        SetUpRatio();
-    }
-
     private void Awake()
     {
         staticCanvas = uICanvas;
     }
 
+    private void Start()
+    {
+        if (Screen.width < 900)
+            scrollSpeed = 0.025f;
+        else if (Screen.width < 950)
+            scrollSpeed = 0.0235f;
+        else if (Screen.width < 980)
+            scrollSpeed = 0.0208f;
+        else if (Screen.width < 1000)
+            scrollSpeed = 0.0222f;
+        else if (Screen.width < 1100)
+            scrollSpeed = 0.02f;
+        else if (Screen.width < 1200)
+            scrollSpeed = 0.0182f;
+        else if (Screen.width < 1290)
+            scrollSpeed = 0.01665f;
+        else if (Screen.width < 1350)
+            scrollSpeed = 0.0155f;
+        else if (Screen.width < 2000)
+            scrollSpeed = 0.013f; // approx. not calculated
+        else if (Screen.width < 2560)
+            scrollSpeed = 0.01f;
+        else
+            scrollSpeed = 0.0085f;
+
+
+        cam = Camera.main;
+
+        SetUpRatio();
+    }
+    
     private void Update()
     {
         // don't do anything if game is paused

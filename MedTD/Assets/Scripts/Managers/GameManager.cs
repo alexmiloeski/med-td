@@ -62,6 +62,11 @@ public class GameManager : MonoBehaviour
         //}
     }
 
+    //internal void Test(string str)
+    //{
+    //    textTest.text = str;
+    //}
+
     private void Start()
     {
         //Debug.Log("GameManager.Start");
@@ -72,6 +77,12 @@ public class GameManager : MonoBehaviour
         towerSettingRallyPoint = null;
 
         ResumeGame();
+
+        //if (textTest != null)
+        //{
+        //    string str = "scrn size: " + Screen.width + ", " + Screen.height;
+        //    textTest.text = "PPI: " + str;
+        //}
 
         //if (Application.platform == RuntimePlatform.WindowsEditor)
         //{
