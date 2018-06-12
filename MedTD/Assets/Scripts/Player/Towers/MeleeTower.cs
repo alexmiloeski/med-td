@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 public class MeleeTower : Tower
 {
     public GameObject unitPrefab; // prefab for the deployed friendly units
     public Sprite rallyPointSprite;
+    public Sprite currentRallyPointSprite;
     public GameObject rallyPointRangePrefab;
     public Transform pathBoard;
 
@@ -28,7 +31,7 @@ public class MeleeTower : Tower
     private bool isSettingRallyPoint = false;
     private bool startedRallyPointClick = false;
     private GameObject currentRallyPointGO;
-    private GameObject rallyPointGO;
+    private GameObject newRallyPointGO;
     private GameObject rallyPointRangeGO;
 
 
@@ -58,9 +61,9 @@ public class MeleeTower : Tower
             Vector2 mousePos2 = new Vector2(mousePos3.x, mousePos3.y);
 
             // the rally point icon should follow the mouse // todo: this doesn't make sense for touch screens
-            if (!GameManager.isPlatformPhone && rallyPointGO != null)
+            if (!GameManager.isPlatformPhone && newRallyPointGO != null)
             {
-                rallyPointGO.transform.position = mousePos2;
+                newRallyPointGO.transform.position = mousePos2;
             }
 
             // when mouse button is pressed, try to set the new rally point there
@@ -343,7 +346,7 @@ public class MeleeTower : Tower
         rallyPointRangeGO.transform.localScale = new Vector3(meleeRallyPointRange*2, meleeRallyPointRange * 2, 1f);
         
         // destroy the currently showing (fixed) rally point sprite
-        //Destroy(rallyPointGO);
+        //Destroy(newRallyPointGO);
 
         Vector3 mousePosWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosWorld.z = -2f;
@@ -352,17 +355,18 @@ public class MeleeTower : Tower
         // create a gameobject for the current rally point sprite
         currentRallyPointGO = new GameObject();
         currentRallyPointGO.transform.SetPositionAndRotation(rallyPoint, Quaternion.identity);
-        currentRallyPointGO.AddComponent<SpriteRenderer>().sprite = rallyPointSprite;
+        currentRallyPointGO.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        currentRallyPointGO.AddComponent<SpriteRenderer>().sprite = currentRallyPointSprite;
 
         // create a gameobject for the cursor-following rally point sprite or X sprite
-        rallyPointGO = new GameObject();
-        rallyPointGO.AddComponent<SpriteRenderer>();
+        newRallyPointGO = new GameObject();
+        newRallyPointGO.AddComponent<SpriteRenderer>();
 
         // set the the rally point flag sprite (except on touch screens!)
         if (!GameManager.isPlatformPhone)
         {
-            rallyPointGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
-            rallyPointGO.GetComponent<SpriteRenderer>().sprite = rallyPointSprite;
+            newRallyPointGO.transform.SetPositionAndRotation(mousePosWorld, Quaternion.identity);
+            newRallyPointGO.GetComponent<SpriteRenderer>().sprite = rallyPointSprite;
         }
     }
     private void TryToSetNewRallyPoint(Vector3 mousePosition)
@@ -401,7 +405,7 @@ public class MeleeTower : Tower
         else
         {
             // briefly change the sprite to an x and then change it back
-            UIManager.instance.FlashXAtTouch(0.4f, rallyPointGO);
+            UIManager.instance.FlashXAtTouch(0.4f, newRallyPointGO);
         }
 
     }
@@ -418,12 +422,14 @@ public class MeleeTower : Tower
         if (currentRallyPointGO != null)
         {
             Destroy(currentRallyPointGO);
+            //StartCoroutine(DestroyObjectDelayed(currentRallyPointGO, 1f));
         }
         // stop showing the rally point icon
-        if (rallyPointGO != null)
+        if (newRallyPointGO != null)
         {
             // destroy the current instance of the rally point sprite that is following the pointer
-            Destroy(rallyPointGO);
+            //Destroy(newRallyPointGO);
+            StartCoroutine(DestroyObjectDelayed(newRallyPointGO, 0.5f));
         }
         // stop showing the rally point range circle
         if (rallyPointRangeGO)
@@ -433,6 +439,14 @@ public class MeleeTower : Tower
 
         BuildManager.instance.StopSelectingRallyPoint();
     }
+
+    private IEnumerator DestroyObjectDelayed(GameObject gameObject, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (gameObject != null)
+            Destroy(gameObject);
+    }
+
     private void SetNewRallyPoint(Vector3 _rallyPoint)
     {
         rallyPoint = _rallyPoint;
