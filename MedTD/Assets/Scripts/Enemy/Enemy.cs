@@ -137,17 +137,22 @@ public class Enemy : Damageable, IAttacker
             // if it's latched, stop the latched animation
             if (latched)
             {
+                attackPoint.SetOccupantActive(false);
+                anim.SetBool("isAttackedWhileLatched", true);
+                anim.SetBool("isMoving", true);
+                anim.SetBool("isAtAP", false);
+
                 if (!attackedWhileLatched)
                 {
                     attackedWhileLatched = true;
-                    attackPoint.SetOccupantActive(!attackedWhileLatched);
                 }
 
                 //Debug.Log("stopping latched animation");
-                if (anim != null)
-                {
-                    anim.SetTrigger("isAttackedWhileLatched");
-                }
+                //if (anim != null)
+                //{
+                //anim.SetBool("isLatched", false);
+                //anim.SetTrigger("isAttackedWhileLatched");
+                //}
             }
 
             AttackMeleeAttacker();
@@ -160,18 +165,23 @@ public class Enemy : Damageable, IAttacker
                 // if already latched, don't move
                 if (latched)
                 {
+                    anim.SetBool("isAttackedWhileLatched", false);
+
                     // unless it's too far away from the attack point; in that case, move towards it
                     if (attackPoint != null && Vector2.Distance(transform.position, attackPoint.transform.position) > 0.15f)
                     {
                         //Debug.Log("move closer to attack point");
+                        attackPoint.SetOccupantActive(false);
                         moveable.MoveDirectlyTowardsPosition(attackPoint.transform.position);
+
+                        anim.SetBool("isAtAP", false);
                     }
                     else
                     {
                         //Debug.Log("starting latched animation");
                         if (anim != null)
                         {
-                            anim.SetTrigger("isLatched");
+                            anim.SetBool("isStunned", Shop.instance.IsCoughing());
                         }
 
                         if (attackedWhileLatched)
@@ -179,6 +189,9 @@ public class Enemy : Damageable, IAttacker
                             attackedWhileLatched = false;
                             attackPoint.SetOccupantActive(!attackedWhileLatched);
                         }
+
+                        anim.SetBool("isAtAP", true);
+                        anim.SetBool("isMoving", false);
                     }
                 }
                 else
@@ -199,6 +212,9 @@ public class Enemy : Damageable, IAttacker
                                 ap.SetOccupant(this);
                                 attackPoint = ap;
                                 latched = true;
+                                //anim.SetTrigger("isLatched");
+                                anim.SetBool("isLatched", true);
+                                anim.SetBool("isMoving", false);
                             }
                             else // if nextTile is an AP that is occupied, clear visited list and get next tile
                             {
@@ -547,6 +563,9 @@ public class Enemy : Damageable, IAttacker
         //Debug.Log("currTile = " + currTile);
         //Debug.Log("nextTile = " + nextTile);
         //Debug.Log("attackPoint: " + (attackPoint != null));
+        //Debug.Log("isMoving = " + anim.GetBool("isMoving"));
+        //Debug.Log("isStunned = " + anim.GetBool("isStunned"));
+        //Debug.Log("isAttackedWhileLatched = " + anim.GetBool("isAttackedWhileLatched"));
 
         //Gizmos.color = Color.blue;
         //Gizmos.DrawWireSphere(transform.position, hitRange);

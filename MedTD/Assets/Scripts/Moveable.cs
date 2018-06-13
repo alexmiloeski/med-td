@@ -8,11 +8,34 @@ public class Moveable : MonoBehaviour
     private Vector3 target;
     private LinkedNode currentNode;
     private LinkedNode nextNode;
+
+    private Animator animator;
     
     void Start()
     {
         //Debug.Log("moveable start");
         rotatingPart = transform.Find(Constants.RotatingPart);
+
+        if (rotatingPart == null)
+        {
+            Debug.Log("RotatingPart is NULL!");
+        }
+        else
+        {
+            Transform head = rotatingPart.Find("Head");
+            if (head == null)
+            {
+                Debug.Log("Head is NULL!");
+            }
+            else
+            {
+                animator = head.GetComponent<Animator>();
+                if (animator == null)
+                {
+                    Debug.Log("Animator is NULL!");
+                }
+            }
+        }
 
         // find the path tile on which we're standing, if there is one
         float minDistance = 0.5f;
@@ -157,6 +180,9 @@ public class Moveable : MonoBehaviour
     }
     private void MoveTowardsPosition(Vector3 position, bool withinTiles)
     {
+        // animate movement
+        animator.SetBool("isMoving", true);
+
         //Debug.Log("moveable MoveDirectlyTowardsPosition; " + (rotatingPart == null));
         // face the target
         Vector2 direction = position - transform.position;

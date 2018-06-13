@@ -287,9 +287,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a950107ccfad594aa1c9f89d495e367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 200
+  startHealth: 1000
   bounty: 10
-  damage: 15
+  damage: 30
   defense: 1
   hitCooldown: 0.8
   hitRange: 0.6
