@@ -14,15 +14,23 @@ public class AttackPoint : MonoBehaviour
 	
 	void Update ()
     {
-		if (!IsVacant())
+        // if it's vacant, stop the pulsing animation if it's on, and then exit
+        if (IsVacant())
         {
-            DoDamageToPlayer();
+            if (IsPulsingEnabled())
+                SetPulsingEnabled(false);
+            return;
         }
 
-        // if this ap is vacant, but pulsing is enabled, disable it
-        if (IsVacant() && IsPulsingEnabled())
+        // if this point has been reached, it's not vacant, so do damage
+        DoDamageToPlayer();
+
+        // if coughing, stop the pulse animation
+        if (Shop.instance.IsCoughing() && IsPulsingEnabled())
             SetPulsingEnabled(false);
-	}
+        else if (!Shop.instance.IsCoughing() && !IsPulsingEnabled())
+            SetPulsingEnabled(true);
+    }
 
     private void DoDamageToPlayer()
     {
@@ -32,6 +40,7 @@ public class AttackPoint : MonoBehaviour
 
     internal void SetOccupant(Enemy occ)
     {
+        Debug.Log("SetOccupant: " + occ.name);
         occupant = occ;
         SetPulsingEnabled(occupantIsActive);
     }
@@ -43,11 +52,11 @@ public class AttackPoint : MonoBehaviour
 
     internal bool IsVacant(Enemy enemy)
     {
-        return occupant == null || occupant == enemy;
+        return occupant == null || occupant.IsDead() || occupant == enemy;
     }
     internal bool IsVacant()
     {
-        return occupant == null;
+        return occupant == null || occupant.IsDead();
     }
 
     internal void SetOccupantActive(bool active)

@@ -23,7 +23,9 @@ public class Shop : MonoBehaviour
     public Sprite spriteButtonX;
     
     public float coughStopDelay = 6f;
-    
+
+    public float shakeMultiplier = 2f;
+
     /// <summary> Reference(s) to a button's state before it's been clicked and changed to "selected";
     /// Used for changing it back to its original state when another button becomes "selected" </summary>
     private GameObject tempButton;
@@ -170,14 +172,17 @@ public class Shop : MonoBehaviour
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             if (enemy != null) enemy.StartCough(coughStopDelay);
         }
-        
+
+        // reenable AP pulse animation
+        // todo: reenable AP pulse animation
+
         Invoke("StopCough", coughStopDelay);
         Invoke("StopCameraShaker", totalCoughDuration);
     }
     private IEnumerator ShakeCamera(float delay, float duration, float intensity)
     {
         yield return new WaitForSeconds(delay);
-        CameraShaker.StartShaking(duration, intensity);
+        CameraShaker.StartShaking(duration, intensity *= shakeMultiplier);
     }
     private void StopCough()
     {
@@ -189,6 +194,9 @@ public class Shop : MonoBehaviour
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             if (enemy != null) enemy.StopCough();
         }
+
+        // reenable AP pulse animation
+        // todo: reenable AP pulse animation
 
         coughing = false;
     }

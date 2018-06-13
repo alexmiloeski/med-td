@@ -190,13 +190,22 @@ public class Enemy : Damageable, IAttacker
                     {
                         // it's reached the tile; go to the next tile, unless the current tile is an attack point
                         AttackPoint ap = nextTile.GetComponent<AttackPoint>();
-                        if (ap != null && ap.IsVacant())
+                        if (ap != null)
                         {
-                            //Debug.Log("ap != null && ap.IsVacant");
-                            // if it's an attack point and it's still vacant, occupy it
-                            ap.SetOccupant(this);
-                            attackPoint = ap;
-                            latched = true;
+                            if (ap.IsVacant())
+                            {
+                                //Debug.Log("ap != null && ap.IsVacant");
+                                // if it's an attack point and it's still vacant, occupy it
+                                ap.SetOccupant(this);
+                                attackPoint = ap;
+                                latched = true;
+                            }
+                            else // if nextTile is an AP that is occupied, clear visited list and get next tile
+                            {
+                                //Debug.Log("NEXTTILE IS OCCUPIED AP!!!!!!!! clearing visitedTiles and getting next tile!");
+                                visitedTiles.Clear();
+                                GetNextTile();
+                            }
                         }
                         else // otherwise, continue on the path
                         {
@@ -462,6 +471,8 @@ public class Enemy : Damageable, IAttacker
 
     private void Replicate()
     {
+        if (isDead) return;
+
         //Debug.Log("Replicate");
 
         // don't move for a short while
@@ -532,6 +543,11 @@ public class Enemy : Damageable, IAttacker
 
     private void OnDrawGizmosSelected()
     {
+        //Debug.Log("enemy: " + this.name);
+        //Debug.Log("currTile = " + currTile);
+        //Debug.Log("nextTile = " + nextTile);
+        //Debug.Log("attackPoint: " + (attackPoint != null));
+
         //Gizmos.color = Color.blue;
         //Gizmos.DrawWireSphere(transform.position, hitRange);
 
