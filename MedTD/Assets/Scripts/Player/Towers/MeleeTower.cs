@@ -424,6 +424,14 @@ public class MeleeTower : Tower
             Destroy(currentRallyPointGO);
             //StartCoroutine(DestroyObjectDelayed(currentRallyPointGO, 1f));
         }
+
+        // if phone, now is the time to set the sprite and the position of the new rally point flag object
+        if (GameManager.isPlatformPhone)
+        {
+            newRallyPointGO.GetComponent<SpriteRenderer>().sprite = rallyPointSprite;
+            newRallyPointGO.transform.position = rallyPoint;
+        }
+
         // stop showing the rally point icon
         if (newRallyPointGO != null)
         {
@@ -431,6 +439,7 @@ public class MeleeTower : Tower
             //Destroy(newRallyPointGO);
             StartCoroutine(DestroyObjectDelayed(newRallyPointGO, 0.5f));
         }
+        
         // stop showing the rally point range circle
         if (rallyPointRangeGO)
         {
