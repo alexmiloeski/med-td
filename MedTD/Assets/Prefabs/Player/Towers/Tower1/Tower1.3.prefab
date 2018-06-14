@@ -61,9 +61,11 @@ MonoBehaviour:
   damage: 0
   cooldown: 6
   range: 2.5
-  unitSprite: {fileID: 21300000, guid: 38d08f1cd70c17b468e31d4ea1240af8, type: 3}
+  animatorController: {fileID: 9100000, guid: d9e7296667c90f14dbd117120f62c472, type: 2}
+  deathAnimatorController: {fileID: 9100000, guid: b2a8a9ec2c70b4d4d9c344a7d728ab38,
+    type: 2}
   unitSpeed: 0.8
-  unitHealth: 250
+  unitHealth: 50
   unitDamage: 80
   unitDefense: 10
   unitHitCooldown: 1.7

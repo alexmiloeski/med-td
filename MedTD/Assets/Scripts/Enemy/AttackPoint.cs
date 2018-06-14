@@ -52,11 +52,11 @@ public class AttackPoint : MonoBehaviour
 
     internal bool IsVacant(Enemy enemy)
     {
-        return occupant == null || occupant.IsDead() || occupant == enemy;
+        return occupant == null || occupant == enemy;
     }
     internal bool IsVacant()
     {
-        return occupant == null || occupant.IsDead();
+        return occupant == null;
     }
 
     internal void SetOccupantActive(bool active)

@@ -10,6 +10,9 @@ public class Enemy : Damageable, IAttacker
     //private float speed = 1f;
     //public float startHealth = 10;
     //private float health = 10f;
+
+    public GameObject deathAnimationPrefab;
+    
     public int bounty = 10; // the money the player gets for killing this unit
     public float damage = 1f;
     public int defense = 1;
@@ -38,8 +41,6 @@ public class Enemy : Damageable, IAttacker
     public int minReplicationTime = 10;
     public int maxReplicationTime = 30;
     private float replicationCoundtown = 10f;
-
-    private bool isDead = false;
 
     private bool coughing = false;
     private float coughStopCountdown = 5f;
@@ -109,8 +110,6 @@ public class Enemy : Damageable, IAttacker
 
     private void Update()
     {
-        if (isDead) return;
-
         if (!started) return;
         
         if (coughing)
@@ -241,8 +240,6 @@ public class Enemy : Damageable, IAttacker
     
     private void AttackMeleeAttacker()
     {
-        if (isDead) return;
-
         //Debug.Log("AttackMeleeAttacker");
         Transform firstAttacker = null;
         for (int i = 0; i < meleeAttackers.Count; i++)
@@ -320,8 +317,6 @@ public class Enemy : Damageable, IAttacker
     
     private void GetNextTile()
     {
-        if (isDead) return;
-
         //Debug.Log("GetNextTile");
         System.Random random = new System.Random();
 
@@ -410,39 +405,35 @@ public class Enemy : Damageable, IAttacker
 
         return true;
     }
-
-    public bool IsDead()
-    {
-        return isDead;
-    }
-
+    
     protected override void Die()
     {
-        if (isDead) return;
-
-        isDead = true;
-
         //Debug.Log("Enemy.Die");
 
         // first remove its health bar
         RemoveHealthBar();
 
-        if (anim != null)
-        {
-            //Debug.Log("setting trigger isDead");
-            anim.SetTrigger("isDead");
-        }
-
         Player.AddMoney(bounty);
-        //Destroy(gameObject);
+        
+        // instantiate the dying animation prefab, with the same rotation
+        Transform head = null;
+        Transform rotatingPart = transform.Find(Constants.RotatingPart);
+        if (rotatingPart != null)
+        {
+            head = rotatingPart.Find("Head");
+        }
+        Quaternion headRotation;
+        if (head != null)
+        {
+            headRotation = head.rotation;
+        }
+        else
+        {
+            headRotation = Quaternion.identity;
+        }
+        Instantiate(deathAnimationPrefab, transform.position, headRotation);
 
-        // call FinilizeDeath (to destroy the gameobject) after a short time
-        Invoke("FinilizeDeath", 1.8f);
-    }
-
-    private void FinilizeDeath()
-    {
-        //Debug.Log("Unit.FinilizeDeath");
+        // destroy this game object
         Destroy(gameObject);
     }
 
@@ -487,8 +478,6 @@ public class Enemy : Damageable, IAttacker
 
     private void Replicate()
     {
-        if (isDead) return;
-
         //Debug.Log("Replicate");
 
         // don't move for a short while

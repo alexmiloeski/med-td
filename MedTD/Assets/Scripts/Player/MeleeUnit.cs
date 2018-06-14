@@ -4,6 +4,8 @@ public class MeleeUnit : Damageable, IAttacker
 {
     //private SpriteRenderer headRenderer;
 
+    public GameObject deathAnimationPrefab;
+
     private Animator anim;
 
     private Moveable moveable;
@@ -17,6 +19,7 @@ public class MeleeUnit : Damageable, IAttacker
     private float rallyPointRange;
     private Vector3 rallyPoint;
     private LinkedNode rallyPointNode;
+    private RuntimeAnimatorController deathAnimatorController;
 
     private const float healthRegenPercentage = 0.04f; // a percentage of startHealth that gets regained each second
 
@@ -24,8 +27,6 @@ public class MeleeUnit : Damageable, IAttacker
 
     private Transform target;
     private float hitCountdown = 0f;
-
-    private bool isDead = false;
     
     private new void Start()
     {
@@ -69,8 +70,6 @@ public class MeleeUnit : Damageable, IAttacker
     
     private void Update()
     {
-        if (isDead) return;
-
         if (hitCountdown > 0f) hitCountdown -= Time.deltaTime;
 
         // if there's no target, go back to rally point
@@ -89,15 +88,7 @@ public class MeleeUnit : Damageable, IAttacker
         }
 
         // if there is a target..
-
-        // if target is dead, update target
-        Enemy targetEnemy = target.GetComponent<Enemy>();
-        if (targetEnemy != null && targetEnemy.IsDead())
-        {
-            UpdateTarget();
-            return;
-        }
-
+        
         // if target is out of range, move in closer
         float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
         if (distanceToTarget > hitRange)
@@ -122,19 +113,13 @@ public class MeleeUnit : Damageable, IAttacker
     /// <summary> Called with Invoke(). </summary>
     private void UpdateTarget()
     {
-        if (isDead)
-        {
-            DismissTarget();
-            return;
-        }
-        
         // if it already has a target, see if it's dead or too far away, or if there's another one without an attacker
         if (target != null)
         {
             Enemy targetEnemy = target.GetComponent<Enemy>();
 
             float distanceToTarget = Vector2.Distance(transform.position, target.transform.position);
-            if (targetEnemy.IsDead() || distanceToTarget > spotRange)
+            if (distanceToTarget > spotRange)
             {
                 //Debug.Log("LOST TARGET");
                 DismissTarget();
@@ -200,7 +185,7 @@ public class MeleeUnit : Damageable, IAttacker
         }
 
         // otherwise, find the nearest enemy
-        if (chosenEnemy == null || (chosenEnemy.GetComponent<Enemy>() != null && chosenEnemy.GetComponent<Enemy>().IsDead()))
+        if (chosenEnemy == null || (chosenEnemy.GetComponent<Enemy>() != null))
         {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag(Constants.EnemyTag);
             /*float */
@@ -209,7 +194,7 @@ public class MeleeUnit : Damageable, IAttacker
             foreach (GameObject enemy in enemies)
             {
                 // if this enemy is not dead
-                if (enemy.GetComponent<Enemy>() != null && !enemy.GetComponent<Enemy>().IsDead())
+                if (enemy.GetComponent<Enemy>() != null)
                 {
                     // if the enemy is beyond this unit's spot range, ignore target
                     float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
@@ -285,8 +270,6 @@ public class MeleeUnit : Damageable, IAttacker
 
     public void PerformHit()
     {
-        if (isDead) return;
-
         //Debug.Log("Unit.PerformHit");
 
         if (target == null || target.GetComponent<Enemy>() == null) return;
@@ -304,21 +287,11 @@ public class MeleeUnit : Damageable, IAttacker
     
     protected override void Die()
     {
-        if (isDead) return;
-
-        isDead = true;
-
         //Debug.Log("Unit.Die");
 
         // first remove its health bar
         RemoveHealthBar();
-
-        if (anim != null)
-        {
-            //Debug.Log("setting trigger isDead");
-            anim.SetTrigger("isDead");
-        }
-
+        
         //Debug.Log("MeleeUnit.Die");
         if (nativeTower != null)
             nativeTower.RespawnUnitAfterCooldown();
@@ -326,13 +299,30 @@ public class MeleeUnit : Damageable, IAttacker
         // if this unit was attacking an enemy, remove itself as one of its target's attackers
         DismissTarget();
 
-        // call FinilizeDeath (to destroy the gameobject) after a short time
-        Invoke("FinilizeDeath", 1.5f);
-    }
+        // instantiate the dying animation prefab, with the same rotation
+        Transform head = null;
+        Transform rotatingPart = transform.Find(Constants.RotatingPart);
+        if (rotatingPart != null)
+        {
+            head = rotatingPart.Find("Head");
+        }
+        Quaternion headRotation;
+        if (head != null)
+        {
+            headRotation = head.rotation;
+        }
+        else
+        {
+            headRotation = Quaternion.identity;
+        }
+        GameObject deathAnimation = Instantiate(deathAnimationPrefab, transform.position, headRotation);
+        Animator deathAnimator = deathAnimation.GetComponent<Animator>();
+        if (deathAnimator != null && deathAnimatorController != null)
+        {
+            deathAnimator.runtimeAnimatorController = deathAnimatorController;
+        }
 
-    private void FinilizeDeath()
-    {
-        //Debug.Log("Unit.FinilizeDeath");
+        // destroy this game object
         Destroy(gameObject);
     }
     
@@ -409,39 +399,63 @@ public class MeleeUnit : Damageable, IAttacker
             rallyPointNode = closestTile.GetComponent<LinkedNode>();
         }
     }
-    internal void SetSprite(Sprite sprite)
-    {
+    //internal void SetSprite(Sprite sprite)
+    //{
         //headRenderer.sprite = sprite;
-    }
+    //}
 
-    internal void SetAnimatorController(int i)
+    internal void SetAnimatorController(RuntimeAnimatorController rac)
     {
         Transform rotatingPart = transform.Find(Constants.RotatingPart);
-        if (rotatingPart == null)
-        {
-            Debug.Log("RotatingPart is NULL!");
-        }
-        else
+        if (rotatingPart != null)
         {
             Transform head = rotatingPart.Find("Head");
-            if (head == null)
-            {
-                Debug.Log("Head is NULL!");
-            }
-            else
+            if (head != null)
             {
                 AnimatedHead animatedHead = head.GetComponent<AnimatedHead>();
-                if (animatedHead == null)
+                if (animatedHead != null)
                 {
-                    Debug.Log("animatedHead is NULL!");
-                }
-                else
-                {
-                    animatedHead.SetAnimatorController(i);
+                    Animator animator = animatedHead.GetComponent<Animator>();
+                    if (animator != null)
+                    {
+                        animator.runtimeAnimatorController = rac;
+                    }
                 }
             }
         }
     }
+    internal void SetDeathAnimatorController(RuntimeAnimatorController _deathAnimationController)
+    {
+        deathAnimatorController = _deathAnimationController;
+    }
+    //internal void SetAnimatorController(int i)
+    //{
+    //    Transform rotatingPart = transform.Find(Constants.RotatingPart);
+    //    if (rotatingPart == null)
+    //    {
+    //        Debug.Log("RotatingPart is NULL!");
+    //    }
+    //    else
+    //    {
+    //        Transform head = rotatingPart.Find("Head");
+    //        if (head == null)
+    //        {
+    //            Debug.Log("Head is NULL!");
+    //        }
+    //        else
+    //        {
+    //            AnimatedHead animatedHead = head.GetComponent<AnimatedHead>();
+    //            if (animatedHead == null)
+    //            {
+    //                Debug.Log("animatedHead is NULL!");
+    //            }
+    //            else
+    //            {
+    //                animatedHead.SetAnimatorController(i);
+    //            }
+    //        }
+    //    }
+    //}
 
 
     private void OnDrawGizmosSelected()

@@ -11,8 +11,11 @@ public class MeleeTower : Tower
     public Transform pathBoard;
 
     public int unitCount = 3;
-    
-    private Sprite unitSprite;
+
+    //private Sprite unitSprite;
+    private RuntimeAnimatorController animatorController;
+    //private GameObject deathAnimationPrefab;
+    private RuntimeAnimatorController deathAnimatorController;
     private float unitRespawnCooldown = 4f;
     private float unitHealth = 10f;
     private float unitDamage = 10f;
@@ -123,7 +126,10 @@ public class MeleeTower : Tower
         unitRespawnCooldown = GetCurrentCooldown();
         meleeSpotRange = GetCurrentMeleeSpotRange();
         meleeRallyPointRange = GetCurrentMeleeRallyPointRange();
-        unitSprite = GetCurrentMeleeUnitSprite();
+        //unitSprite = GetCurrentMeleeUnitSprite();
+        animatorController = GetCurrentMeleeUnitAnimatorController();
+        deathAnimatorController = GetCurrentMeleeUnitDeathAnimationController();
+
         unitSpeed = GetCurrentMeleeUnitSpeed();
         unitHealth = GetCurrentMeleeUnitHealth();
         unitDamage = GetCurrentMeleeUnitDamage();
@@ -141,7 +147,9 @@ public class MeleeTower : Tower
                 if (unit != null)
                 {
                     //unit.UpdateStats();
-                    unit.SetSprite(unitSprite);
+                    //unit.SetSprite(unitSprite);
+                    unit.SetAnimatorController(animatorController);
+                    unit.SetDeathAnimatorController(deathAnimatorController);
                     unit.SetMeleeSpotRange(meleeSpotRange);
                     unit.SetMeleeRallyPointRange(meleeRallyPointRange);
                     unit.SetUnitSpeed(unitSpeed);
@@ -151,7 +159,7 @@ public class MeleeTower : Tower
                     unit.SetHitRange(meleeHitRange);
                     unit.SetHitCooldown(unitHitCooldown);
 
-                    unit.SetAnimatorController(currentTowerLevel);
+                    //unit.SetAnimatorController(currentTowerLevel);
                 }
             }
         }
@@ -215,7 +223,9 @@ public class MeleeTower : Tower
 
         MeleeUnit meleeUnit = unit.GetComponent<MeleeUnit>();
         meleeUnit.SetNativeTower(this);
-        meleeUnit.SetSprite(unitSprite);
+        //meleeUnit.SetSprite(unitSprite);
+        meleeUnit.SetAnimatorController(animatorController);
+        meleeUnit.SetDeathAnimatorController(deathAnimatorController);
         meleeUnit.SetHealth(unitHealth);
         //Debug.Log("unitHealth = " + unitHealth);
         meleeUnit.SetDamage(unitDamage);
@@ -251,12 +261,26 @@ public class MeleeTower : Tower
     
 
 
-    internal Sprite GetCurrentMeleeUnitSprite()
+    //internal Sprite GetCurrentMeleeUnitSprite()
+    //{
+    //    MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+    //    if (meleeTowerLevel == null) return null;
+
+    //    return meleeTowerLevel.unitSprite;
+    //}
+    internal RuntimeAnimatorController GetCurrentMeleeUnitAnimatorController()
     {
         MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
         if (meleeTowerLevel == null) return null;
 
-        return meleeTowerLevel.unitSprite;
+        return meleeTowerLevel.animatorController;
+    }
+    internal RuntimeAnimatorController GetCurrentMeleeUnitDeathAnimationController()
+    {
+        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+        if (meleeTowerLevel == null) return null;
+
+        return meleeTowerLevel.deathAnimatorController;
     }
     internal float GetCurrentMeleeUnitHealth()
     {

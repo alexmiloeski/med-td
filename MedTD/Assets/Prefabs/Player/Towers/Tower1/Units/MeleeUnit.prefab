@@ -296,6 +296,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startHealth: 0
+  deathAnimationPrefab: {fileID: 1936974071310844, guid: 418be398111532c4e869465ab6efc01d,
+    type: 2}
 --- !u!114 &114502253611944870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -318,11 +320,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb539dd196f39c49b6f51d16269c22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ac:
-  - {fileID: 9100000, guid: bd1dc90de789a2a459f4c2a926ebdddb, type: 2}
-  - {fileID: 9100000, guid: b32efe32258385b43b54e7150e7b12ca, type: 2}
-  - {fileID: 9100000, guid: d9e7296667c90f14dbd117120f62c472, type: 2}
-  - {fileID: 9100000, guid: 9df21fa2c84c8194f98bc1d5eacc8c11, type: 2}
 --- !u!212 &212249231807325478
 SpriteRenderer:
   m_ObjectHideFlags: 1
