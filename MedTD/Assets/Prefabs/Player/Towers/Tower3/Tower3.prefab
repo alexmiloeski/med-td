@@ -52,18 +52,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eda9e44f19336e4abe1918079c525c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerName: Tower3
-  description: Tower three, launches explosives.
+  towerName: Explosive Tower
+  description: Launches explosive missiles towards enemy clusters, damaging all enemies
+    inside the explosion. Also deals a portion of the damage to the organ.
   towerLevels:
   - {fileID: 114538706459103610, guid: 844261fbb965f3c49b2a591fcbc1a6d2, type: 2}
   - {fileID: 114538706459103610, guid: 3065c62233ba4244c98de4c8f7e05875, type: 2}
   - {fileID: 114538706459103610, guid: 9f967ee952e45a141b684e61fd90ca94, type: 2}
   projectilePrefab: {fileID: 1409172707699670, guid: a89ee53206b72bb488ea440cc69e056d,
     type: 2}
+  explosionRadius: 3.2
   damagePortionToEnvironment:
-  - 1
-  - 0.6
-  - 0.2
+  - 0.8
+  - 0.5
+  - 0.1
 --- !u!212 &212487595534256636
 SpriteRenderer:
   m_ObjectHideFlags: 1

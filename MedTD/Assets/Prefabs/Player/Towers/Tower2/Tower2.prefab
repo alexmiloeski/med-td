@@ -52,8 +52,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19b6d52acbb2d2a448d311ea43de51aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerName: Towertwo
-  description: Tower two, ranged.
+  towerName: Ranged Tower
+  description: Launches projectiles at nearby enemies.
   towerLevels:
   - {fileID: 114298525440082482, guid: de72ec6b2e0c11846ae911ef9e618327, type: 2}
   - {fileID: 114060708012228564, guid: e4ec98a9fdc8a3f4a93f2a73c1baef7f, type: 2}

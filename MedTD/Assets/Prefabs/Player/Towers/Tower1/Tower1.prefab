@@ -52,8 +52,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae3eaf71264907c40ac29e535eb84ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerName: Tower1
-  description: Tower one, deploys melee units.
+  towerName: Melee Tower
+  description: Deploys melee units. Good for blocking enemy passage and crowd control.
   towerLevels:
   - {fileID: 114238171581901022, guid: d1b0307bfd45c9f48b4e1b082c35e955, type: 2}
   - {fileID: 114844755604913970, guid: f4ce8160ac7b84d42a8df9133591c139, type: 2}

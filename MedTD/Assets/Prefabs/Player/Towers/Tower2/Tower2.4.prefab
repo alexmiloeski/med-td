@@ -53,14 +53,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: e25d85b035b6b844b8eca82146db534a, type: 3}
-  towerLevelName: Tower24
-  description: tower two four
+  towerLevelName: Ranged Tower 4
+  description: Much wider range, slightly more damage, but slower.
   level: 4
-  cost: 250
-  sellValue: 150
-  damage: 50
-  cooldown: 2.5
-  range: 4.5
+  cost: 280
+  sellValue: 180
+  damage: 90
+  cooldown: 2
+  range: 3.9
 --- !u!212 &212263973332581398
 SpriteRenderer:
   m_ObjectHideFlags: 1

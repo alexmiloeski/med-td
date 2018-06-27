@@ -56,18 +56,18 @@ MonoBehaviour:
   towerLevelName: Tower11
   description: Tower one one
   level: 1
-  cost: 100
+  cost: 120
   sellValue: 80
   damage: 0
-  cooldown: 4
+  cooldown: 6
   range: 1.5
   animatorController: {fileID: 9100000, guid: bd1dc90de789a2a459f4c2a926ebdddb, type: 2}
   deathAnimatorController: {fileID: 9100000, guid: 429645a50186c07439c9db2e12809e35,
     type: 2}
-  unitSpeed: 0.7
-  unitHealth: 50
-  unitDamage: 5
-  unitDefense: 10
+  unitSpeed: 0.9
+  unitHealth: 260
+  unitDamage: 8
+  unitDefense: 1
   unitHitCooldown: 0.4
   meleeHitRange: 0.6
   meleeSpotRange: 1.5

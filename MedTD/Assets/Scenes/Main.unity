@@ -3347,8 +3347,8 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 
 --- !u!222 &873286558
@@ -6266,8 +6266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfWaves: 8
-  timeBetweenWaves: 14
-  moneyForEarlyStart: 40
+  timeBetweenWaves: 30
+  moneyForEarlyStart: 100
   enemyFolder: {fileID: 624177191}
   spawnPoints:
   - {fileID: 1915952089}
@@ -6321,7 +6321,7 @@ MonoBehaviour:
   lymphNodePrefab: {fileID: 4207219894400406, guid: 90acd459b4c74c447b3826ab7801195a,
     type: 2}
   sSContainer: {fileID: 123073212}
-  numberOfLymphNodes: 3
+  numberOfLymphNodes: 6
 --- !u!114 &1378128246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6333,8 +6333,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f5b1f39a04d64f4ea84aa6414645011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 400
-  startMoney: 1400
+  startHealth: 1000
+  startMoney: 1500
 --- !u!114 &1378128247
 MonoBehaviour:
   m_ObjectHideFlags: 0

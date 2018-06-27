@@ -26,7 +26,9 @@ public class Enemy : Damageable, IAttacker
     public float regularSpeed;
     private bool started = false;
 
+#pragma warning disable CS0169 // The field 'Enemy.rotatingPart' is never used
     private Transform rotatingPart;
+#pragma warning restore CS0169 // The field 'Enemy.rotatingPart' is never used
 
     private LinkedNode currTile;
     private LinkedNode nextTile;

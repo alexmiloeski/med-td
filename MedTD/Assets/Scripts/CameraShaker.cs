@@ -8,7 +8,9 @@ public class CameraShaker : MonoBehaviour
     // Amplitude of the shake. A larger value shakes the camera harder.
     private static float startShakeAmount = 0.2f;
     private static float shakeAmount = 0.2f;
+#pragma warning disable CS0414 // The field 'CameraShaker.decreaseFactor' is assigned but its value is never used
     private static float decreaseFactor = 2.0f;
+#pragma warning restore CS0414 // The field 'CameraShaker.decreaseFactor' is assigned but its value is never used
     private static float decrease = 1f;
 
     //private Transform camTransform;

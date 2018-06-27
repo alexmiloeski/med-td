@@ -275,19 +275,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a950107ccfad594aa1c9f89d495e367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 100
+  startHealth: 260
   deathAnimationPrefab: {fileID: 1859067237493940, guid: f289d2dca50839c43b942a3c4e5d22e0,
     type: 2}
-  bounty: 10
+  bounty: 50
   damage: 10
   defense: 1
-  hitCooldown: 0.5
+  hitCooldown: 0.6
   hitRange: 0.6
   movementDelay: 0.5
   cloneMovementDelay: 1.5
-  regularSpeed: 1.2
+  regularSpeed: 1
   minReplicationTime: 20
-  maxReplicationTime: 30
+  maxReplicationTime: 50
 --- !u!114 &114406653395224162
 MonoBehaviour:
   m_ObjectHideFlags: 1

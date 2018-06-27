@@ -52,11 +52,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 263f5968427eabd4a97f9885a53092bb, type: 3}
-  towerLevelName: Tower33
-  description: Tower three three
+  towerLevelName: Explosive Tower 3
+  description: Much more damage to enemies, and only a small amount to the organ.
   level: 3
-  cost: 250
-  sellValue: 80
-  damage: 50
+  cost: 300
+  sellValue: 180
+  damage: 80
   cooldown: 3
-  range: 5
+  range: 3
