@@ -412,14 +412,10 @@ public class MeleeUnit : Damageable, IAttacker
             Transform head = rotatingPart.Find("Head");
             if (head != null)
             {
-                AnimatedHead animatedHead = head.GetComponent<AnimatedHead>();
-                if (animatedHead != null)
+                Animator animator = head.GetComponent<Animator>();
+                if (animator != null)
                 {
-                    Animator animator = animatedHead.GetComponent<Animator>();
-                    if (animator != null)
-                    {
-                        animator.runtimeAnimatorController = rac;
-                    }
+                    animator.runtimeAnimatorController = rac;
                 }
             }
         }
