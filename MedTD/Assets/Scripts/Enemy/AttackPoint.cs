@@ -40,7 +40,7 @@ public class AttackPoint : MonoBehaviour
 
     internal void SetOccupant(Enemy occ)
     {
-        Debug.Log("SetOccupant: " + occ.name);
+        //Debug.Log("SetOccupant: " + occ.name);
         occupant = occ;
         SetPulsingEnabled(occupantIsActive);
     }

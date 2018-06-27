@@ -12,11 +12,11 @@ public class MeleeUnit : Damageable, IAttacker
 
     private MeleeTower nativeTower;
     private float damage;
-    private int defense;
+    //private int defense;
     private float hitCooldown;
     private float hitRange;
     private float spotRange;
-    private float rallyPointRange;
+    //private float rallyPointRange;
     private Vector3 rallyPoint;
     private LinkedNode rallyPointNode;
     private RuntimeAnimatorController deathAnimatorController;
@@ -339,10 +339,10 @@ public class MeleeUnit : Damageable, IAttacker
     {
         damage = _damage;
     }
-    internal void SetDefense(int _defense)
-    {
-        defense = _defense;
-    }
+    //internal void SetDefense(int _defense)
+    //{
+    //    defense = _defense;
+    //}
     internal void SetUnitSpeed(float unitSpeed)
     {
         if (moveable == null) moveable = GetComponent<Moveable>();
@@ -357,10 +357,10 @@ public class MeleeUnit : Damageable, IAttacker
     {
         spotRange = _meleeSpotRange;
     }
-    internal void SetMeleeRallyPointRange(float _meleeRallyPointRange)
-    {
-        rallyPointRange = _meleeRallyPointRange;
-    }
+    //internal void SetMeleeRallyPointRange(float _meleeRallyPointRange)
+    //{
+    //    rallyPointRange = _meleeRallyPointRange;
+    //}
     internal float GetHitRange()
     {
         return hitRange;
@@ -453,7 +453,7 @@ public class MeleeUnit : Damageable, IAttacker
     //    }
     //}
 
-
+    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

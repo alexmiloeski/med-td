@@ -19,7 +19,7 @@ public class MeleeTower : Tower
     private float unitRespawnCooldown = 4f;
     private float unitHealth = 10f;
     private float unitDamage = 10f;
-    private int unitDefense = 10;
+    //private int unitDefense = 10;
     private float unitSpeed = 1f;
     private float unitHitCooldown = 1f;
     private float meleeHitRange = 1f;
@@ -133,11 +133,11 @@ public class MeleeTower : Tower
         unitSpeed = GetCurrentMeleeUnitSpeed();
         unitHealth = GetCurrentMeleeUnitHealth();
         unitDamage = GetCurrentMeleeUnitDamage();
-        unitDefense = GetCurrentMeleeUnitDefense();
+        //unitDefense = GetCurrentMeleeUnitDefense();
         meleeHitRange = GetCurrentMeleeHitRange();
         unitHitCooldown = GetCurrentMeleeUnitHitCooldown();
 
-        int currentTowerLevel = GetCurrentLevel();
+        //int currentTowerLevel = GetCurrentLevel();
 
         // update the stats of each of this tower's melee units
         if (units != null)
@@ -151,11 +151,11 @@ public class MeleeTower : Tower
                     unit.SetAnimatorController(animatorController);
                     unit.SetDeathAnimatorController(deathAnimatorController);
                     unit.SetMeleeSpotRange(meleeSpotRange);
-                    unit.SetMeleeRallyPointRange(meleeRallyPointRange);
+                    //unit.SetMeleeRallyPointRange(meleeRallyPointRange);
                     unit.SetUnitSpeed(unitSpeed);
                     unit.SetHealth(unitHealth);
                     unit.SetDamage(unitDamage);
-                    unit.SetDefense(unitDefense);
+                    //unit.SetDefense(unitDefense);
                     unit.SetHitRange(meleeHitRange);
                     unit.SetHitCooldown(unitHitCooldown);
 
@@ -230,9 +230,9 @@ public class MeleeTower : Tower
         //Debug.Log("unitHealth = " + unitHealth);
         meleeUnit.SetDamage(unitDamage);
         //Debug.Log("unitDamage = " + unitDamage);
-        meleeUnit.SetDefense(unitDefense);
+        //meleeUnit.SetDefense(unitDefense);
         meleeUnit.SetMeleeSpotRange(meleeSpotRange);
-        meleeUnit.SetMeleeRallyPointRange(meleeRallyPointRange);
+        //meleeUnit.SetMeleeRallyPointRange(meleeRallyPointRange);
         meleeUnit.SetHitRange(meleeHitRange);
         meleeUnit.SetUnitSpeed(unitSpeed);
         //Debug.Log("unitSpeed = " + unitSpeed);
@@ -296,13 +296,13 @@ public class MeleeTower : Tower
 
         return meleeTowerLevel.unitDamage;
     }
-    internal int GetCurrentMeleeUnitDefense()
-    {
-        MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
-        if (meleeTowerLevel == null) return 0;
+    //internal int GetCurrentMeleeUnitDefense()
+    //{
+    //    MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
+    //    if (meleeTowerLevel == null) return 0;
 
-        return meleeTowerLevel.unitDefense;
-    }
+    //    return meleeTowerLevel.unitDefense;
+    //}
     internal float GetCurrentMeleeUnitSpeed()
     {
         MeleeTowerLevel meleeTowerLevel = (MeleeTowerLevel)towerLevels[currentTowerLevelIndex];
@@ -398,7 +398,7 @@ public class MeleeTower : Tower
         Vector3 mousePos3 = Camera.main.ScreenToWorldPoint(mousePosition);
         Vector2 mousePos2 = new Vector2(mousePos3.x, mousePos3.y);
 
-        BuildManager buildManager = BuildManager.instance;
+        //BuildManager buildManager = BuildManager.instance;
 
         bool validPos = false;
 

@@ -26,9 +26,9 @@ public class Enemy : Damageable, IAttacker
     public float regularSpeed;
     private bool started = false;
 
-#pragma warning disable CS0169 // The field 'Enemy.rotatingPart' is never used
-    private Transform rotatingPart;
-#pragma warning restore CS0169 // The field 'Enemy.rotatingPart' is never used
+//#pragma warning disable CS0169 // The field 'Enemy.rotatingPart' is never used
+//    private Transform rotatingPart;
+//#pragma warning restore CS0169 // The field 'Enemy.rotatingPart' is never used
 
     private LinkedNode currTile;
     private LinkedNode nextTile;
@@ -94,7 +94,7 @@ public class Enemy : Damageable, IAttacker
             moveable = gameObject.AddComponent<Moveable>();
         }
         
-        rotatingPart = transform.Find(Constants.RotatingPart);
+        //rotatingPart = transform.Find(Constants.RotatingPart);
 
         if (!Shop.instance.IsCoughing())
         {

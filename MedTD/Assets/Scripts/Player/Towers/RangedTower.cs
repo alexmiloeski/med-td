@@ -169,7 +169,7 @@ public class RangedTower : Tower
     {
         base.Upgrade();
 
-        Debug.Log("RangedTower.Upgrade");
+        //Debug.Log("RangedTower.Upgrade");
         range = GetCurrentRange();
         damage = GetCurrentDamage();
         cooldown = GetCurrentCooldown();

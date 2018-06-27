@@ -29,9 +29,9 @@ public class Shop : MonoBehaviour
     /// <summary> Reference(s) to a button's state before it's been clicked and changed to "selected";
     /// Used for changing it back to its original state when another button becomes "selected" </summary>
     private GameObject tempButton;
-#pragma warning disable CS0169 // The field 'Shop.tempButtonText' is never used
-    private string tempButtonText;
-#pragma warning restore CS0169 // The field 'Shop.tempButtonText' is never used
+//#pragma warning disable CS0169 // The field 'Shop.tempButtonText' is never used
+    //private string tempButtonText;
+//#pragma warning restore CS0169 // The field 'Shop.tempButtonText' is never used
     private Sprite tempButtonSprite;
 
     public static GameObject infoPanel;
